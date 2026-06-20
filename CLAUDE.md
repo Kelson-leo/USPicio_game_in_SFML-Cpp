@@ -103,8 +103,8 @@ Definidas em `src/core/PhysicsConstants.h` (resolução de referência: 1080p):
 
 | Constante | Valor | Unidade |
 |---|---|---|
-| `GROUND_Y` | 880.0f | pixels (topo do tile de chão) |
-| `GROUND_HEIGHT` | 200.0f | pixels |
+| `GROUND_Y` | 900.0f | pixels (topo do tile de chão — medido no Inkscape) |
+| `GROUND_HEIGHT` | 126.0f | pixels (medido no Inkscape) |
 | `GRAVITY` | 800.0f | pixels/s² |
 | `JUMP_SPEED` | -400.0f | pixels/s (negativo = para cima) |
 

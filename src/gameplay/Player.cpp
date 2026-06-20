@@ -7,7 +7,7 @@ Player::Player(const sf::Texture& texture,
                infrastructure::FrameConfig& frameConfig)
     : m_sprite(texture)
     , m_frameConfig(frameConfig)
-    , m_position{100.0f, core::GROUND_Y} {
+    , m_position{100.0f, core::GROUND_Y - 95.0f} {
     setAnimation("idle");
 }
 

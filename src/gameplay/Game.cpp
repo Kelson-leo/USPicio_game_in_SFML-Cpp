@@ -41,6 +41,16 @@ Game::Game(core::IRenderer& renderer, core::IInputHandler& input)
     m_titleText.setCharacterSize(48);
     m_titleText.setFillColor(sf::Color::White);
     m_titleText.setStyle(sf::Text::Bold);
+
+    // ── Menu hearts (static, 5 top-left) ─────────────────────────
+    constexpr float HEART_SCALE = 20.0f / 500.0f;   // 0.04 → 20px
+    constexpr float HEART_STEP  = 30.0f;             // 10px gap
+    const auto& heartTex = assets.getTexture("heart");
+    for (int i = 0; i < 5; ++i) {
+        auto& h = m_menuHearts.emplace_back(heartTex);
+        h.setScale(HEART_SCALE, HEART_SCALE);
+        h.setPosition(10.0f + i * HEART_STEP, 10.0f);
+    }
 }
 
 // ────────────────────────────────────────────────────────────────────
@@ -227,6 +237,11 @@ void Game::render() {
                               bounds.top  + bounds.height / 2.0f);
         m_titleText.setPosition(wSz.x / 2.0f, wSz.y / 2.0f);
         m_renderer.draw(m_titleText);
+
+        // ── Hearts ───────────────────────────────────────────────
+        for (auto& h : m_menuHearts) {
+            m_renderer.draw(h);
+        }
     } else if (m_state == State::Playing) {
         if (m_currentLevel) {
             m_currentLevel->draw(m_renderer);

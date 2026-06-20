@@ -4,7 +4,7 @@
 
 int main() {
     infrastructure::SfmlRenderer renderer;
-    if (!renderer.open({800, 600}, "Uspicio Game")) {
+    if (!renderer.open({1920, 1080}, "Uspicio Game")) {
         return 1;
     }
 

@@ -61,6 +61,7 @@ private:
     sf::Font               m_font;
     infrastructure::SfmlText     m_titleText;
     infrastructure::SfmlSprite   m_menuBg;
+    std::vector<infrastructure::SfmlSprite> m_menuHearts;
 
     // ── Entities (created per level) ──────────────────────────────
     std::unique_ptr<Player>    m_player;
