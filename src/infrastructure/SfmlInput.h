@@ -5,16 +5,17 @@
 
 namespace infrastructure {
 
-/// SFML concrete adapter for IInputHandler.
+/// SFML concrete adapter for core::IInputHandler.
 class SfmlInput : public core::IInputHandler {
 public:
-    /// Must be called with the active window reference.
-    explicit SfmlInput(const sf::RenderWindow& window);
+    /// Window reference (non-const, pollEvent requires it).
+    explicit SfmlInput(sf::RenderWindow& window);
 
-    bool pollEvent(sf::Event& event) override;
+    bool pollEvent(core::Event& event) override;
+    bool isKeyPressed(core::KeyCode key) const override;
 
 private:
-    const sf::RenderWindow& m_window;
+    sf::RenderWindow& m_window;
 };
 
 } // namespace infrastructure

@@ -1,15 +1,42 @@
 #include "SfmlInput.h"
+#include "SfmlConversions.h"
+#include <SFML/Window/Event.hpp>
+#include <SFML/Window/Keyboard.hpp>
 
 namespace infrastructure {
 
-SfmlInput::SfmlInput(const sf::RenderWindow& window)
+SfmlInput::SfmlInput(sf::RenderWindow& window)
     : m_window(window) {
 }
 
-bool SfmlInput::pollEvent(sf::Event& event) {
-    // Unfortunately, SFML's pollEvent is a non-const method on Window.
-    // We need to const_cast here because we store a const ref.
-    return const_cast<sf::RenderWindow&>(m_window).pollEvent(event);
+bool SfmlInput::pollEvent(core::Event& out) {
+    sf::Event sfEvent;
+    if (!m_window.pollEvent(sfEvent)) return false;
+
+    // Translate event type
+    switch (sfEvent.type) {
+    case sf::Event::Closed:
+        out.type = core::EventType::Closed;
+        out.key  = core::KeyCode::Unknown;
+        break;
+    case sf::Event::KeyPressed:
+        out.type = core::EventType::KeyPressed;
+        out.key  = toCore(sfEvent.key.code);
+        break;
+    case sf::Event::KeyReleased:
+        out.type = core::EventType::KeyReleased;
+        out.key  = toCore(sfEvent.key.code);
+        break;
+    default:
+        // Skip non-keyboard / non-close events for now
+        return pollEvent(out);
+    }
+
+    return true;
+}
+
+bool SfmlInput::isKeyPressed(core::KeyCode key) const {
+    return sf::Keyboard::isKeyPressed(toSfml(key));
 }
 
 } // namespace infrastructure

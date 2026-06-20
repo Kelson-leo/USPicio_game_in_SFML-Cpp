@@ -1,5 +1,5 @@
 #include "Game.h"
-#include <SFML/Window/Event.hpp>
+#include "infrastructure/SfmlRenderer.h"  // temporary: see render()
 #include <iostream>
 
 namespace gameplay {
@@ -8,22 +8,20 @@ namespace gameplay {
 Game::Game(core::IRenderer& renderer, core::IInputHandler& input)
     : m_renderer(renderer)
     , m_input(input) {
-    // ── Load default font ─────────────────────────────────────────
-    // SFML 2.6 no longer bundles a default font; we use a
-    // hard-coded path to the system DejaVu font available on
-    // Debian/Ubuntu. In production this will come from assets/.
-    if (!m_font.loadFromFile("/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf")) {
-        std::cerr << "[Game] WARNING: Could not load font. "
+    // ── Load font from assets/ ────────────────────────────────────
+    if (!m_font.loadFromFile("assets/fonts/PressStart2P.ttf")) {
+        std::cerr << "[Game] WARNING: Could not load "
+                     "assets/fonts/PressStart2P.ttf. "
                      "Text will not render.\n";
     }
 
-    // ── Menu background ───────────────────────────────────────────
+    // ── Menu background ──────────────────────────────────────────
     m_menuBg.setSize({400.0f, 150.0f});
     m_menuBg.setFillColor(sf::Color(20, 20, 60));
     m_menuBg.setOutlineColor(sf::Color::White);
     m_menuBg.setOutlineThickness(2.0f);
 
-    // ── Menu text ─────────────────────────────────────────────────
+    // ── Menu text ────────────────────────────────────────────────
     m_menuText.setFont(m_font);
     m_menuText.setString("USPICIO");
     m_menuText.setCharacterSize(64);
@@ -38,11 +36,7 @@ void Game::run() {
 
     while (m_running && m_renderer.isOpen()) {
         const float frameTime = clock.restart().asSeconds();
-        if (frameTime > MAX_FRAME) {
-            accumulator += MAX_FRAME;
-        } else {
-            accumulator += frameTime;
-        }
+        accumulator += (frameTime > MAX_FRAME) ? MAX_FRAME : frameTime;
 
         processInput();
 
@@ -52,33 +46,31 @@ void Game::run() {
             accumulator -= FIXED_DT;
         }
 
-        // Variable-timestep render (with interpolation alpha if needed)
         render();
     }
 }
 
 // ────────────────────────────────────────────────────────────────────
 void Game::processInput() {
-    sf::Event event;
+    core::Event event;
     while (m_input.pollEvent(event)) {
-        if (event.type == sf::Event::Closed) {
+        if (event.type == core::EventType::Closed) {
             m_running = false;
             m_renderer.close();
             return;
         }
 
-        // ── Keyboard input ────────────────────────────────────────
-        if (event.type == sf::Event::KeyPressed) {
+        if (event.type == core::EventType::KeyPressed) {
             // Global: ESC always quits
-            if (event.key.code == sf::Keyboard::Key::Escape) {
+            if (event.key == core::KeyCode::Escape) {
                 m_running = false;
                 m_renderer.close();
                 return;
             }
 
-            // Menu input (placeholder)
+            // Menu input
             if (m_state == State::Menu) {
-                if (event.key.code == sf::Keyboard::Key::Enter) {
+                if (event.key == core::KeyCode::Enter) {
                     setState(State::Playing);
                 }
             }
@@ -89,21 +81,18 @@ void Game::processInput() {
 // ────────────────────────────────────────────────────────────────────
 void Game::update(float /*deltaTime*/) {
     // Reserved for game-object updates (physics, AI, etc.).
-    // Menu state has no per-frame logic for now.
 }
 
 // ────────────────────────────────────────────────────────────────────
 void Game::render() {
-    m_renderer.clear(sf::Color(10, 10, 30));
+    m_renderer.clear(core::Color{10, 10, 30});
 
     if (m_state == State::Menu) {
-        // Centre the background and text on the window
-        const auto& win = m_renderer.getWindow();
-        const auto  wSz = win.getSize();
+        const auto wSz = m_renderer.getSize();
 
         m_menuBg.setPosition({
-            (wSz.x - m_menuBg.getSize().x) / 2.0f,
-            (wSz.y - m_menuBg.getSize().y) / 2.0f
+            (static_cast<float>(wSz.x) - m_menuBg.getSize().x) / 2.0f,
+            (static_cast<float>(wSz.y) - m_menuBg.getSize().y) / 2.0f
         });
 
         const sf::FloatRect textBounds = m_menuText.getLocalBounds();
@@ -116,11 +105,13 @@ void Game::render() {
             static_cast<float>(wSz.y) / 2.0f
         });
 
-        m_renderer.draw(m_menuBg);
-        m_renderer.draw(m_menuText);
+        // Temporary coupling: cast to SfmlRenderer to draw SFML
+        // objects directly. Will be replaced when game objects
+        // implement core::Drawable in later sprints.
+        auto& sfmlR = dynamic_cast<infrastructure::SfmlRenderer&>(m_renderer);
+        sfmlR.drawSfml(m_menuBg);
+        sfmlR.drawSfml(m_menuText);
     }
-
-    // Playing state will draw game objects here.
 
     m_renderer.display();
 }

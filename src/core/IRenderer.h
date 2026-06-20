@@ -1,42 +1,75 @@
 #pragma once
 
-#include <SFML/Graphics.hpp>
+#include <cstdint>
 #include <string>
 
 namespace core {
 
-/// Port: abstracts the rendering backend.
+// ── Geometry / colour types (SFML-free) ───────────────────────────
+
+struct Color {
+    std::uint8_t r = 0;
+    std::uint8_t g = 0;
+    std::uint8_t b = 0;
+    std::uint8_t a = 255;
+
+    static constexpr Color Black()   { return {0,   0,   0,   255}; }
+    static constexpr Color White()   { return {255, 255, 255, 255}; }
+    static constexpr Color Red()     { return {255, 0,   0,   255}; }
+    static constexpr Color Green()   { return {0,   255, 0,   255}; }
+    static constexpr Color Blue()    { return {0,   0,   255, 255}; }
+    static constexpr Color Transparent() { return {0, 0, 0, 0}; }
+};
+
+struct Vector2f {
+    float x = 0.0f;
+    float y = 0.0f;
+};
+
+struct Vector2u {
+    unsigned int x = 0;
+    unsigned int y = 0;
+};
+
+struct FloatRect {
+    float left   = 0.0f;
+    float top    = 0.0f;
+    float width  = 0.0f;
+    float height = 0.0f;
+};
+
+// ── Abstract drawable ─────────────────────────────────────────────
+
+class IRenderer; // fwd
+
+class Drawable {
+public:
+    virtual ~Drawable() = default;
+    /// Called by the renderer to draw this object.
+    virtual void draw(IRenderer& renderer) const = 0;
+};
+
+// ── Renderer port ─────────────────────────────────────────────────
+
 class IRenderer {
 public:
     virtual ~IRenderer() = default;
 
-    /// Initialise the window.
-    virtual bool open(unsigned width, unsigned height, const std::string& title) = 0;
+    virtual bool open(const Vector2u& size, const std::string& title) = 0;
 
-    /// Close the window and release resources.
     virtual void close() = 0;
 
-    /// Is the window still open?
     virtual bool isOpen() const = 0;
 
-    /// Clear the framebuffer.
-    virtual void clear(sf::Color color = sf::Color::Black) = 0;
+    virtual void clear(const Color& color = Color::Black()) = 0;
 
-    /// Swap buffers / present.
     virtual void display() = 0;
 
-    /// Draw a drawable object.
-    virtual void draw(const sf::Drawable& drawable) = 0;
+    /// Draw a core::Drawable.
+    virtual void draw(const Drawable& drawable) = 0;
 
-    /// Draw a drawable with a render state.
-    virtual void draw(const sf::Drawable& drawable,
-                      const sf::RenderStates& states) = 0;
-
-    /// Expose the underlying window for event polling.
-    virtual sf::RenderWindow& getWindow() = 0;
-
-    /// Expose const version.
-    virtual const sf::RenderWindow& getWindow() const = 0;
+    /// Current window size.
+    virtual Vector2u getSize() const = 0;
 };
 
 } // namespace core

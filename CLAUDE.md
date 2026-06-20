@@ -80,10 +80,40 @@
 - Resolução base: 1920x1080.
 - Viewport fixa ou câmera com scroll lateral (a decidir).
 
-## 4. Nomenclatura de Assets
+## 4. Tipos Próprios do Core (Sprint 1.1)
+
+Para garantir que `src/core/` não inclua SFML, foram criados tipos próprios no namespace `core`:
+
+| Tipo | Header | Descrição |
+|---|---|---|
+| `Color` | `IRenderer.h` | `{r,g,b,a}` uint8_t, com factories `Black()`, `White()`, `Red()`, `Green()`, `Blue()`, `Transparent()` |
+| `Vector2f` | `IRenderer.h` | `{x,y}` float |
+| `Vector2u` | `IRenderer.h` | `{x,y}` unsigned int |
+| `FloatRect` | `IRenderer.h` | `{left,top,width,height}` float |
+| `Drawable` | `IRenderer.h` | Interface abstrata: `void draw(IRenderer&) const` |
+| `KeyCode` | `IInputHandler.h` | Enum: A-Z, Space, Enter, Escape, Left, Right, Up, Down |
+| `EventType` | `IInputHandler.h` | Enum: Closed, KeyPressed, KeyReleased |
+| `Event` | `IInputHandler.h` | `{EventType type; KeyCode key;}` |
+
+A tradução Core ↔ SFML fica em `src/infrastructure/SfmlConversions.h` (header-only, funções inline `toSfml()` / `toCore()`).
+
+## 5. Constantes Físicas
+
+Definidas em `src/core/PhysicsConstants.h` (resolução de referência: 1080p):
+
+| Constante | Valor | Unidade |
+|---|---|---|
+| `GROUND_Y` | 880.0f | pixels (topo do tile de chão) |
+| `GROUND_HEIGHT` | 200.0f | pixels |
+| `GRAVITY` | 800.0f | pixels/s² |
+| `JUMP_SPEED` | -400.0f | pixels/s (negativo = para cima) |
+
+## 6. Nomenclatura de Assets
 
 ```
 assets/
+├── fonts/
+│   └── PressStart2P.ttf        (Google Fonts, baixada via script)
 ├── backgrounds/
 │   ├── fase1_patio.png
 │   ├── fase2_biblioteca.png
@@ -105,7 +135,7 @@ assets/
     └── heart.png
 ```
 
-## 5. Padrões de Código e Build
+## 7. Padrões de Código e Build
 
 ### Língua
 - **Código:** Inglês (classes, variáveis, métodos, comentários).
@@ -127,7 +157,7 @@ cd build && ctest
 - Padrão: `[Sprint N] - Descrição clara em inglês`
 - Exemplo: `[Sprint 1] - Add fixed timestep game loop and menu placeholder`
 
-## 6. Fluxo de Comunicação
+## 8. Fluxo de Comunicação
 
 1. Toda sessão começa relendo `CLAUDE.md`.
 2. Antes de implementar qualquer Sprint, entregar **Review Técnico** ao PO.
@@ -136,9 +166,18 @@ cd build && ctest
 
 ---
 
+## 9. Débitos Técnicos Conhecidos
+
+| ID | Descrição | Impacto | Resolução planejada |
+|---|---|---|---|
+| TD-01 | `Game::render()` faz `dynamic_cast<SfmlRenderer&>` para desenhar `sf::Drawable` direto | `gameplay/` acoplado a `infrastructure/` | Sprint 2: criar game-objects que implementam `core::Drawable` |
+| TD-02 | `SfmlInput` armazena `sf::RenderWindow&` (não usa porta `IRenderer`) | Acoplamento direto ao SFML no adapter de input | Revisar na Sprint 2 junto com TD-01 |
+
+---
+
 ## Histórico de Sprints
 
 | Sprint | Data | Descrição |
 |---|---|---|
-| 0 | 2026-06-19 | Setup do projeto: CMake, estrutura de diretórios, ports, adapters, Game loop |
-| 1 | — | Pendente aprovação |
+| 0 | 2026-06-19 | Setup inicial: CMake, estrutura de diretórios, ports, adapters, Game loop, menu placeholder |
+| 1.1 | 2026-06-19 | Refatoração arquitetural: remoção de SFML do Core, tipos próprios, ITextureLoader, PhysicsConstants, SfmlConversions, fonte PressStart2P.ttf, 11 testes passando |

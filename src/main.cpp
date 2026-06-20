@@ -4,11 +4,11 @@
 
 int main() {
     infrastructure::SfmlRenderer renderer;
-    if (!renderer.open(800, 600, "Uspicio Game")) {
+    if (!renderer.open({800, 600}, "Uspicio Game")) {
         return 1;
     }
 
-    infrastructure::SfmlInput input(renderer.getWindow());
+    infrastructure::SfmlInput input(renderer.getSfmlWindow());
     gameplay::Game game(renderer, input);
     game.run();
 

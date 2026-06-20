@@ -6,27 +6,35 @@
 
 namespace infrastructure {
 
-/// SFML concrete adapter for IRenderer.
+/// SFML concrete adapter for core::IRenderer.
 class SfmlRenderer : public core::IRenderer {
 public:
     SfmlRenderer() = default;
     ~SfmlRenderer() override = default;
 
-    bool open(unsigned width, unsigned height,
+    // ── core::IRenderer interface ─────────────────────────────────
+    bool open(const core::Vector2u& size,
               const std::string& title) override;
 
     void close() override;
     bool isOpen() const override;
 
-    void clear(sf::Color color = sf::Color::Black) override;
+    void clear(const core::Color& color) override;
     void display() override;
 
-    void draw(const sf::Drawable& drawable) override;
-    void draw(const sf::Drawable& drawable,
-              const sf::RenderStates& states) override;
+    void draw(const core::Drawable& drawable) override;
 
-    sf::RenderWindow& getWindow() override;
-    const sf::RenderWindow& getWindow() const override;
+    core::Vector2u getSize() const override;
+
+    // ── SFML-specific helpers (temporary — see CLAUDE.md) ─────────
+    /// Draw an SFML drawable directly. Used by gameplay/ until
+    /// proper game-object rendering is in place.
+    void drawSfml(const sf::Drawable& d);
+    void drawSfml(const sf::Drawable& d, const sf::RenderStates& states);
+
+    /// Access the underlying SFML window (needed for font loading etc.)
+    sf::RenderWindow& getSfmlWindow();
+    const sf::RenderWindow& getSfmlWindow() const;
 
 private:
     std::unique_ptr<sf::RenderWindow> m_window;
