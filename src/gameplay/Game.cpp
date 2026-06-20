@@ -332,6 +332,14 @@ void Game::updateMenuTextColors() {
 void Game::update(float dt) {
     if (m_state != State::Playing) return;
 
+    // ── Capivara AI ──────────────────────────────────────────────
+    for (auto& c : m_capivaras) {
+        if (!c.isDead() && m_player) {
+            c.update(dt, *m_player);
+        }
+    }
+
+    // ── Player ───────────────────────────────────────────────────
     if (m_player && !m_player->health.isDead()) {
         m_player->updateAnimation(dt);
         m_player->applyGravity(dt);
@@ -346,13 +354,14 @@ void Game::update(float dt) {
             m_playerHealthBar->setPosition({p.x - 50.0f, p.y - 30.0f});
         }
 
+        // Proximity damage from capivaras
         for (auto& c : m_capivaras) {
-            if (c.health.isDead()) continue;
+            if (c.isDead()) continue;
             auto cPos = c.getPosition();
             auto pPos = m_player->getPosition();
             float dx = std::abs(cPos.x - pPos.x);
             float dy = std::abs(cPos.y - pPos.y);
-            if (dx < 60.0f && dy < 60.0f) {
+            if (dx < Capivara::ATTACK_RANGE && dy < 80.0f) {
                 c.touchPlayer(*m_player, m_damageCfg);
             }
         }
@@ -392,7 +401,7 @@ void Game::render() {
             m_currentLevel->draw(m_renderer);
         }
         for (auto& c : m_capivaras) {
-            if (!c.health.isDead()) {
+            if (!c.isDead()) {
                 m_renderer.draw(c);
             }
         }
@@ -628,28 +637,28 @@ void Game::loadLevel(int phaseNumber) {
     m_professor.reset();
 
     if (phaseNumber == 1) {
-        for (int i = 0; i < 3; ++i) {
+        for (int i = 0; i < 2; ++i) {
+            float startX = 1500.0f + i * 200.0f;
             auto& c = m_capivaras.emplace_back(
-                assets.getTexture("capivara"), m_frameConfig);
-            c.setPosition({300.0f + i * 150.0f, core::GROUND_Y});
+                assets.getTexture("capivara"), m_frameConfig, startX);
             auto& bar = m_enemyHealthBars.emplace_back(c.health);
             auto cPos = c.getPosition();
             bar.setPosition({cPos.x - 50.0f, cPos.y - 30.0f});
         }
     } else if (phaseNumber == 2) {
-        for (int i = 0; i < 4; ++i) {
+        for (int i = 0; i < 3; ++i) {
+            float startX = 1500.0f + i * 200.0f;
             auto& c = m_capivaras.emplace_back(
-                assets.getTexture("capivara"), m_frameConfig);
-            c.setPosition({250.0f + i * 150.0f, core::GROUND_Y});
+                assets.getTexture("capivara"), m_frameConfig, startX);
             auto& bar = m_enemyHealthBars.emplace_back(c.health);
             auto cPos = c.getPosition();
             bar.setPosition({cPos.x - 50.0f, cPos.y - 30.0f});
         }
     } else if (phaseNumber == 3) {
         for (int i = 0; i < 2; ++i) {
+            float startX = 1500.0f + i * 200.0f;
             auto& c = m_capivaras.emplace_back(
-                assets.getTexture("capivara"), m_frameConfig);
-            c.setPosition({250.0f + i * 150.0f, core::GROUND_Y});
+                assets.getTexture("capivara"), m_frameConfig, startX);
             auto& bar = m_enemyHealthBars.emplace_back(c.health);
             auto cPos = c.getPosition();
             bar.setPosition({cPos.x - 50.0f, cPos.y - 30.0f});

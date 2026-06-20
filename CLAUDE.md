@@ -198,6 +198,19 @@ Pressionar `ESC` durante o jogo abre o menu de pausa sobreposto ao jogo congelad
 
 Navegação: Up/Down para selecionar, Enter para confirmar.
 
+### Capivara (Enemy — Sprint 6)
+
+**Comportamento:** Anda automaticamente em direção ao player com velocidade baixa (40 px/s). Inverte direção ao atingir as bordas da tela (0 ou 1860). Começa no lado direito.
+
+**Atributos:**
+- HP: 30 | Speed: 40 px/s | Scale: 1.5× | Attack range: 30px
+- Frame height: 55px nativa → 82.5px scaled
+- Animations: idle, walk (2 frames), hurt, dead — cada com suffix `_right`/`_left`
+
+**Dano por contato:** Proximidade < 30px + `|dy| < 80px` → `EnemyTouch` (8 dano base, redutível por defesa).
+
+**Contagem por fase:** Fase 1 = 2, Fase 2 = 3, Fase 3 = 2 + Professor.
+
 ### Build
 ```bash
 cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug
@@ -366,3 +379,4 @@ Entidades em `src/gameplay/` implementam `core::Drawable` para renderização:
 | 3 | 2026-06-20 | HealthComponent, LivesComponent, AmmoComponent, DamageConfig com AttackType/EntityType, UI bars (HealthBar, LivesDisplay, AmmoDisplay), entidades esqueleto (Player, Capivara, Professor), integração no Game, 68/68 testes |
 | 4 | 2026-06-20 | Animation & Rendering System: frames reais do Player (12 estados direcionais), Direction enum, sistema de animação (setAnimation, updateAnimation, buildAnimName), sprites nas 3 entidades, input de gameplay, física (gravidade/pulo/movimento), dano por proximidade, 78/78 testes |
 | 5 | 2026-06-20 | Menu system (Start/Restart/Info with Up/Down/Enter navigation), Info screen (developer, copyright, controls overlay), Player scale 1.5x, keyboard controls documented, Restart fully resets game state |
+| 6 | 2026-06-20 | Capivara enemy: real sprite frames (8 directional), animation system, AI movement toward player, edge clamping, contact damage, hurt/dead states, Fase 1=2, Fase 2=3, Fase 3=2+Professor |

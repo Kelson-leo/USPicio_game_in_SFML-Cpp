@@ -84,9 +84,9 @@ TEST(FrameConfigTest, CapivaraFrames) {
     infrastructure::FrameConfig config;
     ASSERT_TRUE(config.loadFromFile(testJson()));
 
-    EXPECT_EQ(config.getFrame("capivara", "idle", 0).width,  64);
-    EXPECT_EQ(config.getFrame("capivara", "hurt", 0).width,  64);
-    EXPECT_EQ(config.getFrame("capivara", "dead", 0).width,  64);
+    EXPECT_EQ(config.getFrame("capivara", "idle_right", 0).width,  64);
+    EXPECT_EQ(config.getFrame("capivara", "hurt_right", 0).width,  69);
+    EXPECT_EQ(config.getFrame("capivara", "dead_right", 0).width,  76);
 }
 
 // ── Professor ──────────────────────────────────────────────────────
