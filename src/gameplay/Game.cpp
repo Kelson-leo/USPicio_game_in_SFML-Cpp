@@ -24,6 +24,8 @@ Game::Game(core::IRenderer& renderer, core::IInputHandler& input)
                        "assets/backgrounds/fase1_patio.png");
     assets.loadTexture("heart",
                        "assets/ui/heart.png");
+    assets.loadTexture("caneta",
+                       "assets/projectiles/caneta.png");
 
     // ── Menu background (stretch to fill window) ─────────────────
     m_menuBg.setTexture(assets.getTexture("background_fase1"), true);
@@ -34,18 +36,6 @@ Game::Game(core::IRenderer& renderer, core::IInputHandler& input)
     m_titleText.setCharacterSize(48);
     m_titleText.setFillColor(sf::Color::White);
     m_titleText.setStyle(sf::Text::Bold);
-
-    // ── Heart sprites (5, top-left, visual only) ─────────────────
-    // Native heart texture is 500×500; scale down to ~20px.
-    // 20 / 500 = 0.04  → fits 5 hearts comfortably at 800×600.
-    constexpr float HEART_SCALE = 20.0f / 500.0f;   // 0.04  → 20 px
-    constexpr float HEART_STEP  = 30.0f;             // 10 px gap
-    const auto& heartTex = assets.getTexture("heart");
-    for (int i = 0; i < 5; ++i) {
-        auto& h = m_hearts.emplace_back(heartTex);
-        h.setScale(HEART_SCALE, HEART_SCALE);
-        h.setPosition(10.0f + i * HEART_STEP, 10.0f);
-    }
 }
 
 // ────────────────────────────────────────────────────────────────────
@@ -121,18 +111,32 @@ void Game::render() {
                               bounds.top  + bounds.height / 2.0f);
         m_titleText.setPosition(wSz.x / 2.0f, wSz.y / 2.0f);
         m_renderer.draw(m_titleText);
-
-        // ── Hearts ───────────────────────────────────────────────
-        for (auto& h : m_hearts) {
-            m_renderer.draw(h);
-        }
     } else if (m_state == State::Playing) {
         if (m_currentLevel) {
             m_currentLevel->draw(m_renderer);
         }
-        // Hearts also visible during gameplay
-        for (auto& h : m_hearts) {
-            m_renderer.draw(h);
+
+        // ── Enemy health bars ────────────────────────────────────
+        for (auto& bar : m_enemyHealthBars) {
+            m_renderer.draw(bar);
+        }
+
+        // ── Player health bar ────────────────────────────────────
+        if (m_playerHealthBar) {
+            m_renderer.draw(*m_playerHealthBar);
+        }
+
+        // ── HUD: lives (top-left) ────────────────────────────────
+        if (m_livesDisplay) {
+            m_renderer.draw(*m_livesDisplay);
+        }
+
+        // ── HUD: ammo (top-right) ────────────────────────────────
+        if (m_ammoDisplay) {
+            const auto wSz = m_renderer.getSize();
+            m_ammoDisplay->setPosition(
+                {static_cast<float>(wSz.x) - 320.0f, 10.0f});
+            m_renderer.draw(*m_ammoDisplay);
         }
     }
 
@@ -146,6 +150,65 @@ void Game::setState(State newState) {
 
 void Game::loadLevel(int phaseNumber) {
     m_currentLevel = std::make_unique<Level>(phaseNumber);
+
+    auto& assets = infrastructure::AssetManager::instance();
+
+    // ── Player ───────────────────────────────────────────────────
+    m_player = std::make_unique<Player>();
+
+    // Lives display (top-left HUD)
+    m_livesDisplay = std::make_unique<infrastructure::LivesDisplay>(
+        m_player->lives, assets.getTexture("heart"));
+    m_livesDisplay->setPosition({10.0f, 10.0f});
+
+    // Ammo display (top-right HUD)
+    m_ammoDisplay = std::make_unique<infrastructure::AmmoDisplay>(
+        m_player->ammo, assets.getTexture("caneta"));
+    // Position set in render() based on window width
+
+    // Player health bar (above character)
+    m_playerHealthBar = std::make_unique<infrastructure::HealthBar>(
+        m_player->health);
+    sf::Vector2f pPos = m_player->getPosition();
+    m_playerHealthBar->setPosition({pPos.x - 50.0f, pPos.y - 30.0f});
+
+    // ── Enemies ──────────────────────────────────────────────────
+    m_capivaras.clear();
+    m_enemyHealthBars.clear();
+
+    if (phaseNumber == 1) {
+        // Phase 1: 3 capivaras
+        for (int i = 0; i < 3; ++i) {
+            auto& c = m_capivaras.emplace_back();
+            c.setPosition({300.0f + i * 150.0f, core::GROUND_Y});
+            auto& bar = m_enemyHealthBars.emplace_back(c.health);
+            sf::Vector2f cPos = c.getPosition();
+            bar.setPosition({cPos.x - 50.0f, cPos.y - 30.0f});
+        }
+    } else if (phaseNumber == 2) {
+        // Phase 2: 4 capivaras
+        for (int i = 0; i < 4; ++i) {
+            auto& c = m_capivaras.emplace_back();
+            c.setPosition({250.0f + i * 150.0f, core::GROUND_Y});
+            auto& bar = m_enemyHealthBars.emplace_back(c.health);
+            sf::Vector2f cPos = c.getPosition();
+            bar.setPosition({cPos.x - 50.0f, cPos.y - 30.0f});
+        }
+    } else if (phaseNumber == 3) {
+        // Phase 3: 2 capivaras + professor
+        for (int i = 0; i < 2; ++i) {
+            auto& c = m_capivaras.emplace_back();
+            c.setPosition({250.0f + i * 150.0f, core::GROUND_Y});
+            auto& bar = m_enemyHealthBars.emplace_back(c.health);
+            sf::Vector2f cPos = c.getPosition();
+            bar.setPosition({cPos.x - 50.0f, cPos.y - 30.0f});
+        }
+        m_professor = std::make_unique<Professor>();
+        m_professor->setPosition({700.0f, core::GROUND_Y});
+        auto& bar = m_enemyHealthBars.emplace_back(m_professor->health);
+        sf::Vector2f profPos = m_professor->getPosition();
+        bar.setPosition({profPos.x - 50.0f, profPos.y - 30.0f});
+    }
 }
 
 } // namespace gameplay

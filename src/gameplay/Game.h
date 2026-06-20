@@ -2,8 +2,15 @@
 
 #include "core/IRenderer.h"
 #include "core/IInputHandler.h"
+#include "core/DamageConfig.h"
 #include "infrastructure/SfmlSprite.h"
 #include "infrastructure/SfmlText.h"
+#include "infrastructure/HealthBar.h"
+#include "infrastructure/LivesDisplay.h"
+#include "infrastructure/AmmoDisplay.h"
+#include "gameplay/Player.h"
+#include "gameplay/Capivara.h"
+#include "gameplay/Professor.h"
 #include <SFML/Graphics.hpp>
 #include <memory>
 #include <string>
@@ -42,6 +49,9 @@ private:
     State m_state   = State::Menu;
     bool  m_running = true;
 
+    // ── Damage config ─────────────────────────────────────────────
+    core::DamageConfig m_damageCfg;
+
     // ── Level ─────────────────────────────────────────────────────
     std::unique_ptr<Level> m_currentLevel;
 
@@ -50,8 +60,16 @@ private:
     infrastructure::SfmlText     m_titleText;
     infrastructure::SfmlSprite   m_menuBg;
 
-    // ── Hearts (visual only for now) ──────────────────────────────
-    std::vector<infrastructure::SfmlSprite> m_hearts;
+    // ── Entities (created per level) ──────────────────────────────
+    std::unique_ptr<Player>    m_player;
+    std::vector<Capivara>      m_capivaras;
+    std::unique_ptr<Professor> m_professor;
+
+    // ── UI components ─────────────────────────────────────────────
+    std::unique_ptr<infrastructure::LivesDisplay> m_livesDisplay;
+    std::unique_ptr<infrastructure::AmmoDisplay>  m_ammoDisplay;
+    std::unique_ptr<infrastructure::HealthBar>    m_playerHealthBar;
+    std::vector<infrastructure::HealthBar>         m_enemyHealthBars;
 };
 
 } // namespace gameplay

@@ -191,6 +191,71 @@ Adapters que implementam `core::Drawable` encapsulando `sf::Sprite` e `sf::Text`
 - `SfmlText` — análogo para texto
 - **Resolve TD-01**: Game agora usa `core::Drawable` sem `dynamic_cast` direto
 
+### FrameConfig (Sprint 2.5)
+
+Sistema de configuração de frames via JSON (`assets/config/frames.json`):
+- `infrastructure::FrameConfig` carrega JSON com estrutura `character → animation → [{x,y,w,h}]`
+- Suporta frames com larguras diferentes (ex: soco 80px, idle 64px)
+- `getFrame(char, anim, idx)` retorna `sf::IntRect`; índice fora de range → último frame
+- `frameCount(char, anim)` retorna número de frames; chaves desconhecidas → 0
+- Dependência: `nlohmann/json` (FetchContent, header-only, v3.11.3)
+
+**Animações Player:** idle, walk (2), jump, punch (80×64), throw (2×96×64), defend (72×64)
+**Capivara:** idle, walk (2), hurt, dead
+**Professor:** idle (80×80), attack (2×100×80), hurt, dead
+
+### Component System (Sprint 3)
+
+Componentes de gameplay no Core (SFML-free, header-only):
+
+| Componente | Header | Campos | Métodos |
+|---|---|---|---|
+| `HealthComponent` | `core/HealthComponent.h` | `int maxHP=100, currentHP=100` | `takeDamage(amount, isDefending=false)`, `heal(amount)`, `isDead()` |
+| `LivesComponent` | `core/LivesComponent.h` | `int maxLives=5, currentLives=5` | `loseLife()`, `isGameOver()` |
+| `AmmoComponent` | `core/AmmoComponent.h` | `int maxAmmo=10, currentAmmo=10` | `canUse()`, `use()`, `reload(amount)` |
+
+### Damage System (Sprint 3)
+
+Sistema de dano configurável via `core::DamageConfig` (mapa em código, extensível para JSON):
+
+**Tipos** (`core/DamageTypes.h`):
+- `AttackType`: Punch, Throw, EnemyTouch, BossProjectile
+- `EntityType`: Player, Capivara, Professor
+
+**Tabela de dano base** (valores padrão em `core/DamageConfig.cpp`):
+
+| AttackType | vs. Capivara | vs. Professor | vs. Player |
+|---|---|---|---|
+| `Punch` | 10 | 5 | — |
+| `Throw` | 20 | 15 | — |
+| `EnemyTouch` | — | — | 8 |
+| `BossProjectile` | — | — | 12 |
+
+**Defesa:** Quando `isDefending=true`, dano é reduzido à metade (`max(1, amount/2)`).
+**Morte do Player:** HP=0 → perde 1 vida → revive com HP cheio e posição inicial. Se vidas=0 → Game Over.
+
+**Como ajustar valores:** Use `DamageConfig::setDamage(atk, ent, amount)` ou edite diretamente `DamageConfig.cpp`.
+
+### UI Components (Sprint 3)
+
+Todas em `src/infrastructure/`, namespace `infrastructure`, implementam `core::Drawable`:
+
+| Classe | Construtor | Descrição |
+|---|---|---|
+| `HealthBar` | `(HealthComponent&, Vector2f size={100,10})` | Retângulo vermelho (fundo) + verde (HP). Não desenha se morto. |
+| `LivesDisplay` | `(LivesComponent&, const sf::Texture&, scale=0.04, step=30)` | Ícones de coração em linha. |
+| `AmmoDisplay` | `(AmmoComponent&, const sf::Texture&, scale=0.04, step=30)` | Ícones de caneta em linha. |
+
+### Entities (Sprint 3)
+
+Esqueletos em `src/gameplay/` (sem state machines — apenas componentes + posição):
+
+| Classe | Componentes | HP Padrão | Métodos de ataque |
+|---|---|---|---|
+| `Player` | health, lives, ammo | 100 | `punch()`, `throwCaneta()`, `defend(bool)`, `takeHit()`, `revive()` |
+| `Capivara` | health | 30 | `touchPlayer(Player&)` |
+| `Professor` | health | 80 | `shootBook(Player&)` |
+
 ## 8. Fluxo de Comunicação
 
 1. Toda sessão começa relendo `CLAUDE.md`.
@@ -215,4 +280,6 @@ Adapters que implementam `core::Drawable` encapsulando `sf::Sprite` e `sf::Text`
 |---|---|---|
 | 0 | 2026-06-19 | Setup inicial: CMake, estrutura de diretórios, ports, adapters, Game loop, menu placeholder |
 | 1.1 | 2026-06-19 | Refatoração arquitetural: remoção de SFML do Core, tipos próprios, ITextureLoader, PhysicsConstants, SfmlConversions, fonte PressStart2P.ttf, 11 testes passando |
-| 2 | 2026-06-19 | AssetManager, SfmlTextureLoader, SfmlSprite, SfmlText, Level system, menu com background + corações, TD-01 resolvido, 16/16 testes |
+| 2 | 2026-06-19 | AssetManager, SfmlTextureLoader, SfmlSprite, SfmlText, Level, menu com background + corações, TD-01 resolvido, 16/16 testes |
+| 2.5 | 2026-06-20 | FrameConfig com JSON (nlohmann/json), suporte a frames de largura variável, animações para player/capivara/professor, 29/29 testes |
+| 3 | 2026-06-20 | HealthComponent, LivesComponent, AmmoComponent, DamageConfig com AttackType/EntityType, UI bars (HealthBar, LivesDisplay, AmmoDisplay), entidades esqueleto (Player, Capivara, Professor), integração no Game, testes unitários |

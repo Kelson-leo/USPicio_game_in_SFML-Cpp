@@ -18,13 +18,29 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(googletest)
 
+# ── nlohmann/json (header-only JSON parser) ─────────────────────────
+FetchContent_Declare(
+    json
+    GIT_REPOSITORY https://github.com/nlohmann/json.git
+    GIT_TAG        v3.11.3
+)
+FetchContent_MakeAvailable(json)
+
 # ── Library (game engine, shared between exe and tests) ───────────────
 set(LIB_SOURCES
+    src/core/DamageConfig.cpp
+    src/gameplay/Capivara.cpp
     src/gameplay/Game.cpp
     src/gameplay/Level.cpp
+    src/gameplay/Player.cpp
+    src/gameplay/Professor.cpp
+    src/infrastructure/AmmoDisplay.cpp
     src/infrastructure/AssetManager.cpp
-    src/infrastructure/SfmlRenderer.cpp
+    src/infrastructure/FrameConfig.cpp
+    src/infrastructure/HealthBar.cpp
+    src/infrastructure/LivesDisplay.cpp
     src/infrastructure/SfmlInput.cpp
+    src/infrastructure/SfmlRenderer.cpp
     src/infrastructure/SfmlSprite.cpp
     src/infrastructure/SfmlText.cpp
     src/infrastructure/SfmlTextureLoader.cpp
@@ -40,6 +56,7 @@ target_link_libraries(UspicioLib PUBLIC
     sfml-graphics
     sfml-window
     sfml-system
+    nlohmann_json
 )
 
 # ── Executable ────────────────────────────────────────────────────────

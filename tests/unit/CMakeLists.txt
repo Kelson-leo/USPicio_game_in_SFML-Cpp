@@ -2,6 +2,12 @@
 add_executable(unit_tests
     test_engine.cpp
     test_asset_manager.cpp
+    test_frame_config.cpp
+    test_health_component.cpp
+    test_lives_component.cpp
+    test_ammo_component.cpp
+    test_damage_config.cpp
+    test_ui_components.cpp
 )
 
 target_link_libraries(unit_tests PRIVATE
