@@ -200,9 +200,11 @@ Sistema de configuração de frames via JSON (`assets/config/frames.json`):
 - `frameCount(char, anim)` retorna número de frames; chaves desconhecidas → 0
 - Dependência: `nlohmann/json` (FetchContent, header-only, v3.11.3)
 
-**Animações Player:** idle, walk (2), jump, punch (80×64), throw (2×96×64), defend (72×64)
-**Capivara:** idle, walk (2), hurt, dead
-**Professor:** idle (80×80), attack (2×100×80), hurt, dead
+**Animações Player (dados reais Inkscape — 12 estados direcionais):**
+- idle_right/left (1 frame, 40×95), walk_right/left (4 frames, 61-77×94-96), punch_right/left (3 frames, 61-74×95)
+- jump_right/left (1 frame, 77×96), defend_right/left (1 frame, 60×97), throw_right/left (1 frame, 73×97)
+**Capivara:** idle, walk (2), hurt, dead (placeholder — pendente dados reais)
+**Professor:** idle (80×80), attack (2×100×80), hurt, dead (placeholder — pendente dados reais)
 
 ### Component System (Sprint 3)
 
@@ -246,15 +248,56 @@ Todas em `src/infrastructure/`, namespace `infrastructure`, implementam `core::D
 | `LivesDisplay` | `(LivesComponent&, const sf::Texture&, scale=0.04, step=30)` | Ícones de coração em linha. |
 | `AmmoDisplay` | `(AmmoComponent&, const sf::Texture&, scale=0.04, step=30)` | Ícones de caneta em linha. |
 
-### Entities (Sprint 3)
+### Entities (Sprint 3 → 4)
 
-Esqueletos em `src/gameplay/` (sem state machines — apenas componentes + posição):
+Entidades em `src/gameplay/` implementam `core::Drawable` para renderização:
 
-| Classe | Componentes | HP Padrão | Métodos de ataque |
+| Classe | Componentes | HP Padrão | Métodos |
 |---|---|---|---|
-| `Player` | health, lives, ammo | 100 | `punch()`, `throwCaneta()`, `defend(bool)`, `takeHit()`, `revive()` |
+| `Player` | health, lives, ammo | 100 | `punch()`, `throwCaneta()`, `defend(bool)`, `takeHit()`, `revive()`, `moveLeft/Right()`, `applyGravity()`, `setAnimation()`, `updateAnimation()`, `setDirection()` |
 | `Capivara` | health | 30 | `touchPlayer(Player&)` |
 | `Professor` | health | 80 | `shootBook(Player&)` |
+
+### Animation & Rendering System (Sprint 4)
+
+**Direction** (`core/Direction.h`): `enum class Direction { Left, Right }` com helper `opposite(Direction)`.
+
+**Sistema de animação (Player):**
+- `Player` herda `core::Drawable` — renderizado via `renderer.draw(*m_player)`
+- Construtor recebe `sf::Texture&` + `FrameConfig&`
+- `buildAnimName(action)` → concatena `action + "_" + (right ? "right" : "left")`
+- `setAnimation(action)` → busca frames no FrameConfig, reseta frameIndex/timer. Fallback: mantém anterior se não encontrar.
+- `updateAnimation(dt)` → avança `frameTimer`; a cada `FRAME_DURATION` (0.15s) avança frame.
+  - **Walk:** loop circular (0→1→2→3→0)
+  - **Demais ações:** para no último frame (não loop)
+- `setDirection(dir)` → reaplica animação atual com sufixo direcional oposto
+- Estados suportados: idle, walk (4 frames), punch (3), jump (1), defend (1), throw (1) — cada um com `_right`/`_left`
+
+**Renderização (Game):**
+- Level → sprites dos inimigos → sprite do player → health bars → HUD
+- `FrameConfig` carregado no construtor do Game e injetado nas entidades
+- Player começa em `idle_right`, posição (100, GROUND_Y)
+
+**Input de gameplay (Playing state):**
+- Left/Right → move + walk animation
+- Space/Up → jump (só se on ground)
+- Z → punch + dano no inimigo mais próximo
+- X → throw + dano + usa ammo
+- C → defend (isDefending=true)
+- Soltar tudo → idle
+
+**Física:**
+- `applyGravity(dt)` → `velocityY += GRAVITY * dt`, clampa em `GROUND_Y`
+- `moveLeft/Right(dt)` → `WALK_SPEED * dt` (200 px/s)
+- Colisão com chão: `m_position.y >= GROUND_Y` → `velocityY = 0`
+- Dano por proximidade: `|dx| < 60 && |dy| < 60` → `touchPlayer()`
+
+**Frames do Player (dados reais do Inkscape):**
+12 estados em `assets/config/frames.json`, com coordenadas medidas:
+- idle/walk/punch/jump/defend/throw × right/left
+- Walk: 4 frames (w: 61, 73, 74, 77)
+- Punch: 3 frames (w: 61, 69, 74)
+- Jump/Defend/Throw: 1 frame cada
 
 ## 8. Fluxo de Comunicação
 
@@ -282,4 +325,5 @@ Esqueletos em `src/gameplay/` (sem state machines — apenas componentes + posi�
 | 1.1 | 2026-06-19 | Refatoração arquitetural: remoção de SFML do Core, tipos próprios, ITextureLoader, PhysicsConstants, SfmlConversions, fonte PressStart2P.ttf, 11 testes passando |
 | 2 | 2026-06-19 | AssetManager, SfmlTextureLoader, SfmlSprite, SfmlText, Level, menu com background + corações, TD-01 resolvido, 16/16 testes |
 | 2.5 | 2026-06-20 | FrameConfig com JSON (nlohmann/json), suporte a frames de largura variável, animações para player/capivara/professor, 29/29 testes |
-| 3 | 2026-06-20 | HealthComponent, LivesComponent, AmmoComponent, DamageConfig com AttackType/EntityType, UI bars (HealthBar, LivesDisplay, AmmoDisplay), entidades esqueleto (Player, Capivara, Professor), integração no Game, testes unitários |
+| 3 | 2026-06-20 | HealthComponent, LivesComponent, AmmoComponent, DamageConfig com AttackType/EntityType, UI bars (HealthBar, LivesDisplay, AmmoDisplay), entidades esqueleto (Player, Capivara, Professor), integração no Game, 68/68 testes |
+| 4 | 2026-06-20 | Animation & Rendering System: frames reais do Player (12 estados direcionais), Direction enum, sistema de animação (setAnimation, updateAnimation, buildAnimName), sprites nas 3 entidades, input de gameplay, física (gravidade/pulo/movimento), dano por proximidade, 78/78 testes |

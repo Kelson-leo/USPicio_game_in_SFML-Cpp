@@ -5,6 +5,7 @@
 #include "core/DamageConfig.h"
 #include "infrastructure/SfmlSprite.h"
 #include "infrastructure/SfmlText.h"
+#include "infrastructure/FrameConfig.h"
 #include "infrastructure/HealthBar.h"
 #include "infrastructure/LivesDisplay.h"
 #include "infrastructure/AmmoDisplay.h"
@@ -49,8 +50,9 @@ private:
     State m_state   = State::Menu;
     bool  m_running = true;
 
-    // ── Damage config ─────────────────────────────────────────────
-    core::DamageConfig m_damageCfg;
+    // ── Config ────────────────────────────────────────────────────
+    core::DamageConfig           m_damageCfg;
+    infrastructure::FrameConfig  m_frameConfig;
 
     // ── Level ─────────────────────────────────────────────────────
     std::unique_ptr<Level> m_currentLevel;

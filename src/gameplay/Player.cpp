@@ -1,11 +1,99 @@
 #include "gameplay/Player.h"
+#include <algorithm>
 
 namespace gameplay {
 
-Player::Player()
-    : m_position{100.0f, core::GROUND_Y} {
-    // Default health/lives/ammo from components
+Player::Player(const sf::Texture& texture,
+               infrastructure::FrameConfig& frameConfig)
+    : m_sprite(texture)
+    , m_frameConfig(frameConfig)
+    , m_position{100.0f, core::GROUND_Y} {
+    setAnimation("idle");
 }
+
+// ────────────────────────────────────────────────────────────────────
+// Animation
+// ────────────────────────────────────────────────────────────────────
+
+std::string Player::buildAnimName(const std::string& action) const {
+    return action + "_"
+        + (m_direction == core::Direction::Right ? "right" : "left");
+}
+
+void Player::setAnimation(const std::string& action) {
+    const std::string fullName = buildAnimName(action);
+
+    auto count = m_frameConfig.frameCount("player", fullName);
+    if (count == 0) return;  // fallback: keep current animation
+
+    m_currentAnim = fullName;
+    m_frameIndex  = 0;
+    m_frameTimer  = 0.0f;
+
+    auto rect = m_frameConfig.getFrame("player", m_currentAnim, 0);
+    m_sprite.setTextureRect(sf::IntRect({rect.left, rect.top},
+                                        {rect.width, rect.height}));
+}
+
+void Player::updateAnimation(float dt) {
+    if (m_currentAnim.empty()) return;
+
+    m_frameTimer += dt;
+    if (m_frameTimer < FRAME_DURATION) return;
+    m_frameTimer = 0.0f;
+
+    auto count = m_frameConfig.frameCount("player", m_currentAnim);
+    if (count == 0) return;
+
+    // Advance frame; loop for walk, stop at last for others
+    ++m_frameIndex;
+    if (m_frameIndex >= count) {
+        // Actions that loop: walk
+        if (m_currentAnim.find("walk") != std::string::npos) {
+            m_frameIndex = 0;
+        } else {
+            m_frameIndex = count - 1;  // stay on last frame
+        }
+    }
+
+    auto rect = m_frameConfig.getFrame("player", m_currentAnim, m_frameIndex);
+    m_sprite.setTextureRect(sf::IntRect({rect.left, rect.top},
+                                        {rect.width, rect.height}));
+}
+
+// ────────────────────────────────────────────────────────────────────
+// Draw
+// ────────────────────────────────────────────────────────────────────
+
+void Player::draw(core::IRenderer& renderer) const {
+    if (m_currentAnim.empty()) return;
+    m_sprite.draw(renderer);
+}
+
+// ────────────────────────────────────────────────────────────────────
+// Direction
+// ────────────────────────────────────────────────────────────────────
+
+core::Direction Player::getDirection() const {
+    return m_direction;
+}
+
+void Player::setDirection(core::Direction dir) {
+    if (m_direction == dir) return;
+    m_direction = dir;
+
+    // Re-apply current action with new direction
+    // Extract action from current anim name (e.g. "idle_right" → "idle")
+    auto pos = m_currentAnim.rfind('_');
+    if (pos != std::string::npos) {
+        std::string action = m_currentAnim.substr(0, pos);
+        setAnimation(action);
+    }
+}
+
+// ────────────────────────────────────────────────────────────────────
+// Offense
+// ────────────────────────────────────────────────────────────────────
 
 void Player::punch(core::HealthComponent& enemyHealth,
                    core::EntityType enemyType,
@@ -24,6 +112,10 @@ void Player::throwCaneta(core::HealthComponent& enemyHealth,
     enemyHealth.takeDamage(dmg);
 }
 
+// ────────────────────────────────────────────────────────────────────
+// Defense
+// ────────────────────────────────────────────────────────────────────
+
 void Player::defend(bool active) {
     m_isDefending = active;
 }
@@ -31,6 +123,10 @@ void Player::defend(bool active) {
 bool Player::isDefending() const {
     return m_isDefending;
 }
+
+// ────────────────────────────────────────────────────────────────────
+// Damage
+// ────────────────────────────────────────────────────────────────────
 
 void Player::takeHit(core::AttackType attack,
                      const core::DamageConfig& cfg) {
@@ -50,12 +146,46 @@ bool Player::revive() {
     return true;
 }
 
+// ────────────────────────────────────────────────────────────────────
+// Movement
+// ────────────────────────────────────────────────────────────────────
+
+void Player::moveLeft(float dt) {
+    m_position.x -= WALK_SPEED * dt;
+    m_sprite.setPosition(m_position.x, m_position.y);
+}
+
+void Player::moveRight(float dt) {
+    m_position.x += WALK_SPEED * dt;
+    m_sprite.setPosition(m_position.x, m_position.y);
+}
+
+void Player::applyGravity(float dt) {
+    velocityY += core::GRAVITY * dt;
+    m_position.y += velocityY * dt;
+
+    if (m_position.y >= core::GROUND_Y) {
+        m_position.y = core::GROUND_Y;
+        velocityY = 0.0f;
+    }
+    m_sprite.setPosition(m_position.x, m_position.y);
+}
+
+bool Player::isOnGround() const {
+    return m_position.y >= core::GROUND_Y;
+}
+
+// ────────────────────────────────────────────────────────────────────
+// Position
+// ────────────────────────────────────────────────────────────────────
+
 sf::Vector2f Player::getPosition() const {
     return m_position;
 }
 
 void Player::setPosition(sf::Vector2f pos) {
     m_position = pos;
+    m_sprite.setPosition(pos.x, pos.y);
 }
 
 } // namespace gameplay

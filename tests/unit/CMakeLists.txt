@@ -8,6 +8,7 @@ add_executable(unit_tests
     test_ammo_component.cpp
     test_damage_config.cpp
     test_ui_components.cpp
+    test_animation.cpp
 )
 
 target_link_libraries(unit_tests PRIVATE
