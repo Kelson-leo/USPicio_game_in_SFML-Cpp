@@ -36,10 +36,15 @@ Game::Game(core::IRenderer& renderer, core::IInputHandler& input)
     m_titleText.setStyle(sf::Text::Bold);
 
     // ── Heart sprites (5, top-left, visual only) ─────────────────
+    // Native heart texture is 500×500; scale down to ~20px.
+    // 20 / 500 = 0.04  → fits 5 hearts comfortably at 800×600.
+    constexpr float HEART_SCALE = 20.0f / 500.0f;   // 0.04  → 20 px
+    constexpr float HEART_STEP  = 30.0f;             // 10 px gap
     const auto& heartTex = assets.getTexture("heart");
     for (int i = 0; i < 5; ++i) {
         auto& h = m_hearts.emplace_back(heartTex);
-        h.setPosition(10.0f + i * 36.0f, 10.0f);
+        h.setScale(HEART_SCALE, HEART_SCALE);
+        h.setPosition(10.0f + i * HEART_STEP, 10.0f);
     }
 }
 

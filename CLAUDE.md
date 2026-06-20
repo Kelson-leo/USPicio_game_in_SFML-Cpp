@@ -108,6 +108,22 @@ Definidas em `src/core/PhysicsConstants.h` (resolução de referência: 1080p):
 | `GRAVITY` | 800.0f | pixels/s² |
 | `JUMP_SPEED` | -400.0f | pixels/s (negativo = para cima) |
 
+### UI Asset Scaling (Sprint 2)
+
+Assets de UI têm tamanhos nativos variados e precisam de escala para manter proporção:
+
+| Asset | Dimensão nativa | Escala | Tamanho final |
+|---|---|---|---|
+| `heart.png` | 500×500 | 0.04 (20/500) | ~20×20 px |
+| `caneta.png` | 500×500 | A definir | A definir (Sprint de projéteis) |
+| `livro.png` | 500×500 | A definir | A definir (Sprint de projéteis) |
+
+Espaçamento entre corações: 42px (10px de gap). Constantes definidas em `Game.cpp`:
+```cpp
+constexpr float HEART_SCALE = 20.0f / 500.0f;   // 0.04 → 20px
+constexpr float HEART_STEP  = 30.0f;             // 10px gap
+```
+
 ## 6. Nomenclatura de Assets
 
 ```

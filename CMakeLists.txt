@@ -47,6 +47,14 @@ add_executable(UspicioGame src/main.cpp)
 
 target_link_libraries(UspicioGame PRIVATE UspicioLib)
 
+# Copy assets to build directory so the executable finds them
+# regardless of the working directory at runtime.
+add_custom_command(TARGET UspicioGame POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+    ${CMAKE_SOURCE_DIR}/assets
+    $<TARGET_FILE_DIR:UspicioGame>/assets
+)
+
 # Assets directory relative to executable
 target_compile_definitions(UspicioGame PRIVATE
     ASSETS_DIR="${CMAKE_SOURCE_DIR}/assets/"
