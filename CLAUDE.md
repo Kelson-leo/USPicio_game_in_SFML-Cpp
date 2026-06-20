@@ -90,7 +90,7 @@ Para garantir que `src/core/` não inclua SFML, foram criados tipos próprios no
 | `Vector2f` | `IRenderer.h` | `{x,y}` float |
 | `Vector2u` | `IRenderer.h` | `{x,y}` unsigned int |
 | `FloatRect` | `IRenderer.h` | `{left,top,width,height}` float |
-| `Drawable` | `IRenderer.h` | Interface abstrata: `void draw(IRenderer&) const` |
+| `Drawable` | `Drawable.h` | Interface abstrata: `void draw(IRenderer&) const` |
 | `KeyCode` | `IInputHandler.h` | Enum: A-Z, Space, Enter, Escape, Left, Right, Up, Down |
 | `EventType` | `IInputHandler.h` | Enum: Closed, KeyPressed, KeyReleased |
 | `Event` | `IInputHandler.h` | `{EventType type; KeyCode key;}` |
@@ -153,9 +153,27 @@ cmake --build build
 cd build && ctest
 ```
 
-### Commit
-- Padrão: `[Sprint N] - Descrição clara em inglês`
-- Exemplo: `[Sprint 1] - Add fixed timestep game loop and menu placeholder`
+### AssetManager (Sprint 2)
+
+Singleton (`infrastructure::AssetManager::instance()`) que centraliza o carregamento de texturas:
+- Armazena `std::unordered_map<std::string, std::unique_ptr<SfmlTextureLoader>>`
+- `loadTexture(id, path)` → carrega do disco ou cria placeholder magenta 32x32 (fallback) e loga aviso
+- `getTexture(id)` → retorna `const sf::Texture&`; IDs nunca carregados recebem fallback global
+- `SfmlTextureLoader` implementa `core::ITextureLoader` internamente
+- IDs oficiais: `background_fase1`, `background_fase2`, `background_fase3`, `tile_grama`, `tile_madeira`, `player`, `capivara`, `professor`, `caneta`, `livro`, `heart`
+
+### Level System (Sprint 2)
+
+`gameplay::Level(int phaseNumber)` carrega background e tile pelo AssetManager.
+- `draw(IRenderer&)` → estica background para preencher a janela, desenha tile do chão em Y=GROUND_Y com altura GROUND_HEIGHT
+- `getGroundY()` → retorna `core::GROUND_Y`
+
+### SfmlSprite / SfmlText (Sprint 2)
+
+Adapters que implementam `core::Drawable` encapsulando `sf::Sprite` e `sf::Text`.
+- `SfmlSprite::draw(IRenderer&)` → `dynamic_cast<SfmlRenderer&>(r).drawSfml(m_sprite)` — o cast fica contido em infrastructure/
+- `SfmlText` — análogo para texto
+- **Resolve TD-01**: Game agora usa `core::Drawable` sem `dynamic_cast` direto
 
 ## 8. Fluxo de Comunicação
 
@@ -170,8 +188,8 @@ cd build && ctest
 
 | ID | Descrição | Impacto | Resolução planejada |
 |---|---|---|---|
-| TD-01 | `Game::render()` faz `dynamic_cast<SfmlRenderer&>` para desenhar `sf::Drawable` direto | `gameplay/` acoplado a `infrastructure/` | Sprint 2: criar game-objects que implementam `core::Drawable` |
-| TD-02 | `SfmlInput` armazena `sf::RenderWindow&` (não usa porta `IRenderer`) | Acoplamento direto ao SFML no adapter de input | Revisar na Sprint 2 junto com TD-01 |
+| TD-01 | ~~`Game::render()` faz `dynamic_cast<SfmlRenderer&>`~~ | — | **Resolvido Sprint 2:** `SfmlSprite`/`SfmlText` implementam `core::Drawable`; cast fica em infrastructure/ |
+| TD-02 | `SfmlInput` armazena `sf::RenderWindow&` (não usa porta `IRenderer`) | Acoplamento direto ao SFML no adapter de input | Sprint 3 |
 
 ---
 
@@ -181,3 +199,4 @@ cd build && ctest
 |---|---|---|
 | 0 | 2026-06-19 | Setup inicial: CMake, estrutura de diretórios, ports, adapters, Game loop, menu placeholder |
 | 1.1 | 2026-06-19 | Refatoração arquitetural: remoção de SFML do Core, tipos próprios, ITextureLoader, PhysicsConstants, SfmlConversions, fonte PressStart2P.ttf, 11 testes passando |
+| 2 | 2026-06-19 | AssetManager, SfmlTextureLoader, SfmlSprite, SfmlText, Level system, menu com background + corações, TD-01 resolvido, 16/16 testes |

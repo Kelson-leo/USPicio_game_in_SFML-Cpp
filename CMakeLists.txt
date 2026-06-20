@@ -21,8 +21,13 @@ FetchContent_MakeAvailable(googletest)
 # ── Library (game engine, shared between exe and tests) ───────────────
 set(LIB_SOURCES
     src/gameplay/Game.cpp
+    src/gameplay/Level.cpp
+    src/infrastructure/AssetManager.cpp
     src/infrastructure/SfmlRenderer.cpp
     src/infrastructure/SfmlInput.cpp
+    src/infrastructure/SfmlSprite.cpp
+    src/infrastructure/SfmlText.cpp
+    src/infrastructure/SfmlTextureLoader.cpp
 )
 
 add_library(UspicioLib STATIC ${LIB_SOURCES})

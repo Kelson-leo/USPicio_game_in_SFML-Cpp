@@ -1,5 +1,6 @@
 #pragma once
 
+#include "core/Drawable.h"
 #include <cstdint>
 #include <string>
 
@@ -36,17 +37,6 @@ struct FloatRect {
     float top    = 0.0f;
     float width  = 0.0f;
     float height = 0.0f;
-};
-
-// ── Abstract drawable ─────────────────────────────────────────────
-
-class IRenderer; // fwd
-
-class Drawable {
-public:
-    virtual ~Drawable() = default;
-    /// Called by the renderer to draw this object.
-    virtual void draw(IRenderer& renderer) const = 0;
 };
 
 // ── Renderer port ─────────────────────────────────────────────────

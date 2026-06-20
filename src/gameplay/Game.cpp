@@ -1,32 +1,46 @@
 #include "Game.h"
-#include "infrastructure/SfmlRenderer.h"  // temporary: see render()
+#include "Level.h"
+#include "infrastructure/AssetManager.h"
 #include <iostream>
 
 namespace gameplay {
+
+Game::~Game() = default;
 
 // ────────────────────────────────────────────────────────────────────
 Game::Game(core::IRenderer& renderer, core::IInputHandler& input)
     : m_renderer(renderer)
     , m_input(input) {
-    // ── Load font from assets/ ────────────────────────────────────
+
+    // ── Font ─────────────────────────────────────────────────────
     if (!m_font.loadFromFile("assets/fonts/PressStart2P.ttf")) {
-        std::cerr << "[Game] WARNING: Could not load "
-                     "assets/fonts/PressStart2P.ttf. "
+        std::cerr << "[Game] WARNING: Could not load font. "
                      "Text will not render.\n";
     }
 
-    // ── Menu background ──────────────────────────────────────────
-    m_menuBg.setSize({400.0f, 150.0f});
-    m_menuBg.setFillColor(sf::Color(20, 20, 60));
-    m_menuBg.setOutlineColor(sf::Color::White);
-    m_menuBg.setOutlineThickness(2.0f);
+    // ── Preload menu / common assets ─────────────────────────────
+    auto& assets = infrastructure::AssetManager::instance();
+    assets.loadTexture("background_fase1",
+                       "assets/backgrounds/fase1_patio.png");
+    assets.loadTexture("heart",
+                       "assets/ui/heart.png");
 
-    // ── Menu text ────────────────────────────────────────────────
-    m_menuText.setFont(m_font);
-    m_menuText.setString("USPICIO");
-    m_menuText.setCharacterSize(64);
-    m_menuText.setFillColor(sf::Color::White);
-    m_menuText.setStyle(sf::Text::Bold);
+    // ── Menu background (stretch to fill window) ─────────────────
+    m_menuBg.setTexture(assets.getTexture("background_fase1"), true);
+
+    // ── Title text ───────────────────────────────────────────────
+    m_titleText.setFont(m_font);
+    m_titleText.setString("USPICIO");
+    m_titleText.setCharacterSize(48);
+    m_titleText.setFillColor(sf::Color::White);
+    m_titleText.setStyle(sf::Text::Bold);
+
+    // ── Heart sprites (5, top-left, visual only) ─────────────────
+    const auto& heartTex = assets.getTexture("heart");
+    for (int i = 0; i < 5; ++i) {
+        auto& h = m_hearts.emplace_back(heartTex);
+        h.setPosition(10.0f + i * 36.0f, 10.0f);
+    }
 }
 
 // ────────────────────────────────────────────────────────────────────
@@ -40,7 +54,6 @@ void Game::run() {
 
         processInput();
 
-        // Fixed-timestep updates
         while (accumulator >= FIXED_DT) {
             update(FIXED_DT);
             accumulator -= FIXED_DT;
@@ -61,16 +74,15 @@ void Game::processInput() {
         }
 
         if (event.type == core::EventType::KeyPressed) {
-            // Global: ESC always quits
             if (event.key == core::KeyCode::Escape) {
                 m_running = false;
                 m_renderer.close();
                 return;
             }
 
-            // Menu input
             if (m_state == State::Menu) {
                 if (event.key == core::KeyCode::Enter) {
+                    loadLevel(1);
                     setState(State::Playing);
                 }
             }
@@ -80,7 +92,6 @@ void Game::processInput() {
 
 // ────────────────────────────────────────────────────────────────────
 void Game::update(float /*deltaTime*/) {
-    // Reserved for game-object updates (physics, AI, etc.).
 }
 
 // ────────────────────────────────────────────────────────────────────
@@ -88,29 +99,36 @@ void Game::render() {
     m_renderer.clear(core::Color{10, 10, 30});
 
     if (m_state == State::Menu) {
+        // ── Background ───────────────────────────────────────────
         const auto wSz = m_renderer.getSize();
+        const auto* bgTex = m_menuBg.getSfmlSprite().getTexture();
+        if (bgTex && bgTex->getSize().x > 0) {
+            m_menuBg.setScale(
+                static_cast<float>(wSz.x) / bgTex->getSize().x,
+                static_cast<float>(wSz.y) / bgTex->getSize().y);
+        }
+        m_menuBg.setPosition(0.0f, 0.0f);
+        m_renderer.draw(m_menuBg);
 
-        m_menuBg.setPosition({
-            (static_cast<float>(wSz.x) - m_menuBg.getSize().x) / 2.0f,
-            (static_cast<float>(wSz.y) - m_menuBg.getSize().y) / 2.0f
-        });
+        // ── Title ────────────────────────────────────────────────
+        const auto bounds = m_titleText.getLocalBounds();
+        m_titleText.setOrigin(bounds.left + bounds.width  / 2.0f,
+                              bounds.top  + bounds.height / 2.0f);
+        m_titleText.setPosition(wSz.x / 2.0f, wSz.y / 2.0f);
+        m_renderer.draw(m_titleText);
 
-        const sf::FloatRect textBounds = m_menuText.getLocalBounds();
-        m_menuText.setOrigin(
-            textBounds.left + textBounds.width  / 2.0f,
-            textBounds.top  + textBounds.height / 2.0f
-        );
-        m_menuText.setPosition({
-            static_cast<float>(wSz.x) / 2.0f,
-            static_cast<float>(wSz.y) / 2.0f
-        });
-
-        // Temporary coupling: cast to SfmlRenderer to draw SFML
-        // objects directly. Will be replaced when game objects
-        // implement core::Drawable in later sprints.
-        auto& sfmlR = dynamic_cast<infrastructure::SfmlRenderer&>(m_renderer);
-        sfmlR.drawSfml(m_menuBg);
-        sfmlR.drawSfml(m_menuText);
+        // ── Hearts ───────────────────────────────────────────────
+        for (auto& h : m_hearts) {
+            m_renderer.draw(h);
+        }
+    } else if (m_state == State::Playing) {
+        if (m_currentLevel) {
+            m_currentLevel->draw(m_renderer);
+        }
+        // Hearts also visible during gameplay
+        for (auto& h : m_hearts) {
+            m_renderer.draw(h);
+        }
     }
 
     m_renderer.display();
@@ -119,6 +137,10 @@ void Game::render() {
 // ────────────────────────────────────────────────────────────────────
 void Game::setState(State newState) {
     m_state = newState;
+}
+
+void Game::loadLevel(int phaseNumber) {
+    m_currentLevel = std::make_unique<Level>(phaseNumber);
 }
 
 } // namespace gameplay
