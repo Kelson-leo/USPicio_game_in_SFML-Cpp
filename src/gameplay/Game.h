@@ -39,16 +39,33 @@ private:
 
     // ── State ─────────────────────────────────────────────────────
     enum class State { Menu, Playing, Paused };
+    enum class MenuPage { Main, Info };
     void setState(State newState);
 
     void loadLevel(int phaseNumber);
+    void restartGame();
+    void restartPhase();
+
+    // ── Menu helpers ──────────────────────────────────────────────
+    void handleMenuInput(const core::Event& event);
+    void handleInfoInput(const core::Event& event);
+    void handlePauseInput(const core::Event& event);
+    void renderMenu();
+    void renderInfo();
+    void renderPauseMenu();
+    void updateMenuTextColors();
 
     // ── Dependencies ──────────────────────────────────────────────
-    core::IRenderer&     m_renderer;
+    core::IRenderer&      m_renderer;
     core::IInputHandler&  m_input;
 
-    State m_state   = State::Menu;
-    bool  m_running = true;
+    State    m_state    = State::Menu;
+    MenuPage m_menuPage = MenuPage::Main;
+    bool     m_running  = true;
+
+    int m_menuSelection  = 0;  // 0=Start, 1=Restart, 2=Info
+    int m_infoSelection  = 0;  // 0=Back
+    int m_pauseSelection = 0;  // 0=Resume, 1=Restart, 2=Quit to Menu
 
     // ── Config ────────────────────────────────────────────────────
     core::DamageConfig           m_damageCfg;
@@ -56,12 +73,28 @@ private:
 
     // ── Level ─────────────────────────────────────────────────────
     std::unique_ptr<Level> m_currentLevel;
+    int m_currentPhase = 1;
 
     // ── Menu UI ───────────────────────────────────────────────────
-    sf::Font               m_font;
-    infrastructure::SfmlText     m_titleText;
-    infrastructure::SfmlSprite   m_menuBg;
+    sf::Font    m_font;
+    infrastructure::SfmlText m_titleText;
+    infrastructure::SfmlSprite m_menuBg;
     std::vector<infrastructure::SfmlSprite> m_menuHearts;
+    sf::RectangleShape m_menuOverlay;
+
+    std::vector<infrastructure::SfmlText> m_menuItems; // "Start", "Restart", "Info"
+
+    // ── Info screen UI ────────────────────────────────────────────
+    sf::RectangleShape m_infoOverlay;
+    infrastructure::SfmlText m_infoTitle;
+    infrastructure::SfmlText m_infoDev;
+    infrastructure::SfmlText m_infoCopyright;
+    infrastructure::SfmlText m_infoControls;
+    infrastructure::SfmlText m_infoBack;
+
+    // ── Pause menu UI ─────────────────────────────────────────────
+    sf::RectangleShape m_pauseOverlay;
+    std::vector<infrastructure::SfmlText> m_pauseItems; // "Resume", "Restart", "Quit to Menu"
 
     // ── Entities (created per level) ──────────────────────────────
     std::unique_ptr<Player>    m_player;

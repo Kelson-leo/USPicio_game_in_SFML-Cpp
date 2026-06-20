@@ -57,15 +57,10 @@ void Level::draw(core::IRenderer& renderer) {
     m_background.setPosition(0.0f, 0.0f);
     renderer.draw(m_background);
 
-    // ── Ground tile: stretch to cover screen width ───────────────
-    const auto* gtTex = m_groundTile.getSfmlSprite().getTexture();
-    if (gtTex && gtTex->getSize().x > 0) {
-        m_groundTile.setScale(
-            static_cast<float>(winSize.x) / gtTex->getSize().x,
-            core::GROUND_HEIGHT / gtTex->getSize().y);
-    }
-    m_groundTile.setPosition(0.0f, core::GROUND_Y);
-    renderer.draw(m_groundTile);
+    // ── Ground tile: temporarily disabled (background has its own floor) ─
+    // m_groundTile.setScale(...)
+    // m_groundTile.setPosition(0.0f, core::GROUND_Y);
+    // renderer.draw(m_groundTile);
 }
 
 float Level::getGroundY() const {

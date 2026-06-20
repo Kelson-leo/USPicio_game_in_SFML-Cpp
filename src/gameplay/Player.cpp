@@ -7,7 +7,8 @@ Player::Player(const sf::Texture& texture,
                infrastructure::FrameConfig& frameConfig)
     : m_sprite(texture)
     , m_frameConfig(frameConfig)
-    , m_position{100.0f, core::GROUND_Y - 95.0f} {
+    , m_position{100.0f, core::GROUND_Y - PLAYER_HEIGHT} {
+    m_sprite.setScale(PLAYER_SCALE, PLAYER_SCALE);
     setAnimation("idle");
 }
 
@@ -22,6 +23,9 @@ std::string Player::buildAnimName(const std::string& action) const {
 
 void Player::setAnimation(const std::string& action) {
     const std::string fullName = buildAnimName(action);
+
+    // Idempotent: don't reset if already playing this animation
+    if (fullName == m_currentAnim) return;
 
     auto count = m_frameConfig.frameCount("player", fullName);
     if (count == 0) return;  // fallback: keep current animation
@@ -48,17 +52,26 @@ void Player::updateAnimation(float dt) {
     // Advance frame; loop for walk, stop at last for others
     ++m_frameIndex;
     if (m_frameIndex >= count) {
-        // Actions that loop: walk
         if (m_currentAnim.find("walk") != std::string::npos) {
-            m_frameIndex = 0;
+            m_frameIndex = 0;  // loop walk
+        } else if (m_currentAnim.find("punch") != std::string::npos ||
+                   m_currentAnim.find("throw") != std::string::npos) {
+            // Attack animations: play once, then return to idle
+            setAnimation("idle");
+            return;
         } else {
-            m_frameIndex = count - 1;  // stay on last frame
+            m_frameIndex = count - 1;  // stay on last frame (jump, defend)
         }
     }
 
     auto rect = m_frameConfig.getFrame("player", m_currentAnim, m_frameIndex);
     m_sprite.setTextureRect(sf::IntRect({rect.left, rect.top},
                                         {rect.width, rect.height}));
+}
+
+bool Player::isAttacking() const {
+    return m_currentAnim.find("punch") != std::string::npos ||
+           m_currentAnim.find("throw") != std::string::npos;
 }
 
 // ────────────────────────────────────────────────────────────────────
@@ -142,7 +155,7 @@ bool Player::revive() {
     if (lives.isGameOver()) return false;
 
     health.currentHP = health.maxHP;
-    m_position = {100.0f, core::GROUND_Y};
+    m_position = {100.0f, core::GROUND_Y - PLAYER_HEIGHT};
     return true;
 }
 
@@ -164,15 +177,17 @@ void Player::applyGravity(float dt) {
     velocityY += core::GRAVITY * dt;
     m_position.y += velocityY * dt;
 
-    if (m_position.y >= core::GROUND_Y) {
-        m_position.y = core::GROUND_Y;
+    // Feet (bottom of sprite) at GROUND_Y
+    float feetY = m_position.y + PLAYER_HEIGHT;
+    if (feetY >= core::GROUND_Y) {
+        m_position.y = core::GROUND_Y - PLAYER_HEIGHT;
         velocityY = 0.0f;
     }
     m_sprite.setPosition(m_position.x, m_position.y);
 }
 
 bool Player::isOnGround() const {
-    return m_position.y >= core::GROUND_Y;
+    return (m_position.y + PLAYER_HEIGHT) >= core::GROUND_Y;
 }
 
 // ────────────────────────────────────────────────────────────────────

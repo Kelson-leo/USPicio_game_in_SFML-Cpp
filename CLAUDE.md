@@ -162,6 +162,42 @@ assets/
 - Cobertura obrigatória para toda regra de negócio.
 - Mock/Stub quando necessário para isolar dependências externas (SFML).
 
+### Keyboard Controls
+
+| Key | Action | Context |
+|---|---|---|
+| `Arrow Keys` | Move left/right | Gameplay |
+| `Space` / `Up` | Jump | Gameplay (on ground) |
+| `Z` | Punch | Gameplay |
+| `X` | Throw Pen (costs 1 ammo) | Gameplay |
+| `C` | Defend (halves incoming damage) | Gameplay (hold) |
+| `Enter` | Select menu option / Start game | Menu |
+| `Up` / `Down` | Navigate menu options | Menu |
+| `Escape` | Pause (during gameplay) / Back (Info) / Exit (Main menu) | Gameplay / Info / Menu |
+
+### Menu (Sprint 5)
+
+Three menu options navigable with Up/Down/Enter:
+- **Start** — Loads Phase 1 and starts gameplay
+- **Restart** — Resets all state (HP, lives, ammo, position, enemies) and reloads Phase 1
+- **Info** — Shows developer info, copyright, and keyboard controls overlay
+
+### Info Screen (Sprint 5)
+
+- Full overlay (800×600, dark) hides menu items behind
+- Developer name, copyright (c) 2026 Kelson
+- Controls list with double-line spacing
+- "Back" option selectable with Enter (or Esc)
+
+### Pause Menu (Sprint 5)
+
+Pressionar `ESC` durante o jogo abre o menu de pausa sobreposto ao jogo congelado:
+- **Resume** — Volta ao jogo (ESC também funciona)
+- **Restart** — Reinicia a fase atual, resetando inimigos e posição do player (mantém vidas e munição)
+- **Quit to Menu** — Sai para o menu principal, resetando todo o progresso
+
+Navegação: Up/Down para selecionar, Enter para confirmar.
+
 ### Build
 ```bash
 cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug
@@ -298,6 +334,8 @@ Entidades em `src/gameplay/` implementam `core::Drawable` para renderização:
 - Walk: 4 frames (w: 61, 73, 74, 77)
 - Punch: 3 frames (w: 61, 69, 74)
 - Jump/Defend/Throw: 1 frame cada
+- **Player scale:** 1.5× (`Player::PLAYER_SCALE`) aplicada no construtor via `m_sprite.setScale()`
+- Jump/Defend/Throw: 1 frame cada
 
 ## 8. Fluxo de Comunicação
 
@@ -327,3 +365,4 @@ Entidades em `src/gameplay/` implementam `core::Drawable` para renderização:
 | 2.5 | 2026-06-20 | FrameConfig com JSON (nlohmann/json), suporte a frames de largura variável, animações para player/capivara/professor, 29/29 testes |
 | 3 | 2026-06-20 | HealthComponent, LivesComponent, AmmoComponent, DamageConfig com AttackType/EntityType, UI bars (HealthBar, LivesDisplay, AmmoDisplay), entidades esqueleto (Player, Capivara, Professor), integração no Game, 68/68 testes |
 | 4 | 2026-06-20 | Animation & Rendering System: frames reais do Player (12 estados direcionais), Direction enum, sistema de animação (setAnimation, updateAnimation, buildAnimName), sprites nas 3 entidades, input de gameplay, física (gravidade/pulo/movimento), dano por proximidade, 78/78 testes |
+| 5 | 2026-06-20 | Menu system (Start/Restart/Info with Up/Down/Enter navigation), Info screen (developer, copyright, controls overlay), Player scale 1.5x, keyboard controls documented, Restart fully resets game state |
