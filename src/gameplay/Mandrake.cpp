@@ -12,7 +12,7 @@ Mandrake::Mandrake(const sf::Texture& texture, infrastructure::FrameConfig& fram
     m_useIdleV2 = (std::rand() % 100) < static_cast<int>(IDLE_V2_CHANCE * 100);
     {
         auto idleAnim = m_useIdleV2 ? "idle_right_v2" : "idle_right";
-        setAnim(idleAnim, 0.12f, true);
+        setAnim(idleAnim, IDLE_FRAME_DURATION, true);
     }
 }
 
@@ -54,11 +54,16 @@ void Mandrake::updateAnimation(float dt) {
                 if (m_loop) {
                     m_frameIndex = 0;  // loop back
                 } else {
-                    // Attack finished — return to idle (v1 or v2)
+                    // Attack finished — return to idle
+                    // Re-roll idle version after ranged attack, keep after melee
+                    if (m_animState == AnimState::RangedAttack) {
+                        m_useIdleV2 = (std::rand() % 100)
+                            < static_cast<int>(IDLE_V2_CHANCE * 100);
+                    }
                     m_animState = AnimState::Idle;
                     {
                         auto idleAnim = m_useIdleV2 ? "idle_right_v2" : "idle_right";
-                        setAnim(idleAnim, 0.12f, true);
+                        setAnim(idleAnim, IDLE_FRAME_DURATION, true);
                     }
                     return;
                 }

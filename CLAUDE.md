@@ -87,7 +87,7 @@ Hierarquia: classe base `Boss` → subclasses `Professor`, `Rato`, `Mandrake`, `
 - `performMeleeAttack(Player&)` virtual → Mandrake e Peru sobrescrevem.
 - `getHeight()` virtual → Rato sobrescreve (97.5px); demais usam BOSS_HEIGHT (80px).
 - **Rato:** Idle (1 frame) + Attack (5 frames, toca uma vez ao disparar). 345×390 native, escala 0.35 → ~121×136.
-- **Mandrake:** Idle v1 (1 frame) ou v2 (2 frames em loop, 50% chance). Ranged: 5 frames (toca uma vez). Melee: 2 frames (toca uma vez). 154-286×318 native, escala 0.3 → ~46-86×95.
+- **Mandrake:** Idle v1 (1 frame) ou v2 (2 frames em loop, 50% chance, 0.3s/frame). Re-sorteia idle após ranged. Ranged: 5 frames. Melee: 2 frames. 154-286×318 native, escala 0.5 → ~77-143×159.
 - Fábrica em `Game::loadLevel()` por `chefao_tipo`.
 
 ### Progressão (Sprint 8)
@@ -344,8 +344,8 @@ Baú interativo exclusivo da Fase 5 (Sanfran). Restaura vidas e munição ao ser
 - **Bônus:** `HEAL_PERCENT = 0.8f` (80%) das vidas e munição perdidas, arredondado com `std::ceil`
   - Ex: perdeu 2 vidas → `ceil(2 * 0.8) = 2` restauradas
   - Ex: perdeu 1 vida → `ceil(1 * 0.8) = 1` restaurada
-- **Frames:** `assets/config/frames.json` → `"chest"` → `"closed"` (0,0,80,80) e `"open"` (80,0,80,80) [placeholder]
-- **Textura:** `assets/sprites/chest/chest_sheet.png` (placeholder, coordenadas reais pendentes do PO)
+- **Frames:** `"closed"` (86,124,267×223), `"open"` (422,102,265×267) — escala 0.3 → ~80×67 (fechado) / ~80×80 (aberto)
+- **Textura:** `assets/sprites/chest/chest_sheet.png`
 - **Colisão:** Bounding-box (`CHEST_WIDTH=80, CHEST_HEIGHT=80`) vs Player bounds
 - **Integração:** `m_chest` (unique_ptr) em Game, criado em `loadLevel()` se `m_currentPhase == 4`
 

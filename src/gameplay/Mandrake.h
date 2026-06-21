@@ -18,11 +18,12 @@ public:
                          const Player& player) override;
     void performMeleeAttack(Player& player) override;
 
-    float getHeight() const override { return FRAME_H * MANDRAKE_SCALE; }  // ~95.4
+    float getHeight() const override { return FRAME_H * MANDRAKE_SCALE; }  // ~159
 
-    static constexpr float MANDRAKE_SCALE        = 0.3f;
+    static constexpr float MANDRAKE_SCALE        = 0.5f;
     static constexpr float FRAME_H               = 318.0f;
     static constexpr float IDLE_V2_CHANCE        = 0.5f;
+    static constexpr float IDLE_FRAME_DURATION   = 0.3f;
     static constexpr float RANGED_FRAME_DURATION = 0.12f;
     static constexpr float MELEE_FRAME_DURATION  = 0.10f;
 

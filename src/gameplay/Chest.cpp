@@ -15,6 +15,7 @@ void Chest::init(const sf::Texture& texture,
     m_wasOpened   = false;
 
     m_sprite = infrastructure::SfmlSprite(texture);
+    m_sprite.setScale(CHEST_SCALE, CHEST_SCALE);
 
     auto rect = m_frameConfig->getFrame("chest", "closed", 0);
     m_sprite.setTextureRect(sf::IntRect({rect.left, rect.top},
