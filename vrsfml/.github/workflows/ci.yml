@@ -1,0 +1,87 @@
+name: CI
+
+on: [push, pull_request, workflow_dispatch]
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: ${{ matrix.preset }}
+    runs-on: ubuntu-24.04
+    container:
+      image: archlinux:latest
+      # tmpfs /tmp avoids overlayfs slowdowns during CPM-fetched dep builds
+      options: --tmpfs /tmp:exec
+
+    strategy:
+      fail-fast: false
+      matrix:
+        preset:
+          - vrdev_clang_no_time_trace
+          - vrdev_clang_rel_no_time_trace
+          - vrdev_gcc
+          - vrdev_gcc_rel
+          - vrdev_clang_egl_no_time_trace
+          - vrdev_clang_egl_rel_no_time_trace
+
+    defaults:
+      run:
+        shell: bash
+
+    steps:
+      - name: Install system packages
+        run: |
+          set -euo pipefail
+          # Refresh keyring first; arch base images often ship a stale one.
+          pacman -Sy --noconfirm archlinux-keyring
+          pacman -Syu --noconfirm --needed \
+            base-devel git cmake ninja ccache pkgconf \
+            gcc clang lld llvm \
+            nodejs \
+            mesa libglvnd glu \
+            libx11 libxrandr libxi libxcursor libxinerama libxext libxfixes \
+            libxss libxtst libxkbcommon dbus \
+            systemd-libs \
+            xorg-server-xvfb
+
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # actions/checkout marks the workspace as a safe directory only for the
+      # `root` UID it ran as; subsequent git invocations (e.g. CPM) need the
+      # same exemption inside the container.
+      - name: Trust workspace for git
+        run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
+
+      - name: Setup ccache
+        uses: hendrikmuhs/ccache-action@v1.2
+        with:
+          key: ${{ matrix.preset }}
+          max-size: 500M
+
+      - name: Configure
+        run: cmake --preset ${{ matrix.preset }}
+
+      - name: Build
+        run: cmake --build build_${{ matrix.preset }} --parallel
+
+      - name: Test
+        run: |
+          set -euxo pipefail
+          # SDL3 nags on every backend probe if these aren't set; pin them
+          # before we even start Xvfb so logs stay readable.
+          export XDG_RUNTIME_DIR="/tmp/xdg-runtime-$$"
+          mkdir -p "$XDG_RUNTIME_DIR" && chmod 700 "$XDG_RUNTIME_DIR"
+          # Some minimal container images (incl. GitHub's hosted runner +
+          # archlinux base) ship without /tmp/.X11-unix; Xvfb won't recreate
+          # it if /tmp was just remounted as tmpfs.
+          mkdir -p /tmp/.X11-unix && chmod 1777 /tmp/.X11-unix
+          # Skip the Wayland/KMSDRM probes entirely -- there's no GPU here.
+          export SDL_VIDEODRIVER=x11
+          xvfb-run --auto-servernum --server-args="-screen 0 1920x1080x24" \
+            ctest --test-dir build_${{ matrix.preset }} \
+                  --output-on-failure \
+                  --no-tests=error \
+                  --parallel "$(nproc)"

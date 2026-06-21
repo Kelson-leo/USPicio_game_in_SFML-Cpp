@@ -1,0 +1,11 @@
+#pragma once
+// LICENSE AND COPYRIGHT (C) INFORMATION
+// https://github.com/vittorioromeo/VRSFML/blob/master/license.md
+
+
+////////////////////////////////////////////////////////////
+// Headers
+////////////////////////////////////////////////////////////
+
+#undef GLAD_GL_IMPLEMENTATION
+#include <glad/gl.h>

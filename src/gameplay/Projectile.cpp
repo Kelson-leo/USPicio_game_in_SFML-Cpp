@@ -8,7 +8,7 @@ Projectile::Projectile() = default;
 void Projectile::init(ProjectileType type, core::Direction dir,
                       const sf::Texture& texture,
                       infrastructure::FrameConfig& frameConfig,
-                      const sf::Vector2f& startPos) {
+                      const sf::Vec2f& startPos) {
     m_type      = type;
     m_direction = dir;
     m_active    = true;
@@ -41,8 +41,8 @@ void Projectile::init(ProjectileType type, core::Direction dir,
     }
 
     auto rect = frameConfig.getFrame("projectiles", anim, 0);
-    m_sprite.setTextureRect(sf::IntRect({rect.left, rect.top},
-                                        {rect.width, rect.height}));
+    m_sprite.setTextureRect(sf::Rect2i({rect.position.x, rect.position.y},
+                                        {rect.size.x, rect.size.y}));
 
     // Scale for visibility at 1080p — target sizes proportional to pen (~60×20)
     float scale = 1.0f;
@@ -77,7 +77,7 @@ void Projectile::update(float dt) {
     }
 
     // Move by velocity
-    auto pos = m_sprite.getSfmlSprite().getPosition();
+    auto pos = m_sprite.getSfmlSprite().position;
     pos += m_velocity * dt;
     m_sprite.setPosition(pos.x, pos.y);
 }
@@ -103,7 +103,7 @@ float Projectile::getLifetime() const {
     return m_lifetime;
 }
 
-sf::FloatRect Projectile::getBounds() const {
+sf::Rect2f Projectile::getBounds() const {
     return m_sprite.getSfmlSprite().getGlobalBounds();
 }
 

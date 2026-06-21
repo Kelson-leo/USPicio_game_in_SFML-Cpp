@@ -10,7 +10,7 @@
 #include "infrastructure/SfmlSprite.h"
 #include "infrastructure/FrameConfig.h"
 #include "gameplay/Projectile.h"
-#include <SFML/System/Vector2.hpp>
+#include <SFML/System/Vec2.hpp>
 #include <memory>
 #include <string>
 #include <vector>
@@ -78,8 +78,8 @@ public:
     bool isOnGround() const;
 
     // ── Position ────────────────────────────────────────────────────
-    sf::Vector2f getPosition() const;
-    void setPosition(sf::Vector2f pos);
+    sf::Vec2f getPosition() const;
+    void setPosition(sf::Vec2f pos);
     void setGroundY(float y);
 
     // ── Components (public for easy access by UI) ───────────────────
@@ -101,7 +101,7 @@ private:
     std::string                      m_currentAnim;
     std::size_t                      m_frameIndex = 0;
     float                            m_frameTimer = 0.0f;
-    sf::Vector2f                     m_position;
+    sf::Vec2f                     m_position;
     float                            m_groundY      = core::GROUND_Y;
     bool                             m_isDefending  = false;
     bool                             m_isCrouching  = false;

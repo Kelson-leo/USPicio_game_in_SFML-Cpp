@@ -21,8 +21,12 @@
 #include "gameplay/Peru.h"
 #include "gameplay/Projectile.h"
 #include "gameplay/Chest.h"
-#include <SFML/Graphics.hpp>
+#include <SFML/Graphics/Font.hpp>
+#include <SFML/Graphics/RectangleShape.hpp>
+#include <SFML/Graphics/Color.hpp>
+#include <SFML/System/Clock.hpp>
 #include <memory>
+#include <optional>
 #include <string>
 #include <vector>
 
@@ -95,16 +99,16 @@ private:
     int m_currentPhase = 0;  // 0-based index into PhaseConfig
 
     // ── Menu UI ───────────────────────────────────────────────────
-    sf::Font    m_font;
+    std::optional<sf::Font> m_font;
     infrastructure::SfmlText m_titleText;
     infrastructure::SfmlSprite m_menuBg;
     std::vector<infrastructure::SfmlSprite> m_menuHearts;
-    sf::RectangleShape m_menuOverlay;
+    sf::RectangleShape m_menuOverlay{sf::RectangleShape::Data{}};
 
     std::vector<infrastructure::SfmlText> m_menuItems; // "Start", "Restart", "Info"
 
     // ── Options screen UI ──────────────────────────────────────────
-    sf::RectangleShape m_optionsOverlay;
+    sf::RectangleShape m_optionsOverlay{sf::RectangleShape::Data{}};
     infrastructure::SfmlText m_optionsTitle;
     infrastructure::SfmlText m_optionsMusicLabel;
     infrastructure::SfmlText m_optionsMusicBar;
@@ -118,7 +122,7 @@ private:
     std::string buildSliderBar(float value) const;
 
     // ── Info screen UI ────────────────────────────────────────────
-    sf::RectangleShape m_infoOverlay;
+    sf::RectangleShape m_infoOverlay{sf::RectangleShape::Data{}};
     infrastructure::SfmlText m_infoTitle;
     infrastructure::SfmlText m_infoDev;
     infrastructure::SfmlText m_infoCopyright;
@@ -126,11 +130,11 @@ private:
     infrastructure::SfmlText m_infoBack;
 
     // ── Pause menu UI ─────────────────────────────────────────────
-    sf::RectangleShape m_pauseOverlay;
+    sf::RectangleShape m_pauseOverlay{sf::RectangleShape::Data{}};
     std::vector<infrastructure::SfmlText> m_pauseItems; // "Resume", "Restart", "Quit to Menu"
 
     // ── Game Over / Victory UI ────────────────────────────────────
-    sf::RectangleShape m_gameOverOverlay;
+    sf::RectangleShape m_gameOverOverlay{sf::RectangleShape::Data{}};
     infrastructure::SfmlText m_gameOverTitle;
     infrastructure::SfmlText m_gameOverSubtext;
 

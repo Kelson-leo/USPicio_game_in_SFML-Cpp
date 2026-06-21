@@ -2,7 +2,9 @@
 
 #include "core/IRenderer.h"
 #include "core/IInputHandler.h"
-#include <SFML/Graphics.hpp>
+#include <SFML/Graphics/Color.hpp>
+#include <SFML/System/Vec2.hpp>
+#include <SFML/System/Rect2.hpp>
 #include <SFML/Window/Keyboard.hpp>
 
 namespace infrastructure {
@@ -10,45 +12,48 @@ namespace infrastructure {
 // ── Color ──────────────────────────────────────────────────────────
 
 inline sf::Color toSfml(const core::Color& c) {
-    return sf::Color(c.r, c.g, c.b, c.a);
+    return {static_cast<sf::base::U8>(c.r),
+            static_cast<sf::base::U8>(c.g),
+            static_cast<sf::base::U8>(c.b),
+            static_cast<sf::base::U8>(c.a)};
 }
 
 inline core::Color toCore(const sf::Color& c) {
     return {c.r, c.g, c.b, c.a};
 }
 
-// ── Vector2f ───────────────────────────────────────────────────────
+// ── Vec2f ──────────────────────────────────────────────────────────
 
-inline sf::Vector2f toSfml(const core::Vector2f& v) {
+inline sf::Vec2f toSfml(const core::Vector2f& v) {
     return {v.x, v.y};
 }
 
-inline core::Vector2f toCore(const sf::Vector2f& v) {
+inline core::Vector2f toCore(const sf::Vec2f& v) {
     return {v.x, v.y};
 }
 
-// ── Vector2u ───────────────────────────────────────────────────────
+// ── Vec2u ──────────────────────────────────────────────────────────
 
-inline sf::Vector2u toSfml(const core::Vector2u& v) {
+inline sf::Vec2u toSfml(const core::Vector2u& v) {
     return {v.x, v.y};
 }
 
-inline core::Vector2u toCore(const sf::Vector2u& v) {
+inline core::Vector2u toCore(const sf::Vec2u& v) {
     return {v.x, v.y};
 }
 
-// ── FloatRect ──────────────────────────────────────────────────────
+// ── Rect2f ─────────────────────────────────────────────────────────
 
-inline sf::FloatRect toSfml(const core::FloatRect& r) {
-    return {r.left, r.top, r.width, r.height};
+inline sf::Rect2f toSfml(const core::FloatRect& r) {
+    return {{r.left, r.top}, {r.width, r.height}};
 }
 
-inline core::FloatRect toCore(const sf::FloatRect& r) {
-    return {r.left, r.top, r.width, r.height};
+inline core::FloatRect toCore(const sf::Rect2f& r) {
+    return {r.position.x, r.position.y, r.size.x, r.size.y};
 }
 
 // ── KeyCode <-> sf::Keyboard::Key ──────────────────────────────────
-// Letters A-Z map to sf::Keyboard::A (0) through sf::Keyboard::Z (25).
+// Letters A-Z map to sf::Keyboard::Key::A (0) through Z (25).
 // Special keys use an explicit lookup.
 
 inline sf::Keyboard::Key toSfml(core::KeyCode code) {

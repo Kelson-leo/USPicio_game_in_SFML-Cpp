@@ -5,34 +5,37 @@
 
 namespace infrastructure {
 
-SfmlInput::SfmlInput(sf::RenderWindow& window)
+SfmlInput::SfmlInput(sf::Window& window)
     : m_window(window) {
 }
 
 bool SfmlInput::pollEvent(core::Event& out) {
-    sf::Event sfEvent;
-    if (!m_window.pollEvent(sfEvent)) return false;
+    const auto sfEvent = m_window.pollEvent();
+    if (!sfEvent.hasValue()) return false;
 
-    // Translate event type
-    switch (sfEvent.type) {
-    case sf::Event::Closed:
+    // Closed event
+    if (sfEvent->is<sf::Event::Closed>()) {
         out.type = core::EventType::Closed;
         out.key  = core::KeyCode::Unknown;
-        break;
-    case sf::Event::KeyPressed:
-        out.type = core::EventType::KeyPressed;
-        out.key  = toCore(sfEvent.key.code);
-        break;
-    case sf::Event::KeyReleased:
-        out.type = core::EventType::KeyReleased;
-        out.key  = toCore(sfEvent.key.code);
-        break;
-    default:
-        // Skip non-keyboard / non-close events for now
-        return pollEvent(out);
+        return true;
     }
 
-    return true;
+    // KeyPressed event
+    if (const auto* kp = sfEvent->getIf<sf::Event::KeyPressed>()) {
+        out.type = core::EventType::KeyPressed;
+        out.key  = toCore(kp->code);
+        return true;
+    }
+
+    // KeyReleased event
+    if (const auto* kr = sfEvent->getIf<sf::Event::KeyReleased>()) {
+        out.type = core::EventType::KeyReleased;
+        out.key  = toCore(kr->code);
+        return true;
+    }
+
+    // Skip unhandled event types, recurse to get next
+    return pollEvent(out);
 }
 
 bool SfmlInput::isKeyPressed(core::KeyCode key) const {

@@ -55,8 +55,7 @@ TEST(HealthBarTest, DrawDoesNotThrowWhenAlive) {
 
 TEST(LivesDisplayTest, ConstructionDoesNotThrow) {
     core::LivesComponent lives;
-    sf::Texture tex;
-    tex.create(1, 1);
+    auto tex = sf::Texture::create({1, 1}).value();
     EXPECT_NO_THROW({
         infrastructure::LivesDisplay display(lives, tex);
     });
@@ -64,8 +63,7 @@ TEST(LivesDisplayTest, ConstructionDoesNotThrow) {
 
 TEST(LivesDisplayTest, DrawDoesNotThrow) {
     core::LivesComponent lives;
-    sf::Texture tex;
-    tex.create(1, 1);
+    auto tex = sf::Texture::create({1, 1}).value();
 
     infrastructure::LivesDisplay display(lives, tex);
     infrastructure::SfmlRenderer renderer;
@@ -78,8 +76,7 @@ TEST(LivesDisplayTest, DrawWithZeroLivesDoesNotCrash) {
     core::LivesComponent lives;
     lives.currentLives = 0;
 
-    sf::Texture tex;
-    tex.create(1, 1);
+    auto tex = sf::Texture::create({1, 1}).value();
 
     infrastructure::LivesDisplay display(lives, tex);
     infrastructure::SfmlRenderer renderer;
@@ -94,8 +91,7 @@ TEST(LivesDisplayTest, DrawWithZeroLivesDoesNotCrash) {
 
 TEST(AmmoDisplayTest, ConstructionDoesNotThrow) {
     core::AmmoComponent ammo;
-    sf::Texture tex;
-    tex.create(1, 1);
+    auto tex = sf::Texture::create({1, 1}).value();
     EXPECT_NO_THROW({
         infrastructure::AmmoDisplay display(ammo, tex);
     });
@@ -103,8 +99,7 @@ TEST(AmmoDisplayTest, ConstructionDoesNotThrow) {
 
 TEST(AmmoDisplayTest, DrawDoesNotThrow) {
     core::AmmoComponent ammo;
-    sf::Texture tex;
-    tex.create(1, 1);
+    auto tex = sf::Texture::create({1, 1}).value();
 
     infrastructure::AmmoDisplay display(ammo, tex);
     infrastructure::SfmlRenderer renderer;
@@ -117,8 +112,7 @@ TEST(AmmoDisplayTest, DrawWithZeroAmmoDoesNotCrash) {
     core::AmmoComponent ammo;
     ammo.currentAmmo = 0;
 
-    sf::Texture tex;
-    tex.create(1, 1);
+    auto tex = sf::Texture::create({1, 1}).value();
 
     infrastructure::AmmoDisplay display(ammo, tex);
     infrastructure::SfmlRenderer renderer;

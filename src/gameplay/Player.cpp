@@ -36,8 +36,8 @@ void Player::setAnimation(const std::string& action) {
     m_frameTimer  = 0.0f;
 
     auto rect = m_frameConfig.getFrame("player", m_currentAnim, 0);
-    m_sprite.setTextureRect(sf::IntRect({rect.left, rect.top},
-                                        {rect.width, rect.height}));
+    m_sprite.setTextureRect(sf::Rect2i({rect.position.x, rect.position.y},
+                                        {rect.size.x, rect.size.y}));
 }
 
 void Player::updateAnimation(float dt) {
@@ -74,8 +74,8 @@ void Player::updateAnimation(float dt) {
     }
 
     auto rect = m_frameConfig.getFrame("player", m_currentAnim, m_frameIndex);
-    m_sprite.setTextureRect(sf::IntRect({rect.left, rect.top},
-                                        {rect.width, rect.height}));
+    m_sprite.setTextureRect(sf::Rect2i({rect.position.x, rect.position.y},
+                                        {rect.size.x, rect.size.y}));
 }
 
 bool Player::isAttacking() const {
@@ -92,23 +92,23 @@ void Player::draw(core::IRenderer& renderer) const {
 
     // ── Dark outline (8-directional, 1px) ─────────────────────────
     auto& sfSprite = m_sprite.getSfmlSprite();
-    const auto origColor = sfSprite.getColor();
-    const auto origPos   = sfSprite.getPosition();
+    const auto origColor = sfSprite.color;
+    const auto origPos   = sfSprite.position;
 
-    sfSprite.setColor(sf::Color(0, 0, 0, 180));
-    const sf::Vector2f offsets[] = {
+    sfSprite.color = sf::Color{0, 0, 0, 180};
+    const sf::Vec2f offsets[] = {
         {-1, -1}, {0, -1}, {1, -1},
         {-1,  0},          {1,  0},
         {-1,  1}, {0,  1}, {1,  1}
     };
     for (const auto& off : offsets) {
-        sfSprite.setPosition(origPos.x + off.x, origPos.y + off.y);
+        sfSprite.position = {origPos.x + off.x, origPos.y + off.y};
         m_sprite.draw(renderer);
     }
 
     // ── Main sprite on top ────────────────────────────────────────
-    sfSprite.setColor(origColor);
-    sfSprite.setPosition(origPos);
+    sfSprite.color = origColor;
+    sfSprite.position = origPos;
     m_sprite.draw(renderer);
 }
 
@@ -167,7 +167,7 @@ void Player::throwProjectile(std::vector<std::unique_ptr<Projectile>>& projectil
     float offsetY = m_isCrouching ? 25.0f : -30.0f;
     float offsetX = (m_direction == core::Direction::Right) ? 40.0f : -10.0f;
     proj->init(ProjectileType::Pen, m_direction, texture,
-               frameConfig, m_position + sf::Vector2f(offsetX, offsetY));
+               frameConfig, m_position + sf::Vec2f(offsetX, offsetY));
     projectiles.push_back(std::move(proj));
 }
 
@@ -284,11 +284,11 @@ bool Player::isOnGround() const {
 // Position
 // ────────────────────────────────────────────────────────────────────
 
-sf::Vector2f Player::getPosition() const {
+sf::Vec2f Player::getPosition() const {
     return m_position;
 }
 
-void Player::setPosition(sf::Vector2f pos) {
+void Player::setPosition(sf::Vec2f pos) {
     m_position = pos;
     m_sprite.setPosition(pos.x, pos.y);
 }

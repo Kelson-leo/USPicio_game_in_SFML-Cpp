@@ -31,12 +31,12 @@ TEST(DirectionTest, OppositeOfLeftIsRight) {
 class PlayerAnimationFixture : public ::testing::Test {
 protected:
     void SetUp() override {
-        m_tex.create(500, 500);  // fake texture
+        m_tex = sf::Texture::create({500, 500}).value();  // fake texture
         m_config.loadFromFile(testJson());
-        m_player = std::make_unique<gameplay::Player>(m_tex, m_config);
+        m_player = std::make_unique<gameplay::Player>(*m_tex, m_config);
     }
 
-    sf::Texture                    m_tex;
+    std::optional<sf::Texture> m_tex;
     infrastructure::FrameConfig    m_config;
     std::unique_ptr<gameplay::Player> m_player;
 };

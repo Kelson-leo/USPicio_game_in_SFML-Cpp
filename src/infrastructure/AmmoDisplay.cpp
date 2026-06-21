@@ -1,8 +1,9 @@
 #include "infrastructure/AmmoDisplay.h"
 #include "infrastructure/SfmlRenderer.h"
 #include <SFML/Graphics/RectangleShape.hpp>
-#include <SFML/Graphics/RenderTarget.hpp>
-#include <SFML/Graphics/VertexArray.hpp>
+#include <SFML/Graphics/PrimitiveType.hpp>
+#include <SFML/Graphics/Vertex.hpp>
+#include <vector>
 
 namespace infrastructure {
 
@@ -22,10 +23,11 @@ void AmmoDisplay::draw(core::IRenderer& renderer) const {
     // Subtle background panel behind the icon row
     const float iconW = m_canetaTexture.getSize().x * m_scale;
     const float iconH = m_canetaTexture.getSize().y * m_scale;
-    sf::RectangleShape bg;
-    bg.setPosition(m_position.x - 4.0f, m_position.y - 2.0f);
-    bg.setSize({m_step * m_ammo.maxAmmo + 4.0f, iconH + 8.0f});
-    bg.setFillColor(sf::Color(255, 255, 255, 35));
+    sf::RectangleShape bg{{
+        .position = {m_position.x - 4.0f, m_position.y - 2.0f},
+        .size = {m_step * m_ammo.maxAmmo + 4.0f, iconH + 8.0f},
+        .fillColor = sf::Color{255, 255, 255, 35}
+    }};
     sfml.drawSfml(bg);
 
     for (int i = 0; i < m_ammo.maxAmmo; ++i) {
@@ -36,12 +38,12 @@ void AmmoDisplay::draw(core::IRenderer& renderer) const {
 
         // Outline: dark copies in 4 directions
         auto drawOutline = [&](float ox, float oy) {
-            sf::Sprite s;
-            s.setTexture(m_canetaTexture);
-            s.setScale(m_scale, m_scale);
-            s.setPosition(px + ox, py + oy);
-            s.setColor(sf::Color(20, 20, 20, 200));
-            sfml.drawSfml(s);
+            sf::Sprite s{
+                .position = {px + ox, py + oy},
+                .scale = {m_scale, m_scale},
+                .color = sf::Color{20, 20, 20, 200}
+            };
+            sfml.drawSfml(s, &m_canetaTexture);
         };
         drawOutline(-1,  0);
         drawOutline( 1,  0);
@@ -49,30 +51,24 @@ void AmmoDisplay::draw(core::IRenderer& renderer) const {
         drawOutline( 0,  1);
 
         // Main icon
-        sf::Sprite pen;
-        pen.setTexture(m_canetaTexture);
-        pen.setScale(m_scale, m_scale);
-        pen.setPosition(px, py);
-
-        if (used) {
-            pen.setColor(sf::Color(255, 255, 255, 50));
-        }
-
-        sfml.drawSfml(pen);
+        sf::Color penColor = used ? sf::Color{255, 255, 255, 50} : sf::Color::White;
+        sf::Sprite pen{
+            .position = {px, py},
+            .scale = {m_scale, m_scale},
+            .color = penColor
+        };
+        sfml.drawSfml(pen, &m_canetaTexture);
 
         if (used) {
             float cx = px + iconW / 2.0f;
             float cy = py + iconH / 2.0f;
-            sf::VertexArray cross(sf::Lines, 4);
-            cross[0].position = {cx - 7, cy - 7};
-            cross[0].color    = sf::Color(220, 20, 20);
-            cross[1].position = {cx + 7, cy + 7};
-            cross[1].color    = sf::Color(220, 20, 20);
-            cross[2].position = {cx + 7, cy - 7};
-            cross[2].color    = sf::Color(220, 20, 20);
-            cross[3].position = {cx - 7, cy + 7};
-            cross[3].color    = sf::Color(220, 20, 20);
-            sfml.drawSfml(cross);
+            std::vector<sf::Vertex> cross = {
+                {{cx - 7, cy - 7}, sf::Color{220, 20, 20}},
+                {{cx + 7, cy + 7}, sf::Color{220, 20, 20}},
+                {{cx + 7, cy - 7}, sf::Color{220, 20, 20}},
+                {{cx - 7, cy + 7}, sf::Color{220, 20, 20}}
+            };
+            sfml.drawSfml(cross, sf::PrimitiveType::Lines);
         }
     }
 }

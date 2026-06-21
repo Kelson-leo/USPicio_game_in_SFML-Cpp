@@ -24,7 +24,7 @@ void Level::draw(core::IRenderer& renderer) {
     const auto winSize = renderer.getSize();
 
     // Background: stretch to fill the window
-    const auto* bgTex = m_background.getSfmlSprite().getTexture();
+    const auto* bgTex = m_background.getTexture();
     if (bgTex && bgTex->getSize().x > 0 && bgTex->getSize().y > 0) {
         m_background.setScale(
             static_cast<float>(winSize.x) / bgTex->getSize().x,

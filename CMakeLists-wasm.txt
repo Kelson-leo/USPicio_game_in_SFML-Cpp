@@ -1,0 +1,147 @@
+cmake_minimum_required(VERSION 3.20)
+project(UspicioGame VERSION 0.1.0 LANGUAGES CXX)
+
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
+
+# ── VRSFML paths ─────────────────────────────────────────────────────
+set(VRSFML_INSTALL ${CMAKE_CURRENT_SOURCE_DIR}/vrsfml/install)
+set(VRSFML_INCLUDE ${VRSFML_INSTALL}/include)
+set(VRSFML_LIB     ${VRSFML_INSTALL}/lib)
+
+# ── nlohmann/json (pre-downloaded header-only) ──────────────────────
+add_library(nlohmann_json INTERFACE)
+target_include_directories(nlohmann_json INTERFACE
+    ${CMAKE_CURRENT_SOURCE_DIR}/build/_deps/json-src/include
+)
+
+# ── SFML imported targets ───────────────────────────────────────────
+# SFML::System
+add_library(SFML_System STATIC IMPORTED)
+set_target_properties(SFML_System PROPERTIES
+    IMPORTED_LOCATION ${VRSFML_LIB}/libsfml-system-s.html
+    INTERFACE_INCLUDE_DIRECTORIES ${VRSFML_INCLUDE}
+    INTERFACE_COMPILE_DEFINITIONS "SFML_STATIC"
+)
+# Dependencies: mbedtls
+add_library(MbedTLS INTERFACE IMPORTED)
+set_target_properties(MbedTLS PROPERTIES
+    INTERFACE_LINK_LIBRARIES "${VRSFML_LIB}/libmbedcrypto.a;${VRSFML_LIB}/libmbedtls.a;${VRSFML_LIB}/libmbedx509.a"
+)
+
+# SFML::Window
+add_library(SFML_Window STATIC IMPORTED)
+set_target_properties(SFML_Window PROPERTIES
+    IMPORTED_LOCATION ${VRSFML_LIB}/libsfml-window-s.html
+    INTERFACE_INCLUDE_DIRECTORIES ${VRSFML_INCLUDE}
+    INTERFACE_LINK_LIBRARIES "SFML_System"
+)
+
+# SFML::GLUtils
+add_library(SFML_GLUtils STATIC IMPORTED)
+set_target_properties(SFML_GLUtils PROPERTIES
+    IMPORTED_LOCATION ${VRSFML_LIB}/libsfml-glutils-s.html
+    INTERFACE_INCLUDE_DIRECTORIES ${VRSFML_INCLUDE}
+)
+
+# SFML::Graphics dependencies
+add_library(Freetype INTERFACE IMPORTED)
+set_target_properties(Freetype PROPERTIES
+    INTERFACE_LINK_LIBRARIES "${VRSFML_LIB}/libfreetype.a"
+)
+
+# SFML::Graphics
+add_library(SFML_Graphics STATIC IMPORTED)
+set_target_properties(SFML_Graphics PROPERTIES
+    IMPORTED_LOCATION ${VRSFML_LIB}/libsfml-graphics-s.html
+    INTERFACE_INCLUDE_DIRECTORIES ${VRSFML_INCLUDE}
+    INTERFACE_LINK_LIBRARIES "SFML_Window;Freetype;SFML_GLUtils"
+)
+
+# SFML::Audio dependencies
+add_library(Vorbis INTERFACE IMPORTED)
+set_target_properties(Vorbis PROPERTIES
+    INTERFACE_LINK_LIBRARIES "${VRSFML_LIB}/libvorbis.a;${VRSFML_LIB}/libvorbisenc.a;${VRSFML_LIB}/libvorbisfile.a"
+)
+add_library(Ogg INTERFACE IMPORTED)
+set_target_properties(Ogg PROPERTIES
+    INTERFACE_LINK_LIBRARIES "${VRSFML_LIB}/libogg.a"
+)
+add_library(FLAC INTERFACE IMPORTED)
+set_target_properties(FLAC PROPERTIES
+    INTERFACE_LINK_LIBRARIES "${VRSFML_LIB}/libFLAC.a"
+)
+
+# SFML::Audio
+add_library(SFML_Audio STATIC IMPORTED)
+set_target_properties(SFML_Audio PROPERTIES
+    IMPORTED_LOCATION ${VRSFML_LIB}/libsfml-audio-s.html
+    INTERFACE_INCLUDE_DIRECTORIES ${VRSFML_INCLUDE}
+    INTERFACE_LINK_LIBRARIES "SFML_System;Vorbis;Ogg;FLAC"
+)
+
+# ── Game Library ────────────────────────────────────────────────────
+set(LIB_SOURCES
+    src/core/DamageConfig.cpp
+    src/gameplay/Capivara.cpp
+    src/gameplay/Chest.cpp
+    src/gameplay/Game.cpp
+    src/gameplay/Level.cpp
+    src/gameplay/Player.cpp
+    src/gameplay/Professor.cpp
+    src/gameplay/Projectile.cpp
+    src/gameplay/Boss.cpp
+    src/gameplay/Rato.cpp
+    src/gameplay/Mandrake.cpp
+    src/gameplay/Peru.cpp
+    src/gameplay/PhaseConfig.cpp
+    src/infrastructure/AmmoDisplay.cpp
+    src/infrastructure/AssetManager.cpp
+    src/infrastructure/AudioManager.cpp
+    src/infrastructure/FrameConfig.cpp
+    src/infrastructure/HealthBar.cpp
+    src/infrastructure/LivesDisplay.cpp
+    src/infrastructure/SfmlInput.cpp
+    src/infrastructure/SfmlRenderer.cpp
+    src/infrastructure/SfmlSprite.cpp
+    src/infrastructure/SfmlText.cpp
+    src/infrastructure/SfmlTextureLoader.cpp
+)
+
+add_library(UspicioLib STATIC ${LIB_SOURCES})
+
+target_include_directories(UspicioLib PUBLIC
+    ${CMAKE_SOURCE_DIR}/src
+)
+
+target_link_libraries(UspicioLib PUBLIC
+    SFML_Graphics
+    SFML_Window
+    SFML_System
+    SFML_Audio
+    nlohmann_json
+)
+
+# ── Executable (HTML/WASM output) ───────────────────────────────────
+add_executable(UspicioGame src/main.cpp)
+
+target_link_libraries(UspicioGame PRIVATE UspicioLib)
+
+# Emscripten link flags
+set_target_properties(UspicioGame PROPERTIES
+    SUFFIX ".html"
+    LINK_FLAGS "--shell-file ${CMAKE_SOURCE_DIR}/vrsfml/emscripten/shell.html --pre-js ${CMAKE_SOURCE_DIR}/vrsfml/emscripten/pre.js -s USE_SDL=0 -s FULL_ES3=1 -s ALLOW_MEMORY_GROWTH=1"
+)
+
+# Assets path
+target_compile_definitions(UspicioGame PRIVATE
+    ASSETS_DIR="${CMAKE_SOURCE_DIR}/assets/"
+)
+
+# Copy assets post-build
+add_custom_command(TARGET UspicioGame POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+    ${CMAKE_SOURCE_DIR}/assets
+    $<TARGET_FILE_DIR:UspicioGame>/assets
+)

@@ -16,11 +16,11 @@ Boss::Boss(const sf::Texture& texture,
     health.currentHP = 80;
 
     auto rect = m_frameConfig.getFrame(m_bossName, "idle_right", 0);
-    if (rect.width == 0) {
+    if (rect.size.x == 0) {
         rect = m_frameConfig.getFrame(m_bossName, "idle", 0);
     }
-    m_sprite.setTextureRect(sf::IntRect({rect.left, rect.top},
-                                        {rect.width, rect.height}));
+    m_sprite.setTextureRect(sf::Rect2i({rect.position.x, rect.position.y},
+                                        {rect.size.x, rect.size.y}));
     m_sprite.setPosition(m_position.x, m_position.y);
 }
 
@@ -80,9 +80,9 @@ void Boss::shootProjectile(
 
     auto proj = std::make_unique<Projectile>();
     float yOff = getProjectileOffsetY();
-    sf::Vector2f offset = (dir == core::Direction::Right)
-        ? sf::Vector2f(80.0f, yOff)
-        : sf::Vector2f(-80.0f, yOff);
+    sf::Vec2f offset = (dir == core::Direction::Right)
+        ? sf::Vec2f(80.0f, yOff)
+        : sf::Vec2f(-80.0f, yOff);
     proj->init(getProjectileType(), dir, *m_projectileTexture,
                frameConfig, m_position + offset);
     projectiles.push_back(std::move(proj));
@@ -94,11 +94,11 @@ void Boss::performMeleeAttack(Player& player) {
     // Default: no-op. Override in melee-capable subclasses.
 }
 
-sf::Vector2f Boss::getPosition() const {
+sf::Vec2f Boss::getPosition() const {
     return m_position;
 }
 
-void Boss::setPosition(sf::Vector2f pos) {
+void Boss::setPosition(sf::Vec2f pos) {
     m_position = pos;
     m_sprite.setPosition(pos.x, pos.y);
 }

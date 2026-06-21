@@ -7,7 +7,7 @@
 #include "infrastructure/SfmlSprite.h"
 #include "infrastructure/FrameConfig.h"
 #include "gameplay/Projectile.h"
-#include <SFML/System/Vector2.hpp>
+#include <SFML/System/Vec2.hpp>
 #include <memory>
 #include <string>
 #include <vector>
@@ -43,8 +43,8 @@ public:
     /// Called when the boss takes damage. Subclasses can override for hurt animation.
     virtual void onHit() {}
 
-    sf::Vector2f getPosition() const;
-    void setPosition(sf::Vector2f pos);
+    sf::Vec2f getPosition() const;
+    void setPosition(sf::Vec2f pos);
     void setGroundY(float y);
     void setCanMelee(bool can);
     void setProjectileTexture(const sf::Texture& tex);
@@ -72,7 +72,7 @@ protected:
     infrastructure::FrameConfig& m_frameConfig;
     std::string                  m_bossName;
     const sf::Texture*           m_projectileTexture = nullptr;
-    sf::Vector2f                 m_position;
+    sf::Vec2f                 m_position;
     float                        m_groundY           = core::GROUND_Y;
     float                        m_rangedCooldown     = 0.0f;
     float                        m_meleeCooldown      = 0.0f;

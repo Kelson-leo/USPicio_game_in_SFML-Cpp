@@ -5,7 +5,8 @@
 - **Projeto:** Uspício Game
 - **Gênero:** Plataforma/Luta 2D Lateral (Side-scrolling beat 'em up)
 - **Tema:** Estudante da USP vs. Capivaras e Professores
-- **Stack:** C++17, SFML 2.6.2, CMake 3.20+, Google Test 1.14 (TDD)
+- **Stack:** C++23, SFML 3.x (VRSFML `vittorioromeo/zancle`), CMake 3.20+, Google Test 1.14 (TDD)
+- **WASM:** Emscripten 6.0.0 (emsdk), compilação via `CMakeLists-vrsfml.txt`
 - **Diretório Raiz:** `~/Documentos/Programming/Cpp_Language/Games/Uspicio_game`
 - **Executável:** `UspicioGame`
 - **Assets:** `assets/` relativo ao executável
@@ -592,3 +593,59 @@ Entidades em `src/gameplay/` implementam `core::Drawable` para renderização:
 | 9 | 2026-06-20 | Audio system: background music (sf::Music, looped, 4-track selector), AudioConfig/AudioManager, Options menu (volume sliders + track selector), Options accessible from Pause menu, 92/92 tests |
 | 10 | 2026-06-21 | Expand to 7 phases + 4 bosses: Boss base class with Professor/Rato/Mandrake/Peru subclasses, factory in loadLevel(), placeholder spritesheets, 95/95 tests |
 | 11 | 2026-06-21 | Chest power-up in Phase 5 (Sanfran): restores 80% lost lives/ammo (ceil), single-use, frame switching, 107/107 tests |
+| 12 | 2026-06-21 | **Migração SFML 2.6 → VRSFML 3.x** para suporte a WebAssembly. ~25 arquivos migrados: headers monolíticos → individuais, `sf::Vector2f`→`sf::Vec2f`, `sf::FloatRect`→`sf::Rect2f`, Sprite sem textura (draw-time), VertexArray→`std::vector<sf::Vertex>`, Event variant-based, RenderWindow factory, AudioManager com PlaybackDevice+MusicReader, Font/Texture factory (Optional<T>), C++23 requerido. Core (src/core/) zero alterações. Build WASM: `cp CMakeLists-vrsfml.txt CMakeLists.txt && emcmake cmake && emmake make`. Desktop SFML 2.6 build preservado com `CMakeLists-desktop.bak`. |
+
+---
+
+## 10. Build WASM (Emscripten)
+
+### Pré-requisitos
+- Emscripten SDK em `emsdk/` (ativar com `source emsdk/emsdk_env.sh`)
+- VRSFML compilado em `vrsfml/install/`
+
+### Compilar o jogo para WebAssembly
+```bash
+# 1. Trocar para o CMakeLists de WASM
+cp CMakeLists-vrsfml.txt CMakeLists.txt
+
+# 2. Build
+source emsdk/emsdk_env.sh
+mkdir -p build-wasm && cd build-wasm
+emcmake cmake .. -DCMAKE_BUILD_TYPE=Release
+emmake make -j$(nproc)
+
+# 3. Output: UspicioGame.html, UspicioGame.js, UspicioGame.wasm
+```
+
+### Rodar testes (WASM)
+```bash
+node unit_tests.js  # testes não-GUI passam; GUI tests precisam de browser
+```
+
+### Restaurar build desktop
+```bash
+cp CMakeLists-desktop.bak CMakeLists.txt  # SFML 2.6 original
+```
+
+## 11. API VRSFML (SFML 3.x) — Guia Rápido
+
+| SFML 2.6 | VRSFML 3.x |
+|---|---|
+| `#include <SFML/Graphics.hpp>` | Headers individuais (`Sprite.hpp`, `Font.hpp`, etc.) |
+| `sf::Vector2f` / `sf::FloatRect` / `sf::IntRect` | `sf::Vec2f` / `sf::Rect2f` / `sf::Rect2i` |
+| `sf::FloatRect(l,t,w,h)` / `.left` `.width` | `sf::Rect2f{{l,t},{w,h}}` / `.position.x` `.size.x` |
+| `sprite.setTexture(&t)` | `window.draw(sprite, &texture)` — textura no draw |
+| `sprite.setPosition/setColor()` | `sprite.position = {x,y}; sprite.color = c;` |
+| `texture.loadFromFile()` retorna bool | `sf::Texture::loadFromFile()` retorna `Optional<Texture>` |
+| `window.isOpen()` / `window.close()` | Removidos; usar flag manual + break loop |
+| `sf::RenderWindow(VideoMode, title)` | `sf::RenderWindow::create({.size={w,h}, .title="..."})` |
+| `event.type == sf::Event::Closed` | `event->is<sf::Event::Closed>()` |
+| `music.openFromFile()` | `MusicReader::openFromFile()` + `PlaybackDevice` + `Music(device, reader)` |
+| `sf::VertexArray` | `std::vector<sf::Vertex>` |
+| `sf::Lines` | `sf::PrimitiveType::Lines` |
+| `rect.intersects(other)` | `sf::findIntersection(rect, other).hasValue()` (include `RectUtils.hpp`) |
+| `sf::Keyboard::A` | `sf::Keyboard::Key::A` |
+| `sf::Text::Bold` | `text.setBold(true)` |
+| `font.loadFromFile()` | `sf::Font::openFromFile()` retorna `Optional<Font>` |
+| `sf::RectangleShape(sf::Vector2f)` | `sf::RectangleShape({{.size={w,h}}})` |
+| C++17 | **C++23 requerido** |

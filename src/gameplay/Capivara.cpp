@@ -38,8 +38,8 @@ void Capivara::setAnimation(const std::string& action) {
     m_frameTimer  = 0.0f;
 
     auto rect = m_frameConfig.getFrame("capivara", m_currentAnim, 0);
-    m_sprite.setTextureRect(sf::IntRect({rect.left, rect.top},
-                                        {rect.width, rect.height}));
+    m_sprite.setTextureRect(sf::Rect2i({rect.position.x, rect.position.y},
+                                        {rect.size.x, rect.size.y}));
 }
 
 // ────────────────────────────────────────────────────────────────────
@@ -68,8 +68,8 @@ void Capivara::update(float dt, const Player& player) {
                         setAnimation("walk");
                         // Apply frame 0 immediately
                         auto rect = m_frameConfig.getFrame("capivara", m_currentAnim, 0);
-                        m_sprite.setTextureRect(sf::IntRect({rect.left, rect.top},
-                                                            {rect.width, rect.height}));
+                        m_sprite.setTextureRect(sf::Rect2i({rect.position.x, rect.position.y},
+                                                            {rect.size.x, rect.size.y}));
                         goto skipFrameUpdate;
                     } else {
                         m_frameIndex = count - 1;  // stay on last (dead)
@@ -77,8 +77,8 @@ void Capivara::update(float dt, const Player& player) {
                 }
 
                 auto rect = m_frameConfig.getFrame("capivara", m_currentAnim, m_frameIndex);
-                m_sprite.setTextureRect(sf::IntRect({rect.left, rect.top},
-                                                    {rect.width, rect.height}));
+                m_sprite.setTextureRect(sf::Rect2i({rect.position.x, rect.position.y},
+                                                    {rect.size.x, rect.size.y}));
             }
         }
     }
@@ -165,23 +165,23 @@ void Capivara::draw(core::IRenderer& renderer) const {
 
     // ── Dark outline (8-directional, 1px) ─────────────────────────
     auto& sfSprite = m_sprite.getSfmlSprite();
-    const auto origColor = sfSprite.getColor();
-    const auto origPos   = sfSprite.getPosition();
+    const auto origColor = sfSprite.color;
+    const auto origPos   = sfSprite.position;
 
-    sfSprite.setColor(sf::Color(0, 0, 0, 180));
-    const sf::Vector2f offsets[] = {
+    sfSprite.color = sf::Color{0, 0, 0, 180};
+    const sf::Vec2f offsets[] = {
         {-1, -1}, {0, -1}, {1, -1},
         {-1,  0},          {1,  0},
         {-1,  1}, {0,  1}, {1,  1}
     };
     for (const auto& off : offsets) {
-        sfSprite.setPosition(origPos.x + off.x, origPos.y + off.y);
+        sfSprite.position = {origPos.x + off.x, origPos.y + off.y};
         m_sprite.draw(renderer);
     }
 
     // ── Main sprite on top ────────────────────────────────────────
-    sfSprite.setColor(origColor);
-    sfSprite.setPosition(origPos);
+    sfSprite.color = origColor;
+    sfSprite.position = origPos;
     m_sprite.draw(renderer);
 }
 
@@ -193,11 +193,11 @@ bool Capivara::isDead() const {
     return !m_isAlive;
 }
 
-sf::Vector2f Capivara::getPosition() const {
+sf::Vec2f Capivara::getPosition() const {
     return m_position;
 }
 
-void Capivara::setPosition(sf::Vector2f pos) {
+void Capivara::setPosition(sf::Vec2f pos) {
     m_position = pos;
     m_sprite.setPosition(pos.x, pos.y);
 }

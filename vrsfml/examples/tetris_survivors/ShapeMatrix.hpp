@@ -1,0 +1,18 @@
+#pragma once
+
+
+////////////////////////////////////////////////////////////
+// Headers
+////////////////////////////////////////////////////////////
+#include "ShapeBlockSequence.hpp"
+#include "ShapeDimension.hpp"
+
+#include "SFML/Base/Array.hpp"
+
+
+namespace tsurv
+{
+////////////////////////////////////////////////////////////
+using ShapeMatrix = sf::base::Array<ShapeBlockSequence, shapeDimension * shapeDimension>;
+
+} // namespace tsurv

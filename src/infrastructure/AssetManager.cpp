@@ -1,3 +1,4 @@
+#include <vector>
 #include "AssetManager.h"
 #include <iostream>
 
@@ -20,9 +21,7 @@ bool AssetManager::loadTexture(const std::string& id,
     std::cerr << "[AssetManager] WARNING: Could not load '" << path
               << "'. Using fallback for '" << id << "'.\n";
     auto fallback = std::make_unique<SfmlTextureLoader>();
-    sf::Texture temp;
-    createFallback(temp);
-    fallback->getSfmlTexture().swap(temp);
+    fallback->setTexture(createFallbackTexture());
     m_cache[id] = std::move(fallback);
     return false;
 }
@@ -33,28 +32,29 @@ const sf::Texture& AssetManager::getTexture(const std::string& id) const {
         return it->second->getSfmlTexture();
     }
     // Never-loaded ID — return global fallback.
-    if (m_fallback.getSize().x == 0) {
-        createFallback(m_fallback);
+    if (!m_fallback.has_value()) {
+        m_fallback = createFallbackTexture();
     }
-    return m_fallback;
+    return m_fallback.value();
 }
 
 void AssetManager::clear() {
     m_cache.clear();
 }
 
-void AssetManager::createFallback(sf::Texture& tex) {
+sf::Texture AssetManager::createFallbackTexture() {
     // 32x32 solid magenta placeholder (easy to spot missing assets).
     constexpr unsigned S = 32;
-    std::vector<sf::Uint8> pixels(S * S * 4, 0xFF);
+    std::vector<sf::base::U8> pixels(S * S * 4, 0xFF);
     for (std::size_t i = 0; i < pixels.size(); i += 4) {
         pixels[i]     = 255; // R
         pixels[i + 1] = 0;   // G
         pixels[i + 2] = 255; // B
         pixels[i + 3] = 255; // A
     }
-    tex.create(S, S);
+    auto tex = sf::Texture::create({S, S}).value();
     tex.update(pixels.data());
+    return tex;
 }
 
 } // namespace infrastructure

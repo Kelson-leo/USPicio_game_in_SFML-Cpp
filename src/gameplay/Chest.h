@@ -4,7 +4,7 @@
 #include "core/PhysicsConstants.h"
 #include "infrastructure/SfmlSprite.h"
 #include "infrastructure/FrameConfig.h"
-#include <SFML/System/Vector2.hpp>
+#include <SFML/System/Vec2.hpp>
 
 namespace gameplay {
 
@@ -18,7 +18,7 @@ public:
 
     void init(const sf::Texture& texture,
               infrastructure::FrameConfig& config,
-              const sf::Vector2f& position,
+              const sf::Vec2f& position,
               float groundY);
 
     /// Checks collision with player and opens if touched for the first time.
@@ -27,7 +27,7 @@ public:
     void draw(core::IRenderer& renderer) const override;
 
     bool isOpen() const { return m_wasOpened; }
-    sf::Vector2f getPosition() const { return m_position; }
+    sf::Vec2f getPosition() const { return m_position; }
 
     static constexpr float CHEST_SCALE   = 0.3f;
     static constexpr float CHEST_FRAME_W = 267.0f;
@@ -43,7 +43,7 @@ private:
 
     infrastructure::SfmlSprite   m_sprite;
     infrastructure::FrameConfig* m_frameConfig = nullptr;
-    sf::Vector2f                 m_position;
+    sf::Vec2f                 m_position;
     float                        m_groundY    = core::GROUND_Y;
     bool                         m_wasOpened  = false;
 };

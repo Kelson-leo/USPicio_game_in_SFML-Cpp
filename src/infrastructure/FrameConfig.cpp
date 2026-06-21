@@ -49,9 +49,9 @@ std::size_t FrameConfig::frameCount(const std::string& character,
     return animIt->second.size();
 }
 
-sf::IntRect FrameConfig::getFrame(const std::string& character,
-                                  const std::string& animation,
-                                  std::size_t index) const {
+sf::Rect2i FrameConfig::getFrame(const std::string& character,
+                                const std::string& animation,
+                                std::size_t index) const {
     auto charIt = m_characters.find(character);
     if (charIt == m_characters.end()) return {};
 
@@ -64,7 +64,7 @@ sf::IntRect FrameConfig::getFrame(const std::string& character,
     if (index >= frames.size()) index = frames.size() - 1;
 
     const auto& f = frames[index];
-    return sf::IntRect({f.x, f.y}, {f.w, f.h});
+    return sf::Rect2i{{f.x, f.y}, {f.w, f.h}};
 }
 
 } // namespace infrastructure

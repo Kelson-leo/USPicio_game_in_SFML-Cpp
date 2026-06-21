@@ -4,38 +4,49 @@
 namespace infrastructure {
 
 SfmlSprite::SfmlSprite(const sf::Texture& texture)
-    : m_sprite(texture) {
+    : m_texture(&texture) {
+    m_sprite.textureRect = texture.getRect();
 }
 
 SfmlSprite::SfmlSprite(const sf::Texture& texture,
-                       const sf::IntRect& rect)
-    : m_sprite(texture, rect) {
+                       const sf::Rect2i& rect)
+    : m_texture(&texture) {
+    m_sprite.textureRect = sf::Rect2f{{static_cast<float>(rect.position.x),
+                                        static_cast<float>(rect.position.y)},
+                                       {static_cast<float>(rect.size.x),
+                                        static_cast<float>(rect.size.y)}};
 }
 
 void SfmlSprite::draw(core::IRenderer& renderer) const {
     auto& sfml = dynamic_cast<SfmlRenderer&>(renderer);
-    sfml.drawSfml(m_sprite);
+    sfml.drawSfml(m_sprite, m_texture);
 }
 
 void SfmlSprite::setTexture(const sf::Texture& texture,
                             bool resetRect) {
-    m_sprite.setTexture(texture, resetRect);
+    m_texture = &texture;
+    if (resetRect) {
+        m_sprite.textureRect = texture.getRect();
+    }
 }
 
-void SfmlSprite::setTextureRect(const sf::IntRect& rect) {
-    m_sprite.setTextureRect(rect);
+void SfmlSprite::setTextureRect(const sf::Rect2i& rect) {
+    m_sprite.textureRect = sf::Rect2f{{static_cast<float>(rect.position.x),
+                                        static_cast<float>(rect.position.y)},
+                                       {static_cast<float>(rect.size.x),
+                                        static_cast<float>(rect.size.y)}};
 }
 
 void SfmlSprite::setPosition(float x, float y) {
-    m_sprite.setPosition({x, y});
+    m_sprite.position = {x, y};
 }
 
 void SfmlSprite::setScale(float x, float y) {
-    m_sprite.setScale({x, y});
+    m_sprite.scale = {x, y};
 }
 
 void SfmlSprite::setColor(const sf::Color& color) {
-    m_sprite.setColor(color);
+    m_sprite.color = color;
 }
 
 sf::Sprite& SfmlSprite::getSfmlSprite() {
@@ -46,12 +57,16 @@ sf::Sprite& SfmlSprite::getSfmlSprite() const {
     return m_sprite;
 }
 
-sf::Color SfmlSprite::getColor() const {
-    return m_sprite.getColor();
+const sf::Texture* SfmlSprite::getTexture() const {
+    return m_texture;
 }
 
-sf::Vector2f SfmlSprite::getPosition() const {
-    return m_sprite.getPosition();
+sf::Color SfmlSprite::getColor() const {
+    return m_sprite.color;
+}
+
+sf::Vec2f SfmlSprite::getPosition() const {
+    return m_sprite.position;
 }
 
 } // namespace infrastructure

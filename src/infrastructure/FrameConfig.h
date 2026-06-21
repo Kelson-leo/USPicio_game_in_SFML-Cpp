@@ -1,6 +1,6 @@
 #pragma once
 
-#include <SFML/Graphics/Rect.hpp>
+#include <SFML/System/Rect2.hpp>
 #include <nlohmann/json_fwd.hpp>
 #include <string>
 #include <unordered_map>
@@ -38,10 +38,10 @@ public:
                            const std::string& animation) const;
 
     /// Get a frame rectangle.  Out-of-range index wraps to last valid
-    /// frame. Missing character/animation returns {0,0,0,0}.
-    sf::IntRect getFrame(const std::string& character,
-                         const std::string& animation,
-                         std::size_t index) const;
+    /// frame. Missing character/animation returns {}.
+    sf::Rect2i getFrame(const std::string& character,
+                        const std::string& animation,
+                        std::size_t index) const;
 
 private:
     CharMap m_characters;

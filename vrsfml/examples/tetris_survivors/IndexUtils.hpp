@@ -1,0 +1,18 @@
+#pragma once
+
+
+////////////////////////////////////////////////////////////
+// Headers
+////////////////////////////////////////////////////////////
+#include "SFML/System/Priv/Vec2Base.hpp"
+
+
+namespace tsurv
+{
+////////////////////////////////////////////////////////////
+[[nodiscard]] inline sf::base::SizeT getIndex2Dto1D(const sf::Vec2uz position, const sf::base::SizeT width)
+{
+    return position.y * width + position.x;
+}
+
+} // namespace tsurv

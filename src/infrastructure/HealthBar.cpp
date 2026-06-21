@@ -1,6 +1,6 @@
 #include "infrastructure/HealthBar.h"
 #include "infrastructure/SfmlRenderer.h"
-#include <SFML/Graphics/RenderTarget.hpp>
+#include <SFML/Graphics/RectangleShape.hpp>
 
 namespace infrastructure {
 
@@ -15,20 +15,22 @@ void HealthBar::draw(core::IRenderer& renderer) const {
     auto& sfml = dynamic_cast<SfmlRenderer&>(renderer);
 
     // Background (red)
-    sf::RectangleShape bg;
-    bg.setPosition(m_position.x, m_position.y);
-    bg.setSize({m_size.x, m_size.y});
-    bg.setFillColor(sf::Color::Red);
+    sf::RectangleShape bg{{
+        .position = {m_position.x, m_position.y},
+        .size = {m_size.x, m_size.y},
+        .fillColor = sf::Color::Red
+    }};
     sfml.drawSfml(bg);
 
     // Fill (green) — proportional to current HP
     float ratio = static_cast<float>(m_health.currentHP) /
                   static_cast<float>(m_health.maxHP);
 
-    sf::RectangleShape fill;
-    fill.setPosition(m_position.x, m_position.y);
-    fill.setSize({m_size.x * ratio, m_size.y});
-    fill.setFillColor(sf::Color::Green);
+    sf::RectangleShape fill{{
+        .position = {m_position.x, m_position.y},
+        .size = {m_size.x * ratio, m_size.y},
+        .fillColor = sf::Color::Green
+    }};
     sfml.drawSfml(fill);
 }
 

@@ -1,0 +1,6 @@
+/home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/build-vrsfml/CMakeFiles/gtest.dir
+/home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/build-vrsfml/CMakeFiles/UspicioLib.dir
+/home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/build-vrsfml/CMakeFiles/UspicioGame.dir
+/home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/build-vrsfml/CMakeFiles/unit_tests.dir
+/home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/build-vrsfml/CMakeFiles/edit_cache.dir
+/home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/build-vrsfml/CMakeFiles/rebuild_cache.dir

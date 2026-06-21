@@ -1,0 +1,71 @@
+#pragma once
+
+
+////////////////////////////////////////////////////////////
+// Headers
+////////////////////////////////////////////////////////////
+#include "SFML/System/Priv/Vec2Base.hpp"
+
+#include "SFML/Base/AssertAndAssume.hpp"
+#include "SFML/Base/Math/Exp.hpp"
+
+
+////////////////////////////////////////////////////////////
+[[nodiscard, gnu::always_inline, gnu::flatten, gnu::const]] inline constexpr float remap(
+    const float x,
+    const float oldMin,
+    const float oldMax,
+    const float newMin,
+    const float newMax) noexcept
+{
+    SFML_BASE_ASSERT_AND_ASSUME(oldMax != oldMin);
+    return newMin + ((x - oldMin) / (oldMax - oldMin)) * (newMax - newMin);
+}
+
+
+////////////////////////////////////////////////////////////
+[[nodiscard, gnu::always_inline, gnu::flatten, gnu::const]] inline constexpr float blend(
+    const float a,
+    const float b,
+    const float value) noexcept
+{
+    return a + (b - a) * value;
+}
+
+
+////////////////////////////////////////////////////////////
+[[nodiscard, gnu::always_inline, gnu::flatten, gnu::const]] inline constexpr sf::Vec2f blend(
+    const sf::Vec2f a,
+    const sf::Vec2f b,
+    const float     value) noexcept
+{
+    return a + (b - a) * value;
+}
+
+
+////////////////////////////////////////////////////////////
+[[nodiscard, gnu::always_inline, gnu::flatten, gnu::const]] inline constexpr float exponentialApproach(
+    const float current,
+    const float target,
+    const float deltaTimeMs,
+    const float timeToConverge) noexcept
+{
+    SFML_BASE_ASSERT_AND_ASSUME(timeToConverge > 0.f);
+
+    const float factor = 1.f - sf::base::exp(-deltaTimeMs / timeToConverge);
+    return current + (target - current) * factor;
+}
+
+
+////////////////////////////////////////////////////////////
+[[nodiscard, gnu::always_inline, gnu::flatten, gnu::const]] inline constexpr sf::Vec2f exponentialApproach(
+    const sf::Vec2f current,
+    const sf::Vec2f target,
+    const float     deltaTimeMs,
+    const float     timeToConverge) noexcept
+{
+    SFML_BASE_ASSERT_AND_ASSUME(timeToConverge > 0.f);
+
+    const float factor = 1.f - sf::base::exp(-deltaTimeMs / timeToConverge);
+    return current + (target - current) * factor;
+}

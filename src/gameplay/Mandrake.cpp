@@ -84,8 +84,8 @@ void Mandrake::setAnim(const std::string& anim, float duration, bool loop) {
 
 void Mandrake::syncSpriteRect() {
     auto rect = m_frameConfig.getFrame("mandrake", m_currentAnim, m_frameIndex);
-    m_sprite.setTextureRect(sf::IntRect({rect.left, rect.top},
-                                        {rect.width, rect.height}));
+    m_sprite.setTextureRect(sf::Rect2i({rect.position.x, rect.position.y},
+                                        {rect.size.x, rect.size.y}));
 }
 
 ProjectileType Mandrake::getProjectileType() const {

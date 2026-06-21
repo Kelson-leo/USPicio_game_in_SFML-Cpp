@@ -1,0 +1,21 @@
+// LICENSE AND COPYRIGHT (C) INFORMATION
+// https://github.com/vittorioromeo/VRSFML/blob/master/license.md
+
+
+////////////////////////////////////////////////////////////
+// Headers
+////////////////////////////////////////////////////////////
+#include "SFML/Base/Abort.hpp"
+
+#include <cstdlib>
+
+
+namespace sf::base
+{
+////////////////////////////////////////////////////////////
+void abort() noexcept
+{
+    std::abort();
+}
+
+} // namespace sf::base

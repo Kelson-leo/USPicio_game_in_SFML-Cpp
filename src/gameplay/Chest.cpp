@@ -1,5 +1,7 @@
 #include "gameplay/Chest.h"
 #include "gameplay/Player.h"
+#include <SFML/System/RectUtils.hpp>
+#include <SFML/System/Rect2.hpp>
 #include <cmath>
 
 namespace gameplay {
@@ -8,7 +10,7 @@ Chest::Chest() = default;
 
 void Chest::init(const sf::Texture& texture,
                  infrastructure::FrameConfig& config,
-                 const sf::Vector2f& position,
+                 const sf::Vec2f& position,
                  float groundY) {
     m_frameConfig = &config;
     m_groundY     = groundY;
@@ -18,8 +20,8 @@ void Chest::init(const sf::Texture& texture,
     m_sprite.setScale(CHEST_SCALE, CHEST_SCALE);
 
     auto rect = m_frameConfig->getFrame("chest", "closed", 0);
-    m_sprite.setTextureRect(sf::IntRect({rect.left, rect.top},
-                                        {rect.width, rect.height}));
+    m_sprite.setTextureRect(sf::Rect2i({rect.position.x, rect.position.y},
+                                        {rect.size.x, rect.size.y}));
     m_position = position;
     m_sprite.setPosition(m_position.x, m_position.y);
 }
@@ -30,12 +32,12 @@ void Chest::update(Player& player) {
     // Simple bounding-box collision
     auto pPos = player.getPosition();
     float playerH = player.getCurrentHeight();
-    sf::FloatRect playerBounds(pPos.x, pPos.y, 60.0f, playerH);
+    sf::Rect2f playerBounds{{pPos.x, pPos.y}, {60.0f, playerH}};
 
-    sf::FloatRect chestBounds(m_position.x, m_position.y,
-                              CHEST_WIDTH, CHEST_HEIGHT);
+    sf::Rect2f chestBounds{{m_position.x, m_position.y},
+                            {CHEST_WIDTH, CHEST_HEIGHT}};
 
-    if (playerBounds.intersects(chestBounds)) {
+    if (sf::findIntersection(playerBounds, chestBounds).hasValue()) {
         tryOpen(player);
     }
 }
@@ -67,8 +69,8 @@ void Chest::tryOpen(Player& player) {
     // ── Switch to open frame ───────────────────────────────────────
     if (m_frameConfig) {
         auto rect = m_frameConfig->getFrame("chest", "open", 0);
-        m_sprite.setTextureRect(sf::IntRect({rect.left, rect.top},
-                                            {rect.width, rect.height}));
+        m_sprite.setTextureRect(sf::Rect2i({rect.position.x, rect.position.y},
+                                            {rect.size.x, rect.size.y}));
     }
 }
 

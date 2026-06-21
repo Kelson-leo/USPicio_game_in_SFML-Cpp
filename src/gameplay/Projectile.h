@@ -4,8 +4,8 @@
 #include "core/Direction.h"
 #include "infrastructure/SfmlSprite.h"
 #include "infrastructure/FrameConfig.h"
-#include <SFML/Graphics/Rect.hpp>
-#include <SFML/System/Vector2.hpp>
+#include <SFML/System/Rect2.hpp>
+#include <SFML/System/Vec2.hpp>
 #include <string>
 
 namespace gameplay {
@@ -19,7 +19,7 @@ public:
     void init(ProjectileType type, core::Direction dir,
               const sf::Texture& texture,
               infrastructure::FrameConfig& frameConfig,
-              const sf::Vector2f& startPos);
+              const sf::Vec2f& startPos);
 
     void update(float dt);
     void draw(core::IRenderer& renderer) const override;
@@ -28,11 +28,11 @@ public:
     bool isActive() const;
     int  getDamage() const;
     float getLifetime() const;
-    sf::FloatRect getBounds() const;
+    sf::Rect2f getBounds() const;
 
 private:
     infrastructure::SfmlSprite   m_sprite;
-    sf::Vector2f                 m_velocity;
+    sf::Vec2f                 m_velocity;
     ProjectileType               m_type = ProjectileType::Pen;
     core::Direction              m_direction = core::Direction::Right;
     int                          m_damage = 0;

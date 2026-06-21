@@ -1,8 +1,9 @@
 #pragma once
 
 #include "SfmlTextureLoader.h"
-#include <SFML/Graphics.hpp>
+#include <SFML/Graphics/Texture.hpp>
 #include <memory>
+#include <optional>
 #include <string>
 #include <unordered_map>
 
@@ -33,10 +34,10 @@ public:
 private:
     AssetManager() = default;
 
-    static void createFallback(sf::Texture& tex);
+    static sf::Texture createFallbackTexture();
 
     std::unordered_map<std::string, std::unique_ptr<SfmlTextureLoader>> m_cache;
-    mutable sf::Texture m_fallback; // returned for unknown IDs / failed loads
+    mutable std::optional<sf::Texture> m_fallback; // returned for unknown IDs / failed loads
 };
 
 } // namespace infrastructure
