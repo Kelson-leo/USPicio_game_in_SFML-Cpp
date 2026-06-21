@@ -11,7 +11,7 @@ struct HealthComponent {
     void takeDamage(int amount, bool isDefending = false) {
         int finalDamage = amount;
         if (isDefending) {
-            finalDamage = std::max(1, amount / 2);
+            finalDamage = std::max(1, amount / 5);  // 80% reduction
         }
         currentHP = std::max(0, currentHP - finalDamage);
     }

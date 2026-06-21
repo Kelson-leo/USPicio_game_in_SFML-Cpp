@@ -230,7 +230,9 @@ float Player::getCurrentHeight() const {
 void Player::takeHit(core::AttackType attack,
                      const core::DamageConfig& cfg) {
     int dmg = cfg.getDamage(attack, core::EntityType::Player);
-    health.takeDamage(dmg, m_isDefending);
+    // Defense only works against projectiles (not melee/touch)
+    bool defending = (attack == core::AttackType::BossProjectile) && m_isDefending;
+    health.takeDamage(dmg, defending);
 
     if (health.isDead()) {
         lives.loseLife();

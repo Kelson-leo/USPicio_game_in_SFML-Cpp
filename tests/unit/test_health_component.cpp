@@ -15,10 +15,16 @@ TEST(HealthComponentTest, TakeDamage) {
     EXPECT_FALSE(h.isDead());
 }
 
-TEST(HealthComponentTest, TakeDamageWithDefenseHalves) {
+TEST(HealthComponentTest, TakeDamageWithDefenseReduces80Percent) {
     core::HealthComponent h;
     h.takeDamage(30, true);
-    EXPECT_EQ(h.currentHP, 85);  // 100 - 15
+    EXPECT_EQ(h.currentHP, 94);  // 100 - (30/5) = 100 - 6
+}
+
+TEST(HealthComponentTest, TakeDamageWithDefense80Percent) {
+    core::HealthComponent h;
+    h.takeDamage(20, true);
+    EXPECT_EQ(h.currentHP, 96);  // 100 - (20/5) = 100 - 4
 }
 
 TEST(HealthComponentTest, DefenseFloorIsOne) {
