@@ -346,16 +346,25 @@ void Game::processInput() {
                         }
                     }
                     if (!hitCapivara && m_boss && !m_boss->health.isDead()) {
-                        int dmg = m_damageCfg.getDamage(
-                            core::AttackType::Punch, core::EntityType::Professor);
-                        m_boss->health.takeDamage(dmg);
+                        float dx = std::abs(m_boss->getPosition().x
+                                            - m_player->getPosition().x);
+                        if (dx <= PUNCH_RANGE_X) {
+                            int dmg = m_damageCfg.getDamage(
+                                core::AttackType::Punch, core::EntityType::Professor);
+                            m_boss->health.takeDamage(dmg);
+                        }
                     }
                 } else {
-                    // Standing punch: only hits Professor (capivaras are too low)
+                    // Standing punch: only hits boss within range
+                    static constexpr float PUNCH_RANGE = 80.0f;
                     if (m_boss && !m_boss->health.isDead()) {
-                        int dmg = m_damageCfg.getDamage(
-                            core::AttackType::Punch, core::EntityType::Professor);
-                        m_boss->health.takeDamage(dmg);
+                        float dx = std::abs(m_boss->getPosition().x
+                                            - m_player->getPosition().x);
+                        if (dx <= PUNCH_RANGE) {
+                            int dmg = m_damageCfg.getDamage(
+                                core::AttackType::Punch, core::EntityType::Professor);
+                            m_boss->health.takeDamage(dmg);
+                        }
                     }
                 }
             }

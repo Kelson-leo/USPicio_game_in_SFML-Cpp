@@ -86,7 +86,8 @@ Hierarquia: classe base `Boss` → subclasses `Professor`, `Rato`, `Mandrake`, `
 - `getProjectileType()` virtual → cada subclasse retorna seu tipo.
 - `performMeleeAttack(Player&)` virtual → Mandrake e Peru sobrescrevem.
 - `getHeight()` virtual → Rato sobrescreve (97.5px); demais usam BOSS_HEIGHT (80px).
-- **Rato:** Animação contínua de 6 frames (345×390 native, escala 0.25 → ~86×97). Sempre em loop de ataque.
+- **Rato:** Idle (1 frame) + Attack (5 frames, toca uma vez ao disparar). 345×390 native, escala 0.35 → ~121×136.
+- **Mandrake:** Idle v1 (1 frame) ou v2 (2 frames em loop, 50% chance). Ranged: 5 frames (toca uma vez). Melee: 2 frames (toca uma vez). 154-286×318 native, escala 0.3 → ~46-86×95.
 - Fábrica em `Game::loadLevel()` por `chefao_tipo`.
 
 ### Progressão (Sprint 8)
@@ -205,7 +206,7 @@ assets/
 |---|---|---|
 | `Arrow Keys` | Move left/right | Gameplay |
 | `Space` / `Up` | Jump | Gameplay (on ground) |
-| `Z` | Punch | Gameplay |
+| `Z` | Punch (range ≤ 80px) | Gameplay |
 | `X` | Throw Pen (costs 1 ammo) | Gameplay |
 | `C` | Defend (blocks 70% projectile damage) | Gameplay (hold) |
 | `Down Arrow` | Crouch | Gameplay (hold) |
@@ -317,7 +318,7 @@ Estado de agachamento acionado ao pressionar `Down Arrow` durante o jogo:
 - Verifica `ammo.canUse()` e `m_shootCooldown <= 0`
 - Cooldown: 0.3s entre disparos (`SHOOT_COOLDOWN`), evita gasto instantâneo
 - Consome 1 munição, cria Pen na direção do player
-- Offset Y: **-30** (em pé) / **0** (agachado). Offset X: **40** (direita) / **-10** (esquerda)
+- Offset Y: **-30** (em pé) / **25** (agachado). Offset X: **40** (direita) / **-10** (esquerda)
 - **Comportamento:** Em pé → caneta passa por cima da capivara (base 797 < topo 817.5). Agachado → caneta acerta (base 831 > topo 817.5). Contra Professor funciona em ambos os estados (Professor é mais alto).
 
 **Disparo pelos Chefes** (`Boss::shootProjectile`):
@@ -326,7 +327,7 @@ Estado de agachamento acionado ao pressionar `Down Arrow` durante o jogo:
   - Mandrake → `assets.getTexture("pedra")`, Peru → `assets.getTexture("copo")`
 - Dispara se vivo, cooldown ≤ 0, e distância ao player entre 80–600px (min 80px evita spawn dentro do player)
 - MELEE_RANGE = 150px (Mandrake/Peru só socam se o player estiver muito próximo)
-- Spawn offset: ±80px horizontal, -40px vertical (acima do chefe, altura do peito)
+- Spawn offset: ±80px horizontal, -10px vertical (altura da mão, próximo ao centro do chefe)
 - **Período de graça:** 0.1s — projétil não pode colidir nos primeiros 100ms (evita destruição antes do primeiro draw)
 - Reseta cooldown para 2.0s após cada disparo
 
