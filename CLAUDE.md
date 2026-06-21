@@ -185,6 +185,7 @@ assets/
 | `Z` | Punch | Gameplay |
 | `X` | Throw Pen (costs 1 ammo) | Gameplay |
 | `C` | Defend (halves incoming damage) | Gameplay (hold) |
+| `Down Arrow` | Crouch | Gameplay (hold) |
 | `Enter` | Select menu option / Start game | Menu |
 | `Up` / `Down` | Navigate menu options | Menu |
 | `Escape` | Pause (during gameplay) / Back (Info) / Exit (Main menu) | Gameplay / Info / Menu |
@@ -211,6 +212,18 @@ Pressionar `ESC` durante o jogo abre o menu de pausa sobreposto ao jogo congelad
 - **Quit to Menu** — Sai para o menu principal, resetando todo o progresso
 
 Navegação: Up/Down para selecionar, Enter para confirmar.
+
+### Crouch (Sprint 8)
+
+Estado de agachamento acionado ao pressionar `Down Arrow` durante o jogo:
+- **Animação:** 8 novos estados direcionais no `frames.json`: `crouch_idle`, `crouch_punch` (2 frames), `crouch_throw` (1 frame), `crouch_defend` (1 frame) × right/left.
+- **Hitbox:** Reduzida verticalmente (`CROUCH_HEIGHT = 79 × 1.5 = 118.5px` vs `PLAYER_HEIGHT = 142.5px`).
+- **Física:** Os pés permanecem em `GROUND_Y`. Ao agachar, `m_position.y` é ajustado para compensar a altura menor. Gravidade e movimento horizontal inalterados.
+- **Pulo bloqueado:** `Space`/`Up` não têm efeito enquanto agachado.
+- **Ataques:** `Z` (punch), `X` (throw), `C` (defend) funcionam normalmente, usando as animações `crouch_*`.
+- **Movimento:** Funciona (usa `crouch_idle` pois não há `crouch_walk`).
+- `buildAnimName()` prefixa `"crouch_"` quando `m_isCrouching == true`.
+- `getCurrentHeight()` retorna a altura apropriada para física e colisão.
 
 ### Capivara (Enemy — Sprint 6)
 
@@ -402,7 +415,7 @@ Entidades em `src/gameplay/` implementam `core::Drawable` para renderização:
 
 | Classe | Componentes | HP Padrão | Métodos |
 |---|---|---|---|
-| `Player` | health, lives, ammo | 100 | `punch()`, `throwCaneta()`, `defend(bool)`, `takeHit()`, `revive()`, `moveLeft/Right()`, `applyGravity()`, `setAnimation()`, `updateAnimation()`, `setDirection()` |
+| `Player` | health, lives, ammo | 100 | `punch()`, `throwCaneta()`, `defend(bool)`, `takeHit()`, `revive()`, `moveLeft/Right()`, `applyGravity()`, `setAnimation()`, `updateAnimation()`, `setDirection()`, `setCrouching()`, `isCrouching()`, `getCurrentHeight()` |
 | `Capivara` | health | 30 | `touchPlayer(Player&)` |
 | `Professor` | health | 80 | `shootBook(Player&)` |
 
@@ -480,4 +493,4 @@ Entidades em `src/gameplay/` implementam `core::Drawable` para renderização:
 | 5 | 2026-06-20 | Menu system (Start/Restart/Info with Up/Down/Enter navigation), Info screen (developer, copyright, controls overlay), Player scale 1.5x, keyboard controls documented, Restart fully resets game state |
 | 6 | 2026-06-20 | Capivara enemy: real sprite frames (8 directional), animation system, AI movement toward player, edge clamping, contact damage, hurt/dead states, Fase 1=2, Fase 2=3, Fase 3=2+Professor |
 | 7 | 2026-06-20 | Projectile system: Pen (player, 500px/s, 20dmg) and Exam (professor, 250px/s, 12dmg), collision with enemies/player, professor AI shoots at range 600px with 2s cooldown, unique_ptr lifecycle with erase_if cleanup |
-| 8 | 2026-06-20 | Phase system restructure (JSON-configurable phases, PhaseConfig class, 4-phase progression Patio→InterUSP→Biblioteca→Reitoria, auto-advance, victory/game-over screens) + Sprite outline/drop-shadow on Player and Capivara (8-directional 1px dark outline via mutable SfmlSprite), 91/91 tests |
+| 8 | 2026-06-20 | Phase system restructure (JSON-configurable phases, PhaseConfig class, 4 phases, auto-advance, victory/game-over) + Sprite outline/drop-shadow on Player and Capivara + Crouch state (8 new directional animations, Down Arrow input, reduced hitbox, jump blocked while crouching), 91/91 tests |

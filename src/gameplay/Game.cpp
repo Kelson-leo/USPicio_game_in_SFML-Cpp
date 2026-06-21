@@ -104,6 +104,7 @@ Game::Game(core::IRenderer& renderer, core::IInputHandler& input)
         "  Z           -  Punch\n\n"
         "  X           -  Throw Pen\n\n"
         "  C           -  Defend\n\n"
+        "  Down Arrow  -  Crouch\n\n"
         "  Enter       -  Select / Start\n\n"
         "  Escape      -  Pause / Back");
     m_infoControls.setCharacterSize(18);
@@ -238,9 +239,15 @@ void Game::processInput() {
             moving = true;
         }
 
+        if (m_input.isKeyPressed(core::KeyCode::Down)) {
+            m_player->setCrouching(true);
+        } else {
+            m_player->setCrouching(false);
+        }
+
         if (m_input.isKeyPressed(core::KeyCode::Space) ||
             m_input.isKeyPressed(core::KeyCode::Up)) {
-            if (m_player->isOnGround()) {
+            if (m_player->isOnGround() && !m_player->isCrouching()) {
                 m_player->velocityY = core::JUMP_SPEED;
                 m_player->setAnimation("jump");
             }
@@ -437,7 +444,8 @@ void Game::update(float dt) {
         } else {  // Exam (professor projectile) vs player
             if (!m_player->health.isDead()) {
                 auto pPos = m_player->getPosition();
-                sf::FloatRect pBounds(pPos.x, pPos.y, 60.0f, 140.0f);
+                float playerH = m_player->getCurrentHeight();
+                sf::FloatRect pBounds(pPos.x, pPos.y, 60.0f, playerH);
                 if (bounds.intersects(pBounds)) {
                     m_player->takeHit(core::AttackType::BossProjectile, m_damageCfg);
                     p->deactivate();

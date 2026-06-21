@@ -30,6 +30,7 @@ public:
     static constexpr float WALK_SPEED     = 80.0f;
     static constexpr float PLAYER_SCALE   = 1.5f;
     static constexpr float PLAYER_HEIGHT  = 95.0f * PLAYER_SCALE;  // feet offset
+    static constexpr float CROUCH_HEIGHT  = 79.0f * PLAYER_SCALE;  // crouch hitbox
     static constexpr float SHOOT_COOLDOWN = 0.3f;
 
     // ── core::Drawable ─────────────────────────────────────────────
@@ -55,6 +56,11 @@ public:
     // ── Defense ─────────────────────────────────────────────────────
     void defend(bool active);
     bool isDefending() const;
+
+    // ── Crouch ──────────────────────────────────────────────────────
+    void setCrouching(bool crouching);
+    bool isCrouching() const;
+    float getCurrentHeight() const;
 
     // ── Damage to self ──────────────────────────────────────────────
     void takeHit(core::AttackType attack,
@@ -93,7 +99,8 @@ private:
     std::size_t                      m_frameIndex = 0;
     float                            m_frameTimer = 0.0f;
     sf::Vector2f                     m_position;
-    bool                             m_isDefending = false;
+    bool                             m_isDefending  = false;
+    bool                             m_isCrouching  = false;
 };
 
 } // namespace gameplay

@@ -17,7 +17,8 @@ Player::Player(const sf::Texture& texture,
 // ────────────────────────────────────────────────────────────────────
 
 std::string Player::buildAnimName(const std::string& action) const {
-    return action + "_"
+    const std::string prefix = m_isCrouching ? "crouch_" : "";
+    return prefix + action + "_"
         + (m_direction == core::Direction::Right ? "right" : "left");
 }
 
@@ -181,6 +182,46 @@ bool Player::isDefending() const {
 }
 
 // ────────────────────────────────────────────────────────────────────
+// Crouch
+// ────────────────────────────────────────────────────────────────────
+
+void Player::setCrouching(bool crouching) {
+    if (m_isCrouching == crouching) return;
+    m_isCrouching = crouching;
+
+    // Adjust Y so feet stay at the same ground level
+    if (crouching) {
+        m_position.y += (PLAYER_HEIGHT - CROUCH_HEIGHT);
+    } else {
+        m_position.y -= (PLAYER_HEIGHT - CROUCH_HEIGHT);
+    }
+    m_sprite.setPosition(m_position.x, m_position.y);
+
+    // Re-apply current action with new crouch prefix
+    // Extract base action: strip direction suffix and optional "crouch_" prefix
+    std::string base = m_currentAnim;
+    auto lastUnderscore = base.rfind('_');
+    if (lastUnderscore != std::string::npos) {
+        base = base.substr(0, lastUnderscore);
+    }
+    const std::string crouchPrefix = "crouch_";
+    if (base.size() >= crouchPrefix.size() &&
+        base.substr(0, crouchPrefix.size()) == crouchPrefix) {
+        base = base.substr(crouchPrefix.size());
+    }
+    if (base.empty()) base = "idle";
+    setAnimation(base);
+}
+
+bool Player::isCrouching() const {
+    return m_isCrouching;
+}
+
+float Player::getCurrentHeight() const {
+    return m_isCrouching ? CROUCH_HEIGHT : PLAYER_HEIGHT;
+}
+
+// ────────────────────────────────────────────────────────────────────
 // Damage
 // ────────────────────────────────────────────────────────────────────
 
@@ -198,7 +239,8 @@ bool Player::revive() {
     if (lives.isGameOver()) return false;
 
     health.currentHP = health.maxHP;
-    m_position = {100.0f, core::GROUND_Y - PLAYER_HEIGHT};
+    m_isCrouching = false;
+    m_position = {100.0f, core::GROUND_Y - getCurrentHeight()};
     return true;
 }
 
@@ -220,17 +262,18 @@ void Player::applyGravity(float dt) {
     velocityY += core::GRAVITY * dt;
     m_position.y += velocityY * dt;
 
-    // Feet (bottom of sprite) at GROUND_Y
-    float feetY = m_position.y + PLAYER_HEIGHT;
+    // Feet (bottom of sprite) at GROUND_Y — uses current height
+    const float h = getCurrentHeight();
+    float feetY = m_position.y + h;
     if (feetY >= core::GROUND_Y) {
-        m_position.y = core::GROUND_Y - PLAYER_HEIGHT;
+        m_position.y = core::GROUND_Y - h;
         velocityY = 0.0f;
     }
     m_sprite.setPosition(m_position.x, m_position.y);
 }
 
 bool Player::isOnGround() const {
-    return (m_position.y + PLAYER_HEIGHT) >= core::GROUND_Y;
+    return (m_position.y + getCurrentHeight()) >= core::GROUND_Y;
 }
 
 // ────────────────────────────────────────────────────────────────────
