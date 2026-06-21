@@ -74,9 +74,10 @@ private:
     bool     m_running  = true;
 
     int m_menuSelection    = 0;  // 0=Start, 1=Options, 2=Info, 3=Restart
-    int m_optionsSelection = 0;  // 0=MusicVol, 1=SFXVol, 2=Back
+    int m_optionsSelection = 0;  // 0=MusicVol, 1=SFXVol, 2=Track, 3=Back
     int m_infoSelection    = 0;  // 0=Back
-    int m_pauseSelection   = 0;  // 0=Resume, 1=Restart, 2=Quit to Menu
+    int m_pauseSelection   = 0;  // 0=Resume, 1=Options, 2=Restart, 3=Quit to Menu
+    bool m_optionsFromPause = false;  // track parent for Back navigation
 
     // ── Config ────────────────────────────────────────────────────
     core::DamageConfig           m_damageCfg;
@@ -104,6 +105,8 @@ private:
     infrastructure::SfmlText m_optionsMusicBar;
     infrastructure::SfmlText m_optionsSfxLabel;
     infrastructure::SfmlText m_optionsSfxBar;
+    infrastructure::SfmlText m_optionsTrackLabel;
+    infrastructure::SfmlText m_optionsTrackSelector;
     infrastructure::SfmlText m_optionsHint;
     infrastructure::SfmlText m_optionsBack;
 

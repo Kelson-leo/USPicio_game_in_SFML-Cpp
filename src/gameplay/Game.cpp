@@ -68,7 +68,7 @@ Game::Game(core::IRenderer& renderer, core::IInputHandler& input)
 
     // ── Audio ────────────────────────────────────────────────────
     m_audio = std::make_unique<infrastructure::AudioManager>(
-        "assets/sounds/music/background_music.mp3");
+        m_audioCfg.selectedTrack);
     m_audio->applyConfig(m_audioCfg);
     m_audio->play();
 
@@ -83,7 +83,7 @@ Game::Game(core::IRenderer& renderer, core::IInputHandler& input)
     }
 
     // ── Options overlay ──────────────────────────────────────────
-    m_optionsOverlay.setSize({700.0f, 380.0f});
+    m_optionsOverlay.setSize({700.0f, 430.0f});
     m_optionsOverlay.setFillColor(sf::Color(30, 30, 40, 245));
 
     m_optionsTitle.setFont(m_font);
@@ -109,6 +109,15 @@ Game::Game(core::IRenderer& renderer, core::IInputHandler& input)
     m_optionsSfxBar.setFont(m_font);
     m_optionsSfxBar.setCharacterSize(18);
     m_optionsSfxBar.setFillColor(sf::Color::White);
+
+    m_optionsTrackLabel.setFont(m_font);
+    m_optionsTrackLabel.setString("Background Music:");
+    m_optionsTrackLabel.setCharacterSize(24);
+    m_optionsTrackLabel.setFillColor(sf::Color(200, 200, 255));
+
+    m_optionsTrackSelector.setFont(m_font);
+    m_optionsTrackSelector.setCharacterSize(20);
+    m_optionsTrackSelector.setFillColor(sf::Color::White);
 
     m_optionsHint.setFont(m_font);
     m_optionsHint.setString("Left/Right Arrow to adjust volume");
@@ -160,10 +169,10 @@ Game::Game(core::IRenderer& renderer, core::IInputHandler& input)
     m_infoBack.setFillColor(sf::Color::Yellow);
 
     // ── Pause overlay ────────────────────────────────────────────
-    m_pauseOverlay.setSize({380.0f, 220.0f});
+    m_pauseOverlay.setSize({380.0f, 280.0f});
     m_pauseOverlay.setFillColor(sf::Color(20, 20, 40, 230));
 
-    const char* pauseOpts[] = {"Resume", "Restart", "Quit to Menu"};
+    const char* pauseOpts[] = {"Resume", "Options", "Restart", "Quit to Menu"};
     for (const auto* lbl : pauseOpts) {
         auto& item = m_pauseItems.emplace_back();
         item.setFont(m_font);
@@ -237,6 +246,11 @@ void Game::processInput() {
                     m_pauseSelection = 0;
                     continue;
                 }
+                if (m_state == State::Paused && m_menuPage == MenuPage::Options) {
+                    m_optionsFromPause = false;
+                    m_menuPage = MenuPage::Main;  // back to pause menu
+                    continue;
+                }
                 if (m_state == State::Paused) {
                     setState(State::Playing);  // resume
                     continue;
@@ -260,7 +274,11 @@ void Game::processInput() {
                     handleInfoInput(event);
                 }
             } else if (m_state == State::Paused) {
-                handlePauseInput(event);
+                if (m_menuPage == MenuPage::Options) {
+                    handleOptionsInput(event);
+                } else {
+                    handlePauseInput(event);
+                }
             } else if (m_state == State::GameOver || m_state == State::Victory) {
                 handleGameOverInput(event);
             }
@@ -390,6 +408,7 @@ void Game::handleMenuInput(const core::Event& event) {
             setState(State::Playing);
             break;
         case 1: // Options
+            m_optionsFromPause = false;
             m_menuPage = MenuPage::Options;
             m_optionsSelection = 0;
             break;
@@ -416,7 +435,7 @@ void Game::handleInfoInput(const core::Event& event) {
 }
 
 void Game::handleOptionsInput(const core::Event& event) {
-    const int n = 3;  // Music, SFX, Back
+    const int n = 4;  // Music, SFX, Track, Back
 
     if (event.key == core::KeyCode::Up) {
         m_optionsSelection = (m_optionsSelection - 1 + n) % n;
@@ -428,6 +447,9 @@ void Game::handleOptionsInput(const core::Event& event) {
             m_audio->setMusicVolume(m_audioCfg.musicVolume);
         } else if (m_optionsSelection == 1) {
             m_audioCfg.effectVolume = std::max(0.0f, m_audioCfg.effectVolume - 5.0f);
+        } else if (m_optionsSelection == 2) {
+            m_audio->previousTrack();
+            m_audioCfg.selectedTrack = m_audio->getCurrentTrackIndex();
         }
     } else if (event.key == core::KeyCode::Right) {
         if (m_optionsSelection == 0) {
@@ -435,13 +457,21 @@ void Game::handleOptionsInput(const core::Event& event) {
             m_audio->setMusicVolume(m_audioCfg.musicVolume);
         } else if (m_optionsSelection == 1) {
             m_audioCfg.effectVolume = std::min(100.0f, m_audioCfg.effectVolume + 5.0f);
+        } else if (m_optionsSelection == 2) {
+            m_audio->nextTrack();
+            m_audioCfg.selectedTrack = m_audio->getCurrentTrackIndex();
         }
     } else if (event.key == core::KeyCode::Enter) {
-        if (m_optionsSelection == 2) {
-            m_menuPage = MenuPage::Main;
+        if (m_optionsSelection == 3) {
+            if (m_optionsFromPause) {
+                m_optionsFromPause = false;
+                m_state = State::Paused;
+            } else {
+                m_menuPage = MenuPage::Main;
+            }
         }
     }
-    // Escape handled globally → returns to Main
+    // Escape handled globally → returns to Main (or Pause if m_optionsFromPause)
 }
 
 void Game::handlePauseInput(const core::Event& event) {
@@ -456,11 +486,16 @@ void Game::handlePauseInput(const core::Event& event) {
         case 0: // Resume
             setState(State::Playing);
             break;
-        case 1: // Restart (phase)
+        case 1: // Options
+            m_optionsFromPause = true;
+            m_optionsSelection = 0;
+            m_menuPage = MenuPage::Options;
+            break;
+        case 2: // Restart (phase)
             restartPhase();
             setState(State::Playing);
             break;
-        case 2: // Quit to Menu
+        case 3: // Quit to Menu
             restartGame();
             setState(State::Menu);
             break;
@@ -686,9 +721,13 @@ void Game::render() {
             m_renderer.draw(*m_ammoDisplay);
         }
 
-        // Pause overlay on top
+        // Pause / Options-from-Pause overlay on top
         if (m_state == State::Paused) {
-            renderPauseMenu();
+            if (m_menuPage == MenuPage::Options) {
+                renderOptions();
+            } else {
+                renderPauseMenu();
+            }
         }
     } else if (m_state == State::GameOver) {
         // Draw game layer frozen underneath
@@ -842,15 +881,15 @@ void Game::renderOptions() {
     // Title
     auto tb = m_optionsTitle.getLocalBounds();
     m_optionsTitle.setOrigin(tb.left + tb.width / 2.0f, tb.top + tb.height / 2.0f);
-    m_optionsTitle.setPosition(cx, cy - 155.0f);
+    m_optionsTitle.setPosition(cx, cy - 185.0f);
     m_renderer.draw(m_optionsTitle);
 
-    // Music — label above bar
+    // Music Volume — label above bar
     m_optionsMusicLabel.setFillColor(
         m_optionsSelection == 0 ? sf::Color::Yellow : sf::Color(200, 200, 255));
     auto mlb = m_optionsMusicLabel.getLocalBounds();
     m_optionsMusicLabel.setOrigin(mlb.left + mlb.width / 2.0f, mlb.top + mlb.height / 2.0f);
-    m_optionsMusicLabel.setPosition(cx, cy - 95.0f);
+    m_optionsMusicLabel.setPosition(cx, cy - 120.0f);
     m_renderer.draw(m_optionsMusicLabel);
 
     m_optionsMusicBar.setString(buildSliderBar(m_audioCfg.musicVolume));
@@ -858,15 +897,15 @@ void Game::renderOptions() {
         m_optionsSelection == 0 ? sf::Color::Yellow : sf::Color::White);
     auto mbb = m_optionsMusicBar.getLocalBounds();
     m_optionsMusicBar.setOrigin(mbb.left + mbb.width / 2.0f, mbb.top + mbb.height / 2.0f);
-    m_optionsMusicBar.setPosition(cx, cy - 60.0f);
+    m_optionsMusicBar.setPosition(cx, cy - 85.0f);
     m_renderer.draw(m_optionsMusicBar);
 
-    // SFX — label above bar
+    // Sound Effects — label above bar
     m_optionsSfxLabel.setFillColor(
         m_optionsSelection == 1 ? sf::Color::Yellow : sf::Color(200, 200, 255));
     auto slb = m_optionsSfxLabel.getLocalBounds();
     m_optionsSfxLabel.setOrigin(slb.left + slb.width / 2.0f, slb.top + slb.height / 2.0f);
-    m_optionsSfxLabel.setPosition(cx, cy - 5.0f);
+    m_optionsSfxLabel.setPosition(cx, cy - 30.0f);
     m_renderer.draw(m_optionsSfxLabel);
 
     m_optionsSfxBar.setString(buildSliderBar(m_audioCfg.effectVolume));
@@ -874,21 +913,38 @@ void Game::renderOptions() {
         m_optionsSelection == 1 ? sf::Color::Yellow : sf::Color::White);
     auto sbb = m_optionsSfxBar.getLocalBounds();
     m_optionsSfxBar.setOrigin(sbb.left + sbb.width / 2.0f, sbb.top + sbb.height / 2.0f);
-    m_optionsSfxBar.setPosition(cx, cy + 30.0f);
+    m_optionsSfxBar.setPosition(cx, cy + 5.0f);
     m_renderer.draw(m_optionsSfxBar);
+
+    // Background Music — label above selector
+    m_optionsTrackLabel.setFillColor(
+        m_optionsSelection == 2 ? sf::Color::Yellow : sf::Color(200, 200, 255));
+    auto tlb = m_optionsTrackLabel.getLocalBounds();
+    m_optionsTrackLabel.setOrigin(tlb.left + tlb.width / 2.0f, tlb.top + tlb.height / 2.0f);
+    m_optionsTrackLabel.setPosition(cx, cy + 55.0f);
+    m_renderer.draw(m_optionsTrackLabel);
+
+    m_optionsTrackSelector.setString(
+        "<  " + m_audio->getCurrentTrackLabel() + "  >");
+    m_optionsTrackSelector.setFillColor(
+        m_optionsSelection == 2 ? sf::Color::Yellow : sf::Color::White);
+    auto tsb = m_optionsTrackSelector.getLocalBounds();
+    m_optionsTrackSelector.setOrigin(tsb.left + tsb.width / 2.0f, tsb.top + tsb.height / 2.0f);
+    m_optionsTrackSelector.setPosition(cx, cy + 85.0f);
+    m_renderer.draw(m_optionsTrackSelector);
 
     // Hint
     auto hb = m_optionsHint.getLocalBounds();
     m_optionsHint.setOrigin(hb.left + hb.width / 2.0f, hb.top + hb.height / 2.0f);
-    m_optionsHint.setPosition(cx, cy + 85.0f);
+    m_optionsHint.setPosition(cx, cy + 130.0f);
     m_renderer.draw(m_optionsHint);
 
     // Back
     m_optionsBack.setFillColor(
-        m_optionsSelection == 2 ? sf::Color::Yellow : sf::Color::White);
+        m_optionsSelection == 3 ? sf::Color::Yellow : sf::Color::White);
     auto bb = m_optionsBack.getLocalBounds();
     m_optionsBack.setOrigin(bb.left + bb.width / 2.0f, bb.top + bb.height / 2.0f);
-    m_optionsBack.setPosition(cx, cy + 140.0f);
+    m_optionsBack.setPosition(cx, cy + 180.0f);
     m_renderer.draw(m_optionsBack);
 }
 

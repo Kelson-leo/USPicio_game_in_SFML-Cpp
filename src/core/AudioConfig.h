@@ -7,6 +7,7 @@ namespace core {
 struct AudioConfig {
     float musicVolume = 50.0f;   // 0 = mute, 100 = max
     float effectVolume = 50.0f;  // placeholder for future SFX
+    int   selectedTrack = 0;     // 0–3, which background music track
 };
 
 } // namespace core

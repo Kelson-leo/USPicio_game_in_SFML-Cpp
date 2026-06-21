@@ -203,16 +203,19 @@ Four menu options navigable with Up/Down/Enter:
 
 ### Options Screen (Sprint 9)
 
-- Full overlay (700×380, dark).
-- Two sliders: **Music Volume** and **Sound Effects Volume** (placeholder for future SFX).
-- Each slider: 20-char bar `[====----]` + percentage. Adjusted with Left/Right arrows in 5% steps (0–100).
+- Full overlay (700×430, dark).
+- **Music Volume:** slider bar with Left/Right (±5%).
+- **Sound Effects Volume:** same (placeholder for future SFX).
+- **Background Music:** `< Track N/4 >` — Left/Right switches tracks immediately. 4 tracks from `assets/sounds/music/background_music1..4.mp3`.
 - Music volume applied immediately via `AudioManager::setMusicVolume()`.
-- "Back" option selectable with Enter, or ESC to return to Main.
+- Navigation: Up/Down selects item, Left/Right adjusts value, Enter on "Back" or ESC returns to Main.
 
 ### Audio System (Sprint 9)
 
-- **AudioConfig** (`core/AudioConfig.h`): struct with `musicVolume` and `effectVolume` (0–100 scale). SFML-free.
-- **AudioManager** (`infrastructure/AudioManager.h`): adapter wrapping `sf::Music`. Loads `assets/sounds/music/background_music.mp3` (looped). If file missing, logs warning and disables music gracefully.
+- **AudioConfig** (`core/AudioConfig.h`): struct with `musicVolume`, `effectVolume` (0–100) and `selectedTrack` (0–3). SFML-free.
+- **AudioManager** (`infrastructure/AudioManager.h`): adapter wrapping `sf::Music`. Supports 4 tracks: `assets/sounds/music/background_music1..4.mp3`. Methods: `loadTrack(index)`, `nextTrack()`, `previousTrack()`, `getCurrentTrackLabel()`.
+- If a track file is missing, logs warning and disables music for that track.
+- **Track selector** in Options: "< Track N/4 >" with Left/Right to switch. Music changes immediately.
 - Music plays from menu and continues throughout gameplay.
 - Build: requires `sfml-audio` linked in CMakeLists.
 
@@ -223,14 +226,16 @@ Four menu options navigable with Up/Down/Enter:
 - Controls list with double-line spacing
 - "Back" option selectable with Enter (or Esc)
 
-### Pause Menu (Sprint 5)
+### Pause Menu (Sprint 5 → 9)
 
 Pressionar `ESC` durante o jogo abre o menu de pausa sobreposto ao jogo congelado:
 - **Resume** — Volta ao jogo (ESC também funciona)
+- **Options** — Abre o menu de opções (volume, track selector) sobre o jogo pausado. Back/ESC retorna ao pause
 - **Restart** — Reinicia a fase atual, resetando inimigos e posição do player (mantém vidas e munição)
 - **Quit to Menu** — Sai para o menu principal, resetando todo o progresso
 
 Navegação: Up/Down para selecionar, Enter para confirmar.
+**Options é acessível tanto do menu principal quanto do menu de pausa** — as configurações são globais e persistem.
 
 ### Crouch (Sprint 8)
 
