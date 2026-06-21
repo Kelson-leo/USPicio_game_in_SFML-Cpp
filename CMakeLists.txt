@@ -38,6 +38,7 @@ set(LIB_SOURCES
     src/gameplay/PhaseConfig.cpp
     src/infrastructure/AmmoDisplay.cpp
     src/infrastructure/AssetManager.cpp
+    src/infrastructure/AudioManager.cpp
     src/infrastructure/FrameConfig.cpp
     src/infrastructure/HealthBar.cpp
     src/infrastructure/LivesDisplay.cpp
@@ -58,6 +59,7 @@ target_link_libraries(UspicioLib PUBLIC
     sfml-graphics
     sfml-window
     sfml-system
+    sfml-audio
     nlohmann_json
 )
 

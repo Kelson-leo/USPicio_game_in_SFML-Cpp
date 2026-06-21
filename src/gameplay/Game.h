@@ -9,6 +9,8 @@
 #include "infrastructure/HealthBar.h"
 #include "infrastructure/LivesDisplay.h"
 #include "infrastructure/AmmoDisplay.h"
+#include "core/AudioConfig.h"
+#include "infrastructure/AudioManager.h"
 #include "gameplay/PhaseConfig.h"
 #include "gameplay/Player.h"
 #include "gameplay/Capivara.h"
@@ -41,7 +43,7 @@ private:
 
     // ── State ─────────────────────────────────────────────────────
     enum class State { Menu, Playing, Paused, GameOver, Victory };
-    enum class MenuPage { Main, Info };
+    enum class MenuPage { Main, Options, Info };
     void setState(State newState);
 
     void loadLevel(int phaseIndex);
@@ -51,10 +53,12 @@ private:
 
     // ── Menu helpers ──────────────────────────────────────────────
     void handleMenuInput(const core::Event& event);
+    void handleOptionsInput(const core::Event& event);
     void handleInfoInput(const core::Event& event);
     void handlePauseInput(const core::Event& event);
     void handleGameOverInput(const core::Event& event);
     void renderMenu();
+    void renderOptions();
     void renderInfo();
     void renderPauseMenu();
     void renderGameOver();
@@ -69,14 +73,16 @@ private:
     MenuPage m_menuPage = MenuPage::Main;
     bool     m_running  = true;
 
-    int m_menuSelection  = 0;  // 0=Start, 1=Restart, 2=Info
-    int m_infoSelection  = 0;  // 0=Back
-    int m_pauseSelection = 0;  // 0=Resume, 1=Restart, 2=Quit to Menu
+    int m_menuSelection    = 0;  // 0=Start, 1=Options, 2=Info, 3=Restart
+    int m_optionsSelection = 0;  // 0=MusicVol, 1=SFXVol, 2=Back
+    int m_infoSelection    = 0;  // 0=Back
+    int m_pauseSelection   = 0;  // 0=Resume, 1=Restart, 2=Quit to Menu
 
     // ── Config ────────────────────────────────────────────────────
     core::DamageConfig           m_damageCfg;
     infrastructure::FrameConfig  m_frameConfig;
     PhaseConfig                  m_phaseConfig;
+    core::AudioConfig            m_audioCfg;
 
     // ── Level ─────────────────────────────────────────────────────
     std::unique_ptr<Level> m_currentLevel;
@@ -90,6 +96,18 @@ private:
     sf::RectangleShape m_menuOverlay;
 
     std::vector<infrastructure::SfmlText> m_menuItems; // "Start", "Restart", "Info"
+
+    // ── Options screen UI ──────────────────────────────────────────
+    sf::RectangleShape m_optionsOverlay;
+    infrastructure::SfmlText m_optionsTitle;
+    infrastructure::SfmlText m_optionsMusicLabel;
+    infrastructure::SfmlText m_optionsMusicBar;
+    infrastructure::SfmlText m_optionsSfxLabel;
+    infrastructure::SfmlText m_optionsSfxBar;
+    infrastructure::SfmlText m_optionsHint;
+    infrastructure::SfmlText m_optionsBack;
+
+    std::string buildSliderBar(float value) const;
 
     // ── Info screen UI ────────────────────────────────────────────
     sf::RectangleShape m_infoOverlay;
@@ -115,6 +133,9 @@ private:
 
     // ── Projectiles ───────────────────────────────────────────────
     std::vector<std::unique_ptr<Projectile>> m_projectiles;
+
+    // ── Audio ─────────────────────────────────────────────────────
+    std::unique_ptr<infrastructure::AudioManager> m_audio;
 
     // ── UI components ─────────────────────────────────────────────
     std::unique_ptr<infrastructure::LivesDisplay> m_livesDisplay;

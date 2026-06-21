@@ -66,8 +66,14 @@ Game::Game(core::IRenderer& renderer, core::IInputHandler& input)
     m_menuOverlay.setSize({380.0f, 240.0f});
     m_menuOverlay.setFillColor(sf::Color(20, 20, 40, 220));
 
+    // ── Audio ────────────────────────────────────────────────────
+    m_audio = std::make_unique<infrastructure::AudioManager>(
+        "assets/sounds/music/background_music.mp3");
+    m_audio->applyConfig(m_audioCfg);
+    m_audio->play();
+
     // ── Menu items ───────────────────────────────────────────────
-    const char* labels[] = {"Start", "Restart", "Info"};
+    const char* labels[] = {"Start", "Options", "Info", "Restart"};
     for (const auto* lbl : labels) {
         auto& item = m_menuItems.emplace_back();
         item.setFont(m_font);
@@ -75,6 +81,44 @@ Game::Game(core::IRenderer& renderer, core::IInputHandler& input)
         item.setCharacterSize(36);
         item.setFillColor(sf::Color::White);
     }
+
+    // ── Options overlay ──────────────────────────────────────────
+    m_optionsOverlay.setSize({700.0f, 380.0f});
+    m_optionsOverlay.setFillColor(sf::Color(30, 30, 40, 245));
+
+    m_optionsTitle.setFont(m_font);
+    m_optionsTitle.setString("Options");
+    m_optionsTitle.setCharacterSize(40);
+    m_optionsTitle.setFillColor(sf::Color::White);
+    m_optionsTitle.setStyle(sf::Text::Bold);
+
+    m_optionsMusicLabel.setFont(m_font);
+    m_optionsMusicLabel.setString("Music Volume:");
+    m_optionsMusicLabel.setCharacterSize(24);
+    m_optionsMusicLabel.setFillColor(sf::Color(200, 200, 255));
+
+    m_optionsMusicBar.setFont(m_font);
+    m_optionsMusicBar.setCharacterSize(18);
+    m_optionsMusicBar.setFillColor(sf::Color::White);
+
+    m_optionsSfxLabel.setFont(m_font);
+    m_optionsSfxLabel.setString("Sound Effects:");
+    m_optionsSfxLabel.setCharacterSize(24);
+    m_optionsSfxLabel.setFillColor(sf::Color(200, 200, 255));
+
+    m_optionsSfxBar.setFont(m_font);
+    m_optionsSfxBar.setCharacterSize(18);
+    m_optionsSfxBar.setFillColor(sf::Color::White);
+
+    m_optionsHint.setFont(m_font);
+    m_optionsHint.setString("Left/Right Arrow to adjust volume");
+    m_optionsHint.setCharacterSize(16);
+    m_optionsHint.setFillColor(sf::Color(150, 150, 150));
+
+    m_optionsBack.setFont(m_font);
+    m_optionsBack.setString("Back (Esc / Enter)");
+    m_optionsBack.setCharacterSize(28);
+    m_optionsBack.setFillColor(sf::Color::Yellow);
 
     // ── Info overlay (larger, darker) ─────────────────────────────
     m_infoOverlay.setSize({800.0f, 600.0f});
@@ -197,7 +241,7 @@ void Game::processInput() {
                     setState(State::Playing);  // resume
                     continue;
                 }
-                if (m_state == State::Menu && m_menuPage == MenuPage::Info) {
+                if (m_state == State::Menu && m_menuPage != MenuPage::Main) {
                     m_menuPage = MenuPage::Main;
                     continue;
                 }
@@ -210,6 +254,8 @@ void Game::processInput() {
             if (m_state == State::Menu) {
                 if (m_menuPage == MenuPage::Main) {
                     handleMenuInput(event);
+                } else if (m_menuPage == MenuPage::Options) {
+                    handleOptionsInput(event);
                 } else if (m_menuPage == MenuPage::Info) {
                     handleInfoInput(event);
                 }
@@ -343,12 +389,16 @@ void Game::handleMenuInput(const core::Event& event) {
             loadLevel(m_currentPhase);
             setState(State::Playing);
             break;
-        case 1: // Restart
-            restartGame();
+        case 1: // Options
+            m_menuPage = MenuPage::Options;
+            m_optionsSelection = 0;
             break;
         case 2: // Info
             m_menuPage = MenuPage::Info;
             m_infoSelection = 0;
+            break;
+        case 3: // Restart
+            restartGame();
             break;
         }
     }
@@ -363,6 +413,35 @@ void Game::handleInfoInput(const core::Event& event) {
         m_menuPage = MenuPage::Main;
     }
     // Escape is handled globally in processInput
+}
+
+void Game::handleOptionsInput(const core::Event& event) {
+    const int n = 3;  // Music, SFX, Back
+
+    if (event.key == core::KeyCode::Up) {
+        m_optionsSelection = (m_optionsSelection - 1 + n) % n;
+    } else if (event.key == core::KeyCode::Down) {
+        m_optionsSelection = (m_optionsSelection + 1) % n;
+    } else if (event.key == core::KeyCode::Left) {
+        if (m_optionsSelection == 0) {
+            m_audioCfg.musicVolume = std::max(0.0f, m_audioCfg.musicVolume - 5.0f);
+            m_audio->setMusicVolume(m_audioCfg.musicVolume);
+        } else if (m_optionsSelection == 1) {
+            m_audioCfg.effectVolume = std::max(0.0f, m_audioCfg.effectVolume - 5.0f);
+        }
+    } else if (event.key == core::KeyCode::Right) {
+        if (m_optionsSelection == 0) {
+            m_audioCfg.musicVolume = std::min(100.0f, m_audioCfg.musicVolume + 5.0f);
+            m_audio->setMusicVolume(m_audioCfg.musicVolume);
+        } else if (m_optionsSelection == 1) {
+            m_audioCfg.effectVolume = std::min(100.0f, m_audioCfg.effectVolume + 5.0f);
+        }
+    } else if (event.key == core::KeyCode::Enter) {
+        if (m_optionsSelection == 2) {
+            m_menuPage = MenuPage::Main;
+        }
+    }
+    // Escape handled globally → returns to Main
 }
 
 void Game::handlePauseInput(const core::Event& event) {
@@ -563,7 +642,9 @@ void Game::render() {
     if (m_state == State::Menu) {
         renderMenu();
 
-        if (m_menuPage == MenuPage::Info) {
+        if (m_menuPage == MenuPage::Options) {
+            renderOptions();
+        } else if (m_menuPage == MenuPage::Info) {
             renderInfo();
         }
     } else if (m_state == State::Playing || m_state == State::Paused) {
@@ -658,7 +739,7 @@ void Game::renderMenu() {
 
     auto& sfml = dynamic_cast<infrastructure::SfmlRenderer&>(m_renderer);
 
-    // Panel + items (hidden when Info page is active)
+    // Panel + items (hidden when sub-page is active)
     if (m_menuPage == MenuPage::Main) {
         m_menuOverlay.setOrigin(m_menuOverlay.getSize().x / 2.0f,
                                 m_menuOverlay.getSize().y / 2.0f);
@@ -733,6 +814,83 @@ void Game::renderInfo() {
 // ────────────────────────────────────────────────────────────────────
 // Pause menu
 // ────────────────────────────────────────────────────────────────────
+
+std::string Game::buildSliderBar(float value) const {
+    constexpr int barLen = 16;
+    int filled = static_cast<int>(value / 100.0f * barLen + 0.5f);
+    std::string bar = "[";
+    for (int i = 0; i < barLen; ++i) {
+        bar += (i < filled) ? '=' : '-';
+    }
+    bar += "]  " + std::to_string(static_cast<int>(value)) + "%";
+    return bar;
+}
+
+void Game::renderOptions() {
+    const auto wSz = m_renderer.getSize();
+    const float cx = static_cast<float>(wSz.x) / 2.0f;
+    const float cy = static_cast<float>(wSz.y) / 2.0f;
+
+    auto& sfml = dynamic_cast<infrastructure::SfmlRenderer&>(m_renderer);
+
+    // Overlay
+    m_optionsOverlay.setOrigin(m_optionsOverlay.getSize().x / 2.0f,
+                               m_optionsOverlay.getSize().y / 2.0f);
+    m_optionsOverlay.setPosition(cx, cy);
+    sfml.drawSfml(m_optionsOverlay);
+
+    // Title
+    auto tb = m_optionsTitle.getLocalBounds();
+    m_optionsTitle.setOrigin(tb.left + tb.width / 2.0f, tb.top + tb.height / 2.0f);
+    m_optionsTitle.setPosition(cx, cy - 155.0f);
+    m_renderer.draw(m_optionsTitle);
+
+    // Music — label above bar
+    m_optionsMusicLabel.setFillColor(
+        m_optionsSelection == 0 ? sf::Color::Yellow : sf::Color(200, 200, 255));
+    auto mlb = m_optionsMusicLabel.getLocalBounds();
+    m_optionsMusicLabel.setOrigin(mlb.left + mlb.width / 2.0f, mlb.top + mlb.height / 2.0f);
+    m_optionsMusicLabel.setPosition(cx, cy - 95.0f);
+    m_renderer.draw(m_optionsMusicLabel);
+
+    m_optionsMusicBar.setString(buildSliderBar(m_audioCfg.musicVolume));
+    m_optionsMusicBar.setFillColor(
+        m_optionsSelection == 0 ? sf::Color::Yellow : sf::Color::White);
+    auto mbb = m_optionsMusicBar.getLocalBounds();
+    m_optionsMusicBar.setOrigin(mbb.left + mbb.width / 2.0f, mbb.top + mbb.height / 2.0f);
+    m_optionsMusicBar.setPosition(cx, cy - 60.0f);
+    m_renderer.draw(m_optionsMusicBar);
+
+    // SFX — label above bar
+    m_optionsSfxLabel.setFillColor(
+        m_optionsSelection == 1 ? sf::Color::Yellow : sf::Color(200, 200, 255));
+    auto slb = m_optionsSfxLabel.getLocalBounds();
+    m_optionsSfxLabel.setOrigin(slb.left + slb.width / 2.0f, slb.top + slb.height / 2.0f);
+    m_optionsSfxLabel.setPosition(cx, cy - 5.0f);
+    m_renderer.draw(m_optionsSfxLabel);
+
+    m_optionsSfxBar.setString(buildSliderBar(m_audioCfg.effectVolume));
+    m_optionsSfxBar.setFillColor(
+        m_optionsSelection == 1 ? sf::Color::Yellow : sf::Color::White);
+    auto sbb = m_optionsSfxBar.getLocalBounds();
+    m_optionsSfxBar.setOrigin(sbb.left + sbb.width / 2.0f, sbb.top + sbb.height / 2.0f);
+    m_optionsSfxBar.setPosition(cx, cy + 30.0f);
+    m_renderer.draw(m_optionsSfxBar);
+
+    // Hint
+    auto hb = m_optionsHint.getLocalBounds();
+    m_optionsHint.setOrigin(hb.left + hb.width / 2.0f, hb.top + hb.height / 2.0f);
+    m_optionsHint.setPosition(cx, cy + 85.0f);
+    m_renderer.draw(m_optionsHint);
+
+    // Back
+    m_optionsBack.setFillColor(
+        m_optionsSelection == 2 ? sf::Color::Yellow : sf::Color::White);
+    auto bb = m_optionsBack.getLocalBounds();
+    m_optionsBack.setOrigin(bb.left + bb.width / 2.0f, bb.top + bb.height / 2.0f);
+    m_optionsBack.setPosition(cx, cy + 140.0f);
+    m_renderer.draw(m_optionsBack);
+}
 
 void Game::renderPauseMenu() {
     const auto wSz = m_renderer.getSize();

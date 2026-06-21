@@ -161,6 +161,9 @@ assets/
 ├── projectiles/
 │   ├── caneta.png
 │   └── livro.png
+├── sounds/
+│   └── music/
+│       └── background_music.mp3  (optional, game runs without it)
 └── ui/
     └── heart.png
 ```
@@ -190,12 +193,28 @@ assets/
 | `Up` / `Down` | Navigate menu options | Menu |
 | `Escape` | Pause (during gameplay) / Back (Info) / Exit (Main menu) | Gameplay / Info / Menu |
 
-### Menu (Sprint 5)
+### Menu (Sprint 5 → 9)
 
-Three menu options navigable with Up/Down/Enter:
+Four menu options navigable with Up/Down/Enter:
 - **Start** — Loads Phase 1 and starts gameplay
-- **Restart** — Resets all state (HP, lives, ammo, position, enemies) and reloads Phase 1
+- **Options** — Music/SFX volume sliders (Left/Right to adjust, +/-5%)
 - **Info** — Shows developer info, copyright, and keyboard controls overlay
+- **Restart** — Resets all state and reloads Phase 1
+
+### Options Screen (Sprint 9)
+
+- Full overlay (700×380, dark).
+- Two sliders: **Music Volume** and **Sound Effects Volume** (placeholder for future SFX).
+- Each slider: 20-char bar `[====----]` + percentage. Adjusted with Left/Right arrows in 5% steps (0–100).
+- Music volume applied immediately via `AudioManager::setMusicVolume()`.
+- "Back" option selectable with Enter, or ESC to return to Main.
+
+### Audio System (Sprint 9)
+
+- **AudioConfig** (`core/AudioConfig.h`): struct with `musicVolume` and `effectVolume` (0–100 scale). SFML-free.
+- **AudioManager** (`infrastructure/AudioManager.h`): adapter wrapping `sf::Music`. Loads `assets/sounds/music/background_music.mp3` (looped). If file missing, logs warning and disables music gracefully.
+- Music plays from menu and continues throughout gameplay.
+- Build: requires `sfml-audio` linked in CMakeLists.
 
 ### Info Screen (Sprint 5)
 
@@ -508,4 +527,5 @@ Entidades em `src/gameplay/` implementam `core::Drawable` para renderização:
 | 5 | 2026-06-20 | Menu system (Start/Restart/Info with Up/Down/Enter navigation), Info screen (developer, copyright, controls overlay), Player scale 1.5x, keyboard controls documented, Restart fully resets game state |
 | 6 | 2026-06-20 | Capivara enemy: real sprite frames (8 directional), animation system, AI movement toward player, edge clamping, contact damage, hurt/dead states, Fase 1=2, Fase 2=3, Fase 3=2+Professor |
 | 7 | 2026-06-20 | Projectile system: Pen (player, 500px/s, 20dmg) and Exam (professor, 250px/s, 12dmg), collision with enemies/player, professor AI shoots at range 600px with 2s cooldown, unique_ptr lifecycle with erase_if cleanup |
-| 8 | 2026-06-20 | Phase system restructure + Sprite outline/drop-shadow + Crouch state (8 anims, reduced hitbox, contextual punch/pen targeting) + Bugfixes: punch cooldown (0.3s), unified damage via Capivara::takeDamage(), vector reserve to fix dangling HealthBar references, pen scale 1.5x + dynamic Y offset, 91/91 tests |
+| 8 | 2026-06-20 | Phase system restructure + Sprite outline/drop-shadow + Crouch state (8 anims, reduced hitbox, contextual punch/pen targeting) + Bugfixes: punch cooldown (0.3s), unified damage via Capivara::takeDamage(), vector reserve, pen scale 1.5x, dynamic groundY per phase (JSON-configurable), Professor ground alignment, victory message "Formado!", 92/92 tests |
+| 9 | 2026-06-20 | Audio system: background music (sf::Music, looped), AudioConfig (core), AudioManager (infrastructure), Options menu with Music/SFX volume sliders (0-100%, 5% steps), sfml-audio linked, 92/92 tests |
