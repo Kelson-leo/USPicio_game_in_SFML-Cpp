@@ -23,17 +23,17 @@ void Projectile::init(ProjectileType type, core::Direction dir,
         m_velocity = {(dir == core::Direction::Right ? 500.0f : -500.0f), 0.0f};
         m_damage   = 20;
     } else if (type == ProjectileType::Pan) {
-        anim = "exam_left";  // reuse exam frame as placeholder
+        anim = "panela_left";
         m_velocity = {(dir == core::Direction::Right ? 250.0f : -250.0f), 0.0f};
         m_damage   = 10;
         if (dir == core::Direction::Right) m_sprite.setScale(-1.0f, 1.0f);
     } else if (type == ProjectileType::Stone) {
-        anim = "exam_left";
+        anim = "pedra_left";
         m_velocity = {(dir == core::Direction::Right ? 300.0f : -300.0f), 0.0f};
         m_damage   = 15;
         if (dir == core::Direction::Right) m_sprite.setScale(-1.0f, 1.0f);
     } else if (type == ProjectileType::Cup) {
-        anim = "exam_left";
+        anim = "copo_left";
         m_velocity = {(dir == core::Direction::Right ? 200.0f : -200.0f), 0.0f};
         m_damage   = 8;
         if (dir == core::Direction::Right) m_sprite.setScale(-1.0f, 1.0f);
