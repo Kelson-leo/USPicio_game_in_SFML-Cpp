@@ -46,6 +46,9 @@ public:
     void setCanMelee(bool can);
     void setProjectileTexture(const sf::Texture& tex);
 
+    /// Boss sprite height for ground alignment (subclasses can override).
+    virtual float getHeight() const { return BOSS_HEIGHT; }
+
     core::HealthComponent health;
 
     static constexpr float RANGED_COOLDOWN = 2.0f;

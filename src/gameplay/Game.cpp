@@ -1204,7 +1204,7 @@ void Game::loadLevel(int phaseIndex) {
             m_boss->setProjectileTexture(assets.getTexture("exam"));
         }
         m_boss->setGroundY(groundY);
-        m_boss->setPosition({1700.0f, groundY - Boss::BOSS_HEIGHT});
+        m_boss->setPosition({1700.0f, groundY - m_boss->getHeight()});
         auto& bar = m_enemyHealthBars.emplace_back(m_boss->health);
         auto bossPos = m_boss->getPosition();
         bar.setPosition({bossPos.x - 50.0f, bossPos.y - 30.0f});

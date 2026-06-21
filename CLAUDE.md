@@ -85,6 +85,8 @@ Hierarquia: classe base `Boss` → subclasses `Professor`, `Rato`, `Mandrake`, `
 - **Boss** base: `update()` dual-mode — se `m_canMelee && dx <= 150`: melee attack; senão se `dx <= 600`: ranged attack.
 - `getProjectileType()` virtual → cada subclasse retorna seu tipo.
 - `performMeleeAttack(Player&)` virtual → Mandrake e Peru sobrescrevem.
+- `getHeight()` virtual → Rato sobrescreve (97.5px); demais usam BOSS_HEIGHT (80px).
+- **Rato:** Animação contínua de 6 frames (345×390 native, escala 0.25 → ~86×97). Sempre em loop de ataque.
 - Fábrica em `Game::loadLevel()` por `chefao_tipo`.
 
 ### Progressão (Sprint 8)

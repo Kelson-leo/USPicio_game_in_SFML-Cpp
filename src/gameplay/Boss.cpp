@@ -11,7 +11,7 @@ Boss::Boss(const sf::Texture& texture,
     : m_sprite(texture)
     , m_frameConfig(frameConfig)
     , m_bossName(bossName)
-    , m_position{startX, m_groundY - BOSS_HEIGHT} {
+    , m_position{startX, m_groundY - getHeight()} {
     health.maxHP     = 80;
     health.currentHP = 80;
 
@@ -97,7 +97,7 @@ void Boss::setPosition(sf::Vector2f pos) {
 
 void Boss::setGroundY(float y) {
     m_groundY = y;
-    m_position.y = y - BOSS_HEIGHT;
+    m_position.y = y - getHeight();
     m_sprite.setPosition(m_position.x, m_position.y);
 }
 
