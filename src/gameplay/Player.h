@@ -9,8 +9,11 @@
 #include "core/PhysicsConstants.h"
 #include "infrastructure/SfmlSprite.h"
 #include "infrastructure/FrameConfig.h"
+#include "gameplay/Projectile.h"
 #include <SFML/System/Vector2.hpp>
+#include <memory>
 #include <string>
+#include <vector>
 
 namespace gameplay {
 
@@ -27,6 +30,7 @@ public:
     static constexpr float WALK_SPEED     = 80.0f;
     static constexpr float PLAYER_SCALE   = 1.5f;
     static constexpr float PLAYER_HEIGHT  = 95.0f * PLAYER_SCALE;  // feet offset
+    static constexpr float SHOOT_COOLDOWN = 0.3f;
 
     // ── core::Drawable ─────────────────────────────────────────────
     void draw(core::IRenderer& renderer) const override;
@@ -43,6 +47,10 @@ public:
     void throwCaneta(core::HealthComponent& enemyHealth,
                      core::EntityType enemyType,
                      const core::DamageConfig& cfg);
+
+    void throwProjectile(std::vector<std::unique_ptr<Projectile>>& projectiles,
+                         infrastructure::FrameConfig& frameConfig,
+                         const sf::Texture& texture);
 
     // ── Defense ─────────────────────────────────────────────────────
     void defend(bool active);
@@ -73,6 +81,7 @@ public:
 
     // ── Physics ─────────────────────────────────────────────────────
     float velocityY = 0.0f;
+    float m_shootCooldown = 0.0f;
 
 private:
     std::string buildAnimName(const std::string& action) const;

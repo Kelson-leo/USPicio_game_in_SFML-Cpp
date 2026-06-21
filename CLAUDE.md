@@ -211,6 +211,36 @@ Navegação: Up/Down para selecionar, Enter para confirmar.
 
 **Contagem por fase:** Fase 1 = 2, Fase 2 = 3, Fase 3 = 2 + Professor.
 
+### Projectile System (Sprint 7)
+
+**Tipos:** `ProjectileType::Pen` (caneta do Player) e `ProjectileType::Exam` (prova do Professor).
+
+| Propriedade | Pen | Exam |
+|---|---|---|
+| Velocidade | 500 px/s | 250 px/s |
+| Dano | 20 (Throw) | 12 (BossProjectile) |
+| Lifetime | 3.0s | 3.0s |
+| Disparo | Tecla X (Player) | IA do Professor (cooldown 2s, range 600px) |
+| Direção | Player's facing | Toward player |
+
+**Frames** (`assets/config/frames.json` → `projectiles`):
+- `pen_left` (66×13), `pen_right` (66×13), `exam_left` (62×67)
+- `exam_right` usa `exam_left` com `setScale(-1, 1)` (espelhamento)
+
+**Ciclo de vida:**
+- Criado via `std::make_unique<Projectile>()`, adicionado ao `std::vector<std::unique_ptr<Projectile>>` no Game
+- `update(dt)`: move por `velocity * dt`, decrementa lifetime, desativa se lifetime ≤ 0
+- Colisão: Pen vs inimigos (Capivara/Professor), Exam vs Player
+- Limpeza: `erase + remove_if` remove projéteis inativos a cada frame
+
+**Disparo pelo Player** (`Player::throwProjectile`):
+- Verifica `ammo.canUse()`, consome 1 munição, cria Pen na direção do player
+- Offset: Right=(40,20), Left=(-10,20)
+
+**Disparo pelo Professor** (`Professor::shootProjectile`):
+- Dispara se vivo, cooldown ≤ 0, e distância ao player < 600px
+- Reseta cooldown para 2.0s após cada disparo
+
 ### Build
 ```bash
 cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug
@@ -380,3 +410,4 @@ Entidades em `src/gameplay/` implementam `core::Drawable` para renderização:
 | 4 | 2026-06-20 | Animation & Rendering System: frames reais do Player (12 estados direcionais), Direction enum, sistema de animação (setAnimation, updateAnimation, buildAnimName), sprites nas 3 entidades, input de gameplay, física (gravidade/pulo/movimento), dano por proximidade, 78/78 testes |
 | 5 | 2026-06-20 | Menu system (Start/Restart/Info with Up/Down/Enter navigation), Info screen (developer, copyright, controls overlay), Player scale 1.5x, keyboard controls documented, Restart fully resets game state |
 | 6 | 2026-06-20 | Capivara enemy: real sprite frames (8 directional), animation system, AI movement toward player, edge clamping, contact damage, hurt/dead states, Fase 1=2, Fase 2=3, Fase 3=2+Professor |
+| 7 | 2026-06-20 | Projectile system: Pen (player, 500px/s, 20dmg) and Exam (professor, 250px/s, 12dmg), collision with enemies/player, professor AI shoots at range 600px with 2s cooldown, unique_ptr lifecycle with erase_if cleanup |

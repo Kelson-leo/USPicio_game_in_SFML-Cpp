@@ -40,6 +40,11 @@ void Player::setAnimation(const std::string& action) {
 }
 
 void Player::updateAnimation(float dt) {
+    // Decrement shoot cooldown
+    if (m_shootCooldown > 0.0f) {
+        m_shootCooldown -= dt;
+    }
+
     if (m_currentAnim.empty()) return;
 
     m_frameTimer += dt;
@@ -123,6 +128,24 @@ void Player::throwCaneta(core::HealthComponent& enemyHealth,
     ammo.use();
     int dmg = cfg.getDamage(core::AttackType::Throw, enemyType);
     enemyHealth.takeDamage(dmg);
+}
+
+void Player::throwProjectile(std::vector<std::unique_ptr<Projectile>>& projectiles,
+                             infrastructure::FrameConfig& frameConfig,
+                             const sf::Texture& texture) {
+    if (!ammo.canUse()) return;
+    if (m_shootCooldown > 0.0f) return;
+
+    ammo.use();
+    m_shootCooldown = SHOOT_COOLDOWN;
+
+    auto proj = std::make_unique<Projectile>();
+    sf::Vector2f offset = (m_direction == core::Direction::Right)
+        ? sf::Vector2f(40.0f, 20.0f)
+        : sf::Vector2f(-10.0f, 20.0f);
+    proj->init(ProjectileType::Pen, m_direction, texture,
+               frameConfig, m_position + offset);
+    projectiles.push_back(std::move(proj));
 }
 
 // ────────────────────────────────────────────────────────────────────

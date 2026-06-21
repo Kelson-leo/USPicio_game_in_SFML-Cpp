@@ -34,6 +34,7 @@ set(LIB_SOURCES
     src/gameplay/Level.cpp
     src/gameplay/Player.cpp
     src/gameplay/Professor.cpp
+    src/gameplay/Projectile.cpp
     src/infrastructure/AmmoDisplay.cpp
     src/infrastructure/AssetManager.cpp
     src/infrastructure/FrameConfig.cpp

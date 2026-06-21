@@ -32,6 +32,8 @@ Game::Game(core::IRenderer& renderer, core::IInputHandler& input)
                        "assets/ui/heart.png");
     assets.loadTexture("caneta",
                        "assets/projectiles/caneta.png");
+    assets.loadTexture("caneta_disp",
+                       "assets/projectiles/caneta_disp.png");
 
     // ── Menu background ──────────────────────────────────────────
     m_menuBg.setTexture(assets.getTexture("background_fase1"), true);
@@ -226,15 +228,9 @@ void Game::processInput() {
 
         if (m_input.isKeyPressed(core::KeyCode::X)) {
             m_player->setAnimation("throw");
-            for (auto& c : m_capivaras) {
-                if (!c.health.isDead()) {
-                    m_player->throwCaneta(c.health, core::EntityType::Capivara, m_damageCfg);
-                    break;
-                }
-            }
-            if (m_professor && !m_professor->health.isDead()) {
-                m_player->throwCaneta(m_professor->health, core::EntityType::Professor, m_damageCfg);
-            }
+            auto& assets = infrastructure::AssetManager::instance();
+            m_player->throwProjectile(m_projectiles, m_frameConfig,
+                                      assets.getTexture("caneta"));
         }
 
         if (m_input.isKeyPressed(core::KeyCode::C)) {
@@ -332,6 +328,8 @@ void Game::updateMenuTextColors() {
 void Game::update(float dt) {
     if (m_state != State::Playing) return;
 
+    auto& assets = infrastructure::AssetManager::instance();
+
     // ── Capivara AI ──────────────────────────────────────────────
     for (auto& c : m_capivaras) {
         if (!c.isDead() && m_player) {
@@ -339,12 +337,69 @@ void Game::update(float dt) {
         }
     }
 
+    // ── Professor AI ─────────────────────────────────────────────
+    if (m_professor && m_player) {
+        m_professor->update(dt, *m_player, m_projectiles,
+                            m_frameConfig,
+                            assets.getTexture("exam"));
+    }
+
+    // ── Projectiles update ───────────────────────────────────────
+    for (auto& p : m_projectiles) {
+        if (p->isActive()) {
+            p->update(dt);
+        }
+    }
+
+    // ── Projectile collisions ────────────────────────────────────
+    for (auto& p : m_projectiles) {
+        if (!p->isActive()) continue;
+
+        auto bounds = p->getBounds();
+
+        // Pen (player projectile) vs enemies
+        if (p->getDamage() == 20) {  // Pen
+            for (auto& c : m_capivaras) {
+                if (c.isDead()) continue;
+                auto cPos = c.getPosition();
+                sf::FloatRect cBounds(cPos.x, cPos.y, 60.0f, 80.0f);
+                if (bounds.intersects(cBounds)) {
+                    c.takeDamage(p->getDamage());
+                    p->deactivate();
+                    break;
+                }
+            }
+            if (p->isActive() && m_professor && !m_professor->health.isDead()) {
+                auto profPos = m_professor->getPosition();
+                sf::FloatRect pBounds(profPos.x, profPos.y, 80.0f, 80.0f);
+                if (bounds.intersects(pBounds)) {
+                    m_professor->health.takeDamage(p->getDamage());
+                    p->deactivate();
+                }
+            }
+        } else {  // Exam (professor projectile) vs player
+            if (m_player && !m_player->health.isDead()) {
+                auto pPos = m_player->getPosition();
+                sf::FloatRect pBounds(pPos.x, pPos.y, 60.0f, 140.0f);
+                if (bounds.intersects(pBounds)) {
+                    m_player->takeHit(core::AttackType::BossProjectile, m_damageCfg);
+                    p->deactivate();
+                }
+            }
+        }
+    }
+
+    // ── Cleanup inactive projectiles ─────────────────────────────
+    m_projectiles.erase(
+        std::remove_if(m_projectiles.begin(), m_projectiles.end(),
+                       [](const auto& p) { return !p->isActive(); }),
+        m_projectiles.end());
+
     // ── Player ───────────────────────────────────────────────────
     if (m_player && !m_player->health.isDead()) {
         m_player->updateAnimation(dt);
         m_player->applyGravity(dt);
 
-        // Clamp player within level boundaries
         auto pos = m_player->getPosition();
         m_player->setPosition(
             {std::clamp(pos.x, 0.0f, 1860.0f), pos.y});
@@ -354,7 +409,6 @@ void Game::update(float dt) {
             m_playerHealthBar->setPosition({p.x - 50.0f, p.y - 30.0f});
         }
 
-        // Proximity damage from capivaras
         for (auto& c : m_capivaras) {
             if (c.isDead()) continue;
             auto cPos = c.getPosition();
@@ -411,6 +465,14 @@ void Game::render() {
         if (m_player && !m_player->health.isDead()) {
             m_renderer.draw(*m_player);
         }
+
+        // Projectiles
+        for (auto& p : m_projectiles) {
+            if (p->isActive()) {
+                m_renderer.draw(*p);
+            }
+        }
+
         for (auto& bar : m_enemyHealthBars) {
             m_renderer.draw(bar);
         }
@@ -422,8 +484,7 @@ void Game::render() {
         }
         if (m_ammoDisplay) {
             const auto wSz = m_renderer.getSize();
-            m_ammoDisplay->setPosition(
-                {static_cast<float>(wSz.x) - 320.0f, 10.0f});
+            m_ammoDisplay->setPosition({10.0f, 40.0f});
             m_renderer.draw(*m_ammoDisplay);
         }
 
@@ -614,6 +675,8 @@ void Game::loadLevel(int phaseNumber) {
                        "assets/sprites/capivara/capivara_sheet.png");
     assets.loadTexture("professor",
                        "assets/sprites/professor/professor_sheet.png");
+    assets.loadTexture("exam",
+                       "assets/projectiles/livro.png");
 
     // ── Player ───────────────────────────────────────────────────
     m_player = std::make_unique<Player>(
@@ -624,7 +687,7 @@ void Game::loadLevel(int phaseNumber) {
     m_livesDisplay->setPosition({10.0f, 10.0f});
 
     m_ammoDisplay = std::make_unique<infrastructure::AmmoDisplay>(
-        m_player->ammo, assets.getTexture("caneta"));
+        m_player->ammo, assets.getTexture("caneta_disp"), 0.30f, 36.0f);
 
     m_playerHealthBar = std::make_unique<infrastructure::HealthBar>(
         m_player->health);

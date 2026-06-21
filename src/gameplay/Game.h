@@ -12,6 +12,7 @@
 #include "gameplay/Player.h"
 #include "gameplay/Capivara.h"
 #include "gameplay/Professor.h"
+#include "gameplay/Projectile.h"
 #include <SFML/Graphics.hpp>
 #include <memory>
 #include <string>
@@ -100,6 +101,9 @@ private:
     std::unique_ptr<Player>    m_player;
     std::vector<Capivara>      m_capivaras;
     std::unique_ptr<Professor> m_professor;
+
+    // ── Projectiles ───────────────────────────────────────────────
+    std::vector<std::unique_ptr<Projectile>> m_projectiles;
 
     // ── UI components ─────────────────────────────────────────────
     std::unique_ptr<infrastructure::LivesDisplay> m_livesDisplay;

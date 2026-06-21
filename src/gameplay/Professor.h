@@ -6,7 +6,10 @@
 #include "core/PhysicsConstants.h"
 #include "infrastructure/SfmlSprite.h"
 #include "infrastructure/FrameConfig.h"
+#include "gameplay/Projectile.h"
 #include <SFML/System/Vector2.hpp>
+#include <memory>
+#include <vector>
 
 namespace gameplay {
 
@@ -19,18 +22,32 @@ public:
 
     void draw(core::IRenderer& renderer) const override;
 
-    /// Shoots a book (BossProjectile) at the player.
+    void update(float dt, const Player& player,
+                std::vector<std::unique_ptr<Projectile>>& projectiles,
+                infrastructure::FrameConfig& frameConfig,
+                const sf::Texture& examTexture);
+
     void shootBook(Player& player, const core::DamageConfig& cfg);
+
+    /// Shoots an exam projectile toward the player.
+    void shootProjectile(std::vector<std::unique_ptr<Projectile>>& projectiles,
+                         infrastructure::FrameConfig& frameConfig,
+                         const sf::Texture& texture,
+                         const Player& player);
 
     sf::Vector2f getPosition() const;
     void setPosition(sf::Vector2f pos);
 
     core::HealthComponent health;
 
+    static constexpr float ATTACK_COOLDOWN = 2.0f;
+    static constexpr float ATTACK_RANGE    = 600.0f;
+
 private:
     infrastructure::SfmlSprite   m_sprite;
     infrastructure::FrameConfig& m_frameConfig;
     sf::Vector2f                 m_position;
+    float                        m_attackCooldown = 0.0f;
 };
 
 } // namespace gameplay
