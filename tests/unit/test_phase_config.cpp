@@ -37,6 +37,7 @@ TEST(PhaseConfigTest, GetPhase1Data) {
     EXPECT_EQ(p.id, 1);
     EXPECT_EQ(p.enemyCount, 2);
     EXPECT_FALSE(p.hasBoss);
+    EXPECT_FLOAT_EQ(p.groundY, 900.0f);
     EXPECT_NE(p.background.find("fase1_patio"), std::string::npos);
 }
 
@@ -71,6 +72,7 @@ TEST(PhaseConfigTest, GetPhase4DataHasBoss) {
     EXPECT_EQ(p.enemyCount, 2);
     EXPECT_TRUE(p.hasBoss);
     EXPECT_EQ(p.bossType, "professor");
+    EXPECT_FLOAT_EQ(p.groundY, 990.0f);
     EXPECT_NE(p.background.find("fase4_reitoria"), std::string::npos);
 }
 
@@ -123,6 +125,15 @@ TEST(PhaseConfigTest, OutOfRangeReturnsEmptyPhase) {
     EXPECT_EQ(p2.id, 0);
 }
 
+TEST(PhaseConfigTest, GetGroundYPerPhase) {
+    PhaseConfig config;
+    ASSERT_TRUE(config.loadFromFile(testJson()));
+    EXPECT_FLOAT_EQ(config.getGroundY(0), 900.0f);
+    EXPECT_FLOAT_EQ(config.getGroundY(1), 900.0f);
+    EXPECT_FLOAT_EQ(config.getGroundY(2), 900.0f);
+    EXPECT_FLOAT_EQ(config.getGroundY(3), 990.0f);
+}
+
 TEST(PhaseConfigTest, OutOfRangeConvenienceReturnsDefaults) {
     PhaseConfig config;
     ASSERT_TRUE(config.loadFromFile(testJson()));
@@ -131,4 +142,5 @@ TEST(PhaseConfigTest, OutOfRangeConvenienceReturnsDefaults) {
     EXPECT_EQ(config.getEnemyCount(-1), 0);
     EXPECT_FALSE(config.hasBoss(99));
     EXPECT_TRUE(config.getBossType(99).empty());
+    EXPECT_FLOAT_EQ(config.getGroundY(-1), 900.0f);
 }

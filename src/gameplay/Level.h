@@ -12,8 +12,9 @@ namespace gameplay {
 /// loaded via AssetManager from the given path.
 class Level {
 public:
-    /// @param bgPath  Path to the background texture (e.g. assets/backgrounds/fase1_patio.png).
-    explicit Level(const std::string& bgPath);
+    /// @param bgPath   Path to the background texture.
+    /// @param groundY  Ground Y for this level.
+    explicit Level(const std::string& bgPath, float groundY);
 
     /// Draw the background.
     void draw(core::IRenderer& renderer);
@@ -23,7 +24,8 @@ public:
 
 private:
     std::string m_bgPath;
-    std::string m_bgId;  ///< AssetManager key derived from the path
+    std::string m_bgId;     ///< AssetManager key derived from the path
+    float       m_groundY;
 
     infrastructure::SfmlSprite m_background;
 };

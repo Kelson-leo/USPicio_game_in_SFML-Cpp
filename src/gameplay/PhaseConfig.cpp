@@ -24,6 +24,7 @@ bool PhaseConfig::loadFromFile(const std::string& path) {
             pd.enemyCount = jf.at("inimigos_comuns").get<int>();
             pd.enemyType  = jf.at("tipo_inimigo").get<std::string>();
             pd.hasBoss    = jf.at("chefao").get<bool>();
+            pd.groundY    = jf.value("ground_y", 900.0f);
             if (pd.hasBoss && jf.contains("chefao_tipo")) {
                 pd.bossType = jf.at("chefao_tipo").get<std::string>();
             }
@@ -62,4 +63,8 @@ bool PhaseConfig::hasBoss(int index) const {
 
 const std::string& PhaseConfig::getBossType(int index) const {
     return getPhase(index).bossType;
+}
+
+float PhaseConfig::getGroundY(int index) const {
+    return getPhase(index).groundY;
 }

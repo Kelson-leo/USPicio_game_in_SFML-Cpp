@@ -9,7 +9,7 @@ Capivara::Capivara(const sf::Texture& texture,
                    float startX)
     : m_sprite(texture)
     , m_frameConfig(frameConfig)
-    , m_position{startX, core::GROUND_Y - FRAME_HEIGHT} {
+    , m_position{startX, m_groundY - FRAME_HEIGHT} {
     health.maxHP     = 30;
     health.currentHP = 30;
     m_sprite.setScale(SCALE, SCALE);
@@ -150,8 +150,8 @@ void Capivara::applyGravity(float dt) {
     m_position.y += m_velocityY * dt;
 
     float feetY = m_position.y + FRAME_HEIGHT;
-    if (feetY >= core::GROUND_Y) {
-        m_position.y = core::GROUND_Y - FRAME_HEIGHT;
+    if (feetY >= m_groundY) {
+        m_position.y = m_groundY - FRAME_HEIGHT;
         m_velocityY = 0.0f;
     }
 }
@@ -200,6 +200,12 @@ sf::Vector2f Capivara::getPosition() const {
 void Capivara::setPosition(sf::Vector2f pos) {
     m_position = pos;
     m_sprite.setPosition(pos.x, pos.y);
+}
+
+void Capivara::setGroundY(float y) {
+    m_groundY = y;
+    m_position.y = y - FRAME_HEIGHT;
+    m_sprite.setPosition(m_position.x, m_position.y);
 }
 
 } // namespace gameplay

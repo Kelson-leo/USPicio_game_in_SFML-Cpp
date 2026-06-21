@@ -220,7 +220,11 @@ Estado de agachamento acionado ao pressionar `Down Arrow` durante o jogo:
 - **Hitbox:** Reduzida verticalmente (`CROUCH_HEIGHT = 79 × 1.5 = 118.5px` vs `PLAYER_HEIGHT = 142.5px`).
 - **Física:** Os pés permanecem em `GROUND_Y`. Ao agachar, `m_position.y` é ajustado para compensar a altura menor. Gravidade e movimento horizontal inalterados.
 - **Pulo bloqueado:** `Space`/`Up` não têm efeito enquanto agachado.
-- **Ataques:** `Z` (punch), `X` (throw), `C` (defend) funcionam normalmente, usando as animações `crouch_*`.
+- **Ataques:** `Z` (punch), `X` (throw), `C` (defend) funcionam com animações `crouch_*`.
+- **Soco (Z):** Em pé → atinge apenas Professor (chefão). Agachado → atinge capivara na frente **com proximidade** (dx<70px, dy<100px, direção correta); se nenhuma em range, atinge Professor. **Cooldown:** 0.3s (`PUNCH_COOLDOWN`).
+- **Caneta (X):** Escala 1.5× (99×19.5px). Offset Y dinâmico: 20 (em pé) / 30 (agachado). Em pé → passa por cima da capivara. Agachado → atinge capivara e Professor.
+- **Dano unificado:** Soco e caneta usam `Capivara::takeDamage()` (única porta de dano, evita zumbis com HP=0).
+- **Vector safety:** `m_capivaras.reserve()` antes de criar `HealthBar`s (evita dangling references por realocação).
 - **Movimento:** Funciona (usa `crouch_idle` pois não há `crouch_walk`).
 - `buildAnimName()` prefixa `"crouch_"` quando `m_isCrouching == true`.
 - `getCurrentHeight()` retorna a altura apropriada para física e colisão.
@@ -247,6 +251,7 @@ Estado de agachamento acionado ao pressionar `Down Arrow` durante o jogo:
 | Velocidade | 500 px/s | 250 px/s |
 | Dano | 20 (Throw) | 12 (BossProjectile) |
 | Lifetime | 3.0s | 3.0s |
+| Escala | 1.5× (99×19.5px) | sem escala (62×67px) |
 | Disparo | Tecla X (Player) | IA do Professor (cooldown 2s, range 600px) |
 | Direção | Player's facing | Toward player |
 
@@ -264,7 +269,8 @@ Estado de agachamento acionado ao pressionar `Down Arrow` durante o jogo:
 - Verifica `ammo.canUse()` e `m_shootCooldown <= 0`
 - Cooldown: 0.3s entre disparos (`SHOOT_COOLDOWN`), evita gasto instantâneo
 - Consome 1 munição, cria Pen na direção do player
-- Offset: Right=(40,20), Left=(-10,20)
+- Offset Y dinâmico: **20** (em pé) / **30** (agachado). Offset X: **40** (direita) / **-10** (esquerda)
+- **Comportamento:** Em pé → caneta passa por cima da capivara (base 797 < topo 817.5). Agachado → caneta acerta (base 831 > topo 817.5). Contra Professor funciona em ambos os estados (Professor é mais alto).
 
 **Disparo pelo Professor** (`Professor::shootProjectile`):
 - Dispara se vivo, cooldown ≤ 0, e distância ao player < 600px
@@ -314,6 +320,13 @@ Singleton (`infrastructure::AssetManager::instance()`) que centraliza o carregam
 - `getPhase(index)` → `const PhaseData&` com `{id, background, enemyCount, enemyType, hasBoss, bossType}`
 - `getBackground(index)`, `getEnemyCount(index)`, `hasBoss(index)`, `getBossType(index)` → convenience methods
 - Índices fora de range retornam sentinel vazio (id=0, strings vazias, counts=0)
+
+**Ground Y per Phase (Sprint 8):**
+- Campo `ground_y` no `fases.json` define a altura do chão por fase (default: 900).
+- Fases 1-3: `ground_y = 900`. Fase 4 (Reitoria): `ground_y = 990`.
+- `Level` recebe `groundY` no construtor e `getGroundY()` retorna o valor configurado.
+- Entidades (`Player`, `Capivara`, `Professor`) têm `setGroundY(float)` chamado em `loadLevel()`, reposicionando-as ao nível correto.
+- `core::GROUND_Y` serve apenas como fallback/default; entidades usam `m_groundY` interno.
 
 **Estrutura do JSON** (`assets/config/fases.json`):
 ```json
@@ -409,6 +422,8 @@ Todas em `src/infrastructure/`, namespace `infrastructure`, implementam `core::D
 | `LivesDisplay` | `(LivesComponent&, const sf::Texture&, scale=0.04, step=30)` | Ícones de coração em linha. |
 | `AmmoDisplay` | `(AmmoComponent&, const sf::Texture&, scale=0.04, step=30)` | Ícones de caneta em linha. |
 
+**IMPORTANTE — Vector Safety (Sprint 8):** `HealthBar` armazena `HealthComponent&` (referência). As capivaras vivem em `std::vector<Capivara>` que realoca ao crescer. Para evitar dangling references, `loadLevel()` faz `m_capivaras.reserve(enemyCount)` antes de criar as HealthBars.
+
 ### Entities (Sprint 3 → 4)
 
 Entidades em `src/gameplay/` implementam `core::Drawable` para renderização:
@@ -493,4 +508,4 @@ Entidades em `src/gameplay/` implementam `core::Drawable` para renderização:
 | 5 | 2026-06-20 | Menu system (Start/Restart/Info with Up/Down/Enter navigation), Info screen (developer, copyright, controls overlay), Player scale 1.5x, keyboard controls documented, Restart fully resets game state |
 | 6 | 2026-06-20 | Capivara enemy: real sprite frames (8 directional), animation system, AI movement toward player, edge clamping, contact damage, hurt/dead states, Fase 1=2, Fase 2=3, Fase 3=2+Professor |
 | 7 | 2026-06-20 | Projectile system: Pen (player, 500px/s, 20dmg) and Exam (professor, 250px/s, 12dmg), collision with enemies/player, professor AI shoots at range 600px with 2s cooldown, unique_ptr lifecycle with erase_if cleanup |
-| 8 | 2026-06-20 | Phase system restructure (JSON-configurable phases, PhaseConfig class, 4 phases, auto-advance, victory/game-over) + Sprite outline/drop-shadow on Player and Capivara + Crouch state (8 new directional animations, Down Arrow input, reduced hitbox, jump blocked while crouching), 91/91 tests |
+| 8 | 2026-06-20 | Phase system restructure + Sprite outline/drop-shadow + Crouch state (8 anims, reduced hitbox, contextual punch/pen targeting) + Bugfixes: punch cooldown (0.3s), unified damage via Capivara::takeDamage(), vector reserve to fix dangling HealthBar references, pen scale 1.5x + dynamic Y offset, 91/91 tests |

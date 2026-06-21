@@ -7,7 +7,7 @@ Player::Player(const sf::Texture& texture,
                infrastructure::FrameConfig& frameConfig)
     : m_sprite(texture)
     , m_frameConfig(frameConfig)
-    , m_position{100.0f, core::GROUND_Y - PLAYER_HEIGHT} {
+    , m_position{100.0f, m_groundY - PLAYER_HEIGHT} {
     m_sprite.setScale(PLAYER_SCALE, PLAYER_SCALE);
     setAnimation("idle");
 }
@@ -41,9 +41,12 @@ void Player::setAnimation(const std::string& action) {
 }
 
 void Player::updateAnimation(float dt) {
-    // Decrement shoot cooldown
+    // Decrement cooldowns
     if (m_shootCooldown > 0.0f) {
         m_shootCooldown -= dt;
+    }
+    if (m_punchCooldown > 0.0f) {
+        m_punchCooldown -= dt;
     }
 
     if (m_currentAnim.empty()) return;
@@ -161,11 +164,10 @@ void Player::throwProjectile(std::vector<std::unique_ptr<Projectile>>& projectil
     m_shootCooldown = SHOOT_COOLDOWN;
 
     auto proj = std::make_unique<Projectile>();
-    sf::Vector2f offset = (m_direction == core::Direction::Right)
-        ? sf::Vector2f(40.0f, 20.0f)
-        : sf::Vector2f(-10.0f, 20.0f);
+    float offsetY = m_isCrouching ? 30.0f : 20.0f;
+    float offsetX = (m_direction == core::Direction::Right) ? 40.0f : -10.0f;
     proj->init(ProjectileType::Pen, m_direction, texture,
-               frameConfig, m_position + offset);
+               frameConfig, m_position + sf::Vector2f(offsetX, offsetY));
     projectiles.push_back(std::move(proj));
 }
 
@@ -240,7 +242,7 @@ bool Player::revive() {
 
     health.currentHP = health.maxHP;
     m_isCrouching = false;
-    m_position = {100.0f, core::GROUND_Y - getCurrentHeight()};
+    m_position = {100.0f, m_groundY - getCurrentHeight()};
     return true;
 }
 
@@ -265,15 +267,15 @@ void Player::applyGravity(float dt) {
     // Feet (bottom of sprite) at GROUND_Y — uses current height
     const float h = getCurrentHeight();
     float feetY = m_position.y + h;
-    if (feetY >= core::GROUND_Y) {
-        m_position.y = core::GROUND_Y - h;
+    if (feetY >= m_groundY) {
+        m_position.y = m_groundY - h;
         velocityY = 0.0f;
     }
     m_sprite.setPosition(m_position.x, m_position.y);
 }
 
 bool Player::isOnGround() const {
-    return (m_position.y + getCurrentHeight()) >= core::GROUND_Y;
+    return (m_position.y + getCurrentHeight()) >= m_groundY;
 }
 
 // ────────────────────────────────────────────────────────────────────
@@ -287,6 +289,12 @@ sf::Vector2f Player::getPosition() const {
 void Player::setPosition(sf::Vector2f pos) {
     m_position = pos;
     m_sprite.setPosition(pos.x, pos.y);
+}
+
+void Player::setGroundY(float y) {
+    m_groundY = y;
+    m_position.y = y - getCurrentHeight();
+    m_sprite.setPosition(m_position.x, m_position.y);
 }
 
 } // namespace gameplay

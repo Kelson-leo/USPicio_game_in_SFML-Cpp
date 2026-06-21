@@ -3,8 +3,9 @@
 
 namespace gameplay {
 
-Level::Level(const std::string& bgPath)
-    : m_bgPath(bgPath) {
+Level::Level(const std::string& bgPath, float groundY)
+    : m_bgPath(bgPath)
+    , m_groundY(groundY) {
 
     // Derive a simple AssetManager key from the path (strip dirs + ext).
     // e.g. "assets/backgrounds/fase1_patio.png" → "bg_fase1_patio"
@@ -34,7 +35,7 @@ void Level::draw(core::IRenderer& renderer) {
 }
 
 float Level::getGroundY() const {
-    return core::GROUND_Y;
+    return m_groundY;
 }
 
 } // namespace gameplay

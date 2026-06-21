@@ -3,6 +3,7 @@
     {
       "id": 1,
       "background": "assets/backgrounds/fase1_patio.png",
+      "ground_y": 900,
       "inimigos_comuns": 2,
       "tipo_inimigo": "capivara",
       "chefao": false
@@ -10,6 +11,7 @@
     {
       "id": 2,
       "background": "assets/backgrounds/fase2_interusp.png",
+      "ground_y": 900,
       "inimigos_comuns": 3,
       "tipo_inimigo": "capivara",
       "chefao": false
@@ -17,6 +19,7 @@
     {
       "id": 3,
       "background": "assets/backgrounds/fase3_biblioteca.png",
+      "ground_y": 900,
       "inimigos_comuns": 4,
       "tipo_inimigo": "capivara",
       "chefao": false
@@ -24,6 +27,7 @@
     {
       "id": 4,
       "background": "assets/backgrounds/fase4_reitoria.png",
+      "ground_y": 990,
       "inimigos_comuns": 2,
       "tipo_inimigo": "capivara",
       "chefao": true,

@@ -35,6 +35,12 @@ void Projectile::init(ProjectileType type, core::Direction dir,
     auto rect = frameConfig.getFrame("projectiles", anim, 0);
     m_sprite.setTextureRect(sf::IntRect({rect.left, rect.top},
                                         {rect.width, rect.height}));
+
+    // Pen scale makes it visually proportional and enables crouch-hit on capivaras
+    if (type == ProjectileType::Pen) {
+        m_sprite.setScale(1.5f, 1.5f);
+    }
+
     m_sprite.setPosition(startPos.x, startPos.y);
 }
 

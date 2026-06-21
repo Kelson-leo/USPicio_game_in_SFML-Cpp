@@ -38,6 +38,7 @@ public:
     bool isDead() const;
     sf::Vector2f getPosition() const;
     void setPosition(sf::Vector2f pos);
+    void setGroundY(float y);
 
     core::HealthComponent health;
 
@@ -53,6 +54,7 @@ private:
     std::size_t                  m_frameIndex = 0;
     float                        m_frameTimer = 0.0f;
     sf::Vector2f                 m_position;
+    float                        m_groundY   = core::GROUND_Y;
     float                        m_velocityY = 0.0f;
     float                        m_attackCooldown = 0.0f;
     bool                         m_isAlive = true;

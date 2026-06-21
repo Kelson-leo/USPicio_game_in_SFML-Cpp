@@ -254,15 +254,46 @@ void Game::processInput() {
         }
 
         if (m_input.isKeyPressed(core::KeyCode::Z)) {
-            m_player->setAnimation("punch");
-            for (auto& c : m_capivaras) {
-                if (!c.health.isDead()) {
-                    m_player->punch(c.health, core::EntityType::Capivara, m_damageCfg);
-                    break;
+            if (m_player->m_punchCooldown <= 0.0f) {
+                m_player->setAnimation("punch");
+                m_player->m_punchCooldown = Player::PUNCH_COOLDOWN;
+
+                if (m_player->isCrouching()) {
+                    // Crouched punch: hits capivara in front within range
+                    static constexpr float PUNCH_RANGE_X = 70.0f;
+                    static constexpr float PUNCH_RANGE_Y = 100.0f;
+                    bool hitCapivara = false;
+                    auto pPos = m_player->getPosition();
+                    auto pDir = m_player->getDirection();
+                    for (auto& c : m_capivaras) {
+                        if (!c.isDead()) {
+                            auto cPos = c.getPosition();
+                            float dx = cPos.x - pPos.x;
+                            float dy = std::abs(cPos.y - pPos.y);
+                            bool inFront = (pDir == core::Direction::Right && dx > 0) ||
+                                          (pDir == core::Direction::Left  && dx < 0);
+                            if (inFront && std::abs(dx) < PUNCH_RANGE_X && dy < PUNCH_RANGE_Y) {
+                                int dmg = m_damageCfg.getDamage(
+                                    core::AttackType::Punch, core::EntityType::Capivara);
+                                c.takeDamage(dmg);
+                                hitCapivara = true;
+                                break;
+                            }
+                        }
+                    }
+                    if (!hitCapivara && m_professor && !m_professor->health.isDead()) {
+                        int dmg = m_damageCfg.getDamage(
+                            core::AttackType::Punch, core::EntityType::Professor);
+                        m_professor->health.takeDamage(dmg);
+                    }
+                } else {
+                    // Standing punch: only hits Professor (capivaras are too low)
+                    if (m_professor && !m_professor->health.isDead()) {
+                        int dmg = m_damageCfg.getDamage(
+                            core::AttackType::Punch, core::EntityType::Professor);
+                        m_professor->health.takeDamage(dmg);
+                    }
                 }
-            }
-            if (m_professor && !m_professor->health.isDead()) {
-                m_player->punch(m_professor->health, core::EntityType::Professor, m_damageCfg);
             }
         }
 
@@ -855,9 +886,10 @@ void Game::advancePhase() {
 void Game::loadLevel(int phaseIndex) {
     m_currentPhase = phaseIndex;
     const auto& phase = m_phaseConfig.getPhase(phaseIndex);
+    float groundY = phase.groundY;
 
-    // Create Level with the configured background path
-    m_currentLevel = std::make_unique<Level>(phase.background);
+    // Create Level with the configured background path and ground level
+    m_currentLevel = std::make_unique<Level>(phase.background, groundY);
 
     auto& assets = infrastructure::AssetManager::instance();
 
@@ -880,6 +912,7 @@ void Game::loadLevel(int phaseIndex) {
     }
     m_player = std::make_unique<Player>(
         assets.getTexture("player"), m_frameConfig);
+    m_player->setGroundY(groundY);
     m_player->lives.currentLives = savedLives;
     m_player->ammo.currentAmmo  = savedAmmo;
 
@@ -901,10 +934,14 @@ void Game::loadLevel(int phaseIndex) {
     m_professor.reset();
 
     int enemyCount = phase.enemyCount;
+    m_capivaras.reserve(static_cast<std::size_t>(enemyCount));
+    m_enemyHealthBars.reserve(
+        static_cast<std::size_t>(enemyCount + (phase.hasBoss ? 1 : 0)));
     for (int i = 0; i < enemyCount; ++i) {
         float startX = 1500.0f + i * 200.0f;
         auto& c = m_capivaras.emplace_back(
             assets.getTexture("capivara"), m_frameConfig, startX);
+        c.setGroundY(groundY);
         auto& bar = m_enemyHealthBars.emplace_back(c.health);
         auto cPos = c.getPosition();
         bar.setPosition({cPos.x - 50.0f, cPos.y - 30.0f});
@@ -913,7 +950,8 @@ void Game::loadLevel(int phaseIndex) {
     if (phase.hasBoss) {
         m_professor = std::make_unique<Professor>(
             assets.getTexture("professor"), m_frameConfig);
-        m_professor->setPosition({700.0f, core::GROUND_Y});
+        m_professor->setGroundY(groundY);
+        m_professor->setPosition({700.0f, groundY});
         auto& bar = m_enemyHealthBars.emplace_back(m_professor->health);
         auto profPos = m_professor->getPosition();
         bar.setPosition({profPos.x - 50.0f, profPos.y - 30.0f});

@@ -37,6 +37,7 @@ public:
 
     sf::Vector2f getPosition() const;
     void setPosition(sf::Vector2f pos);
+    void setGroundY(float y);
 
     core::HealthComponent health;
 
@@ -47,6 +48,7 @@ private:
     infrastructure::SfmlSprite   m_sprite;
     infrastructure::FrameConfig& m_frameConfig;
     sf::Vector2f                 m_position;
+    float                        m_groundY = core::GROUND_Y;
     float                        m_attackCooldown = 0.0f;
 };
 

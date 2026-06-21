@@ -8,7 +8,7 @@ Professor::Professor(const sf::Texture& texture,
                      infrastructure::FrameConfig& frameConfig)
     : m_sprite(texture)
     , m_frameConfig(frameConfig)
-    , m_position{600.0f, core::GROUND_Y} {
+    , m_position{600.0f, m_groundY} {
     health.maxHP     = 80;
     health.currentHP = 80;
 
@@ -71,6 +71,12 @@ sf::Vector2f Professor::getPosition() const {
 void Professor::setPosition(sf::Vector2f pos) {
     m_position = pos;
     m_sprite.setPosition(pos.x, pos.y);
+}
+
+void Professor::setGroundY(float y) {
+    m_groundY = y;
+    m_position.y = y;
+    m_sprite.setPosition(m_position.x, m_position.y);
 }
 
 } // namespace gameplay

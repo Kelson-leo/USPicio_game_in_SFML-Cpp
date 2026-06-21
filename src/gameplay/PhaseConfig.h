@@ -7,6 +7,7 @@
 struct PhaseData {
     int id               = 0;
     std::string background;       ///< path relative to executable
+    float groundY        = 900.0f; ///< ground level for this phase
     int  enemyCount       = 0;
     std::string enemyType;        ///< e.g. "capivara"
     bool hasBoss          = false;
@@ -39,6 +40,9 @@ public:
 
     /// Convenience: boss type string (e.g. "professor").
     const std::string& getBossType(int index) const;
+
+    /// Convenience: ground Y for the given phase index.
+    float getGroundY(int index) const;
 
 private:
     std::vector<PhaseData> m_phases;
