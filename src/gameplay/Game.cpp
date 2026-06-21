@@ -1226,7 +1226,7 @@ void Game::loadLevel(int phaseIndex) {
                            "assets/sprites/chest/chest_sheet.png");
         m_chest = std::make_unique<Chest>();
         m_chest->init(assets.getTexture("chest"), m_frameConfig,
-                      {500.0f, groundY - Chest::CHEST_HEIGHT}, groundY);
+                      {500.0f, groundY - 67.0f}, groundY);
     }
 }
 

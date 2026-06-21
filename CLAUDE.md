@@ -88,6 +88,8 @@ Hierarquia: classe base `Boss` → subclasses `Professor`, `Rato`, `Mandrake`, `
 - `getHeight()` virtual → Rato sobrescreve (97.5px); demais usam BOSS_HEIGHT (80px).
 - **Rato:** Idle (1 frame) + Attack (5 frames, toca uma vez ao disparar). 345×390 native, escala 0.35 → ~121×136.
 - **Mandrake:** Idle v1 (1 frame) ou v2 (2 frames em loop, 50% chance, 0.3s/frame). Re-sorteia idle após ranged. Ranged: 5 frames. Melee: 2 frames. 154-286×318 native, escala 0.5 → ~77-143×159.
+- **Peru:** Idle v1 (1 frame) ou v2 (1 frame, alterna após ranged). Ranged: 3 frames (cerveja). Melee: 3 frames (bicada). 271-478×326 native, escala 0.35 → ~95-167×114.
+- **Baú:** Posição Y = `groundY - 67.0f` (pés no chão).
 - Fábrica em `Game::loadLevel()` por `chefao_tipo`.
 
 ### Progressão (Sprint 8)
