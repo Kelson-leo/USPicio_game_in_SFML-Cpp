@@ -81,6 +81,9 @@ Hierarquia: classe base `Boss` → subclasses `Professor`, `Rato`, `Mandrake`, `
 | **Mandrake** | 4 (Busão) | Pedra (300px/s) | Soco/porrada | `ProjectileType::Stone` | 15 | 8 |
 | **Peru** | 5 (SanFran) | Copo (200px/s) | Bicada (1.2s cd) | `ProjectileType::Cup` | 8 | 6 |
 | **Professor** | 7 (Reitoria) | Prova (250px/s) | — | `ProjectileType::Exam` | 12 | — |
+| **Rato** | 2 (Bandeijão) | Panela (250px/s) | — | `ProjectileType::Pan` | 10 | — |
+| **Mandrake** | 4 (Busão) | Pedra (300px/s) | Soco/porrada | `ProjectileType::Stone` | 15 | 8 |
+| **Peru** | 5 (SanFran) | Copo (200px/s) | Bicada (1.2s cd) | `ProjectileType::Cup` | 8 | 6 |
 
 - **Boss** base: `update()` dual-mode — se `m_canMelee && dx <= 150`: melee attack; senão se `dx <= 600`: ranged attack.
 - `getProjectileType()` virtual → cada subclasse retorna seu tipo.
@@ -89,6 +92,8 @@ Hierarquia: classe base `Boss` → subclasses `Professor`, `Rato`, `Mandrake`, `
 - **Rato:** Idle (1 frame) + Attack (5 frames, toca uma vez ao disparar). 345×390 native, escala 0.35 → ~121×136.
 - **Mandrake:** Idle v1 (1 frame) ou v2 (2 frames em loop, 50% chance, 0.3s/frame). Re-sorteia idle após ranged. Ranged: 5 frames. Melee: 2 frames. 154-286×318 native, escala 0.5 → ~77-143×159.
 - **Peru:** Idle v1 (1 frame) ou v2 (1 frame, alterna após ranged). Ranged: 3 frames (cerveja). Melee: 3 frames (bicada). 271-478×326 native, escala 0.35 → ~95-167×114.
+- **Professor:** Idle v1 (1 frame) ou v2 (1 frame, alterna após ranged). Ranged: 2 frames. Hurt: 1 frame (0.3s, acionado por `onHit()`). 147-247×345 native, escala 0.35 → ~51-86×121. Prova offset Y = -30.
+- **`Boss::onHit()`:** virtual, chamado pelo Game quando o boss toma dano. Professor sobrescreve para exibir frame "hurt" por 0.3s e pausar ataques.
 - **Baú:** Posição Y = `groundY - 67.0f` (pés no chão).
 - Fábrica em `Game::loadLevel()` por `chefao_tipo`.
 

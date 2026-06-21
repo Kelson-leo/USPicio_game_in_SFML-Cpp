@@ -40,6 +40,9 @@ public:
     /// Melee attack — override in subclasses that support it.
     virtual void performMeleeAttack(Player& player);
 
+    /// Called when the boss takes damage. Subclasses can override for hurt animation.
+    virtual void onHit() {}
+
     sf::Vector2f getPosition() const;
     void setPosition(sf::Vector2f pos);
     void setGroundY(float y);

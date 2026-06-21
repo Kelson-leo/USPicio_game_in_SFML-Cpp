@@ -95,15 +95,15 @@ TEST(FrameConfigTest, ProfessorFramesLarger) {
     infrastructure::FrameConfig config;
     ASSERT_TRUE(config.loadFromFile(testJson()));
 
-    auto idle  = config.getFrame("professor", "idle", 0);
-    EXPECT_EQ(idle.width,  80);
-    EXPECT_EQ(idle.height, 80);
+    auto idle  = config.getFrame("professor", "idle_right", 0);
+    EXPECT_EQ(idle.width,  166);
+    EXPECT_EQ(idle.height, 328);
 
-    auto atk0 = config.getFrame("professor", "attack", 0);
-    EXPECT_EQ(atk0.width, 100);
+    auto atk0 = config.getFrame("professor", "attack_ranged_right", 0);
+    EXPECT_EQ(atk0.width, 225);
 
-    auto atk1 = config.getFrame("professor", "attack", 1);
-    EXPECT_EQ(atk1.left, 180);
+    auto atk1 = config.getFrame("professor", "attack_ranged_right", 1);
+    EXPECT_EQ(atk1.left, 365);
 }
 
 // ── Missing data ───────────────────────────────────────────────────
@@ -146,7 +146,7 @@ TEST(FrameConfigTest, FrameCount) {
     EXPECT_EQ(config.frameCount("player", "walk_right"),   4);
     EXPECT_EQ(config.frameCount("player", "throw_right"),  1);
     EXPECT_EQ(config.frameCount("player", "punch_right"),  3);
-    EXPECT_EQ(config.frameCount("professor", "attack"),    2);
+    EXPECT_EQ(config.frameCount("professor", "attack_ranged_right"), 2);
     EXPECT_EQ(config.frameCount("nonexistent", "idle"),    0);
     EXPECT_EQ(config.frameCount("player", "nonexistent"),  0);
 }

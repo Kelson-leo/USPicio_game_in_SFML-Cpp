@@ -352,6 +352,7 @@ void Game::processInput() {
                             int dmg = m_damageCfg.getDamage(
                                 core::AttackType::Punch, core::EntityType::Professor);
                             m_boss->health.takeDamage(dmg);
+                            m_boss->onHit();
                         }
                     }
                 } else {
@@ -595,6 +596,7 @@ void Game::update(float dt) {
                 sf::FloatRect pBounds(profPos.x, profPos.y, 80.0f, 80.0f);
                 if (bounds.intersects(pBounds)) {
                     m_boss->health.takeDamage(p->getDamage());
+                    m_boss->onHit();
                     p->deactivate();
                 }
             }
