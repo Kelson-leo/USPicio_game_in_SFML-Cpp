@@ -43,6 +43,7 @@ public:
 
     static constexpr float ATTACK_COOLDOWN = 2.0f;
     static constexpr float ATTACK_RANGE    = 600.0f;
+    static constexpr float PROFESSOR_HEIGHT = 80.0f;
 
 private:
     infrastructure::SfmlSprite   m_sprite;

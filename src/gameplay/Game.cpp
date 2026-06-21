@@ -546,7 +546,7 @@ void Game::update(float dt) {
     if (allDead) {
         if (m_currentPhase + 1 >= m_phaseConfig.size()) {
             // All phases complete → Victory
-            m_gameOverTitle.setString("PARABENS!");
+            m_gameOverTitle.setString("Formado!");
             m_gameOverTitle.setFillColor(sf::Color(255, 215, 0));  // gold
             m_gameOverOverlay.setFillColor(sf::Color(10, 40, 10, 235));
             setState(State::Victory);
@@ -951,7 +951,7 @@ void Game::loadLevel(int phaseIndex) {
         m_professor = std::make_unique<Professor>(
             assets.getTexture("professor"), m_frameConfig);
         m_professor->setGroundY(groundY);
-        m_professor->setPosition({700.0f, groundY});
+        m_professor->setPosition({1700.0f, groundY - Professor::PROFESSOR_HEIGHT});
         auto& bar = m_enemyHealthBars.emplace_back(m_professor->health);
         auto profPos = m_professor->getPosition();
         bar.setPosition({profPos.x - 50.0f, profPos.y - 30.0f});

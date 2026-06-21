@@ -8,7 +8,7 @@ Professor::Professor(const sf::Texture& texture,
                      infrastructure::FrameConfig& frameConfig)
     : m_sprite(texture)
     , m_frameConfig(frameConfig)
-    , m_position{600.0f, m_groundY} {
+    , m_position{600.0f, m_groundY - PROFESSOR_HEIGHT} {
     health.maxHP     = 80;
     health.currentHP = 80;
 
@@ -75,7 +75,7 @@ void Professor::setPosition(sf::Vector2f pos) {
 
 void Professor::setGroundY(float y) {
     m_groundY = y;
-    m_position.y = y;
+    m_position.y = y - PROFESSOR_HEIGHT;
     m_sprite.setPosition(m_position.x, m_position.y);
 }
 

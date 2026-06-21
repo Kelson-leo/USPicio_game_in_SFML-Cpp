@@ -432,7 +432,7 @@ Entidades em `src/gameplay/` implementam `core::Drawable` para renderização:
 |---|---|---|---|
 | `Player` | health, lives, ammo | 100 | `punch()`, `throwCaneta()`, `defend(bool)`, `takeHit()`, `revive()`, `moveLeft/Right()`, `applyGravity()`, `setAnimation()`, `updateAnimation()`, `setDirection()`, `setCrouching()`, `isCrouching()`, `getCurrentHeight()` |
 | `Capivara` | health | 30 | `touchPlayer(Player&)` |
-| `Professor` | health | 80 | `shootBook(Player&)` |
+| `Professor` | health | 80 | `shootBook(Player&)`, `setGroundY()`. Feet at groundY via `PROFESSOR_HEIGHT=80`. Position: X=1700 (right side). |
 
 ### Animation & Rendering System (Sprint 4)
 
