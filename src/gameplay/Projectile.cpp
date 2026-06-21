@@ -22,11 +22,25 @@ void Projectile::init(ProjectileType type, core::Direction dir,
         anim = (dir == core::Direction::Right) ? "pen_right" : "pen_left";
         m_velocity = {(dir == core::Direction::Right ? 500.0f : -500.0f), 0.0f};
         m_damage   = 20;
+    } else if (type == ProjectileType::Pan) {
+        anim = "exam_left";  // reuse exam frame as placeholder
+        m_velocity = {(dir == core::Direction::Right ? 250.0f : -250.0f), 0.0f};
+        m_damage   = 10;
+        if (dir == core::Direction::Right) m_sprite.setScale(-1.0f, 1.0f);
+    } else if (type == ProjectileType::Stone) {
+        anim = "exam_left";
+        m_velocity = {(dir == core::Direction::Right ? 300.0f : -300.0f), 0.0f};
+        m_damage   = 15;
+        if (dir == core::Direction::Right) m_sprite.setScale(-1.0f, 1.0f);
+    } else if (type == ProjectileType::Cup) {
+        anim = "exam_left";
+        m_velocity = {(dir == core::Direction::Right ? 200.0f : -200.0f), 0.0f};
+        m_damage   = 8;
+        if (dir == core::Direction::Right) m_sprite.setScale(-1.0f, 1.0f);
     } else {  // Exam
         anim = "exam_left";
         m_velocity = {(dir == core::Direction::Right ? 250.0f : -250.0f), 0.0f};
         m_damage   = 12;
-        // Mirror horizontally for right-facing exam
         if (dir == core::Direction::Right) {
             m_sprite.setScale(-1.0f, 1.0f);
         }

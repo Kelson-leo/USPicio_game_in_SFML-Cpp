@@ -345,17 +345,17 @@ void Game::processInput() {
                             }
                         }
                     }
-                    if (!hitCapivara && m_professor && !m_professor->health.isDead()) {
+                    if (!hitCapivara && m_boss && !m_boss->health.isDead()) {
                         int dmg = m_damageCfg.getDamage(
                             core::AttackType::Punch, core::EntityType::Professor);
-                        m_professor->health.takeDamage(dmg);
+                        m_boss->health.takeDamage(dmg);
                     }
                 } else {
                     // Standing punch: only hits Professor (capivaras are too low)
-                    if (m_professor && !m_professor->health.isDead()) {
+                    if (m_boss && !m_boss->health.isDead()) {
                         int dmg = m_damageCfg.getDamage(
                             core::AttackType::Punch, core::EntityType::Professor);
-                        m_professor->health.takeDamage(dmg);
+                        m_boss->health.takeDamage(dmg);
                     }
                 }
             }
@@ -547,8 +547,8 @@ void Game::update(float dt) {
     }
 
     // ── Professor AI ─────────────────────────────────────────────
-    if (m_professor && m_player) {
-        m_professor->update(dt, *m_player, m_projectiles,
+    if (m_boss && m_player) {
+        m_boss->update(dt, *m_player, m_projectiles,
                             m_frameConfig,
                             assets.getTexture("exam"));
     }
@@ -578,11 +578,11 @@ void Game::update(float dt) {
                     break;
                 }
             }
-            if (p->isActive() && m_professor && !m_professor->health.isDead()) {
-                auto profPos = m_professor->getPosition();
+            if (p->isActive() && m_boss && !m_boss->health.isDead()) {
+                auto profPos = m_boss->getPosition();
                 sf::FloatRect pBounds(profPos.x, profPos.y, 80.0f, 80.0f);
                 if (bounds.intersects(pBounds)) {
-                    m_professor->health.takeDamage(p->getDamage());
+                    m_boss->health.takeDamage(p->getDamage());
                     p->deactivate();
                 }
             }
@@ -643,8 +643,8 @@ void Game::update(float dt) {
         }
         ++barIdx;
     }
-    if (m_professor && barIdx < m_enemyHealthBars.size()) {
-        auto pos = m_professor->getPosition();
+    if (m_boss && barIdx < m_enemyHealthBars.size()) {
+        auto pos = m_boss->getPosition();
         m_enemyHealthBars[barIdx].setPosition({pos.x - 50.0f, pos.y - 30.0f});
     }
 
@@ -653,7 +653,7 @@ void Game::update(float dt) {
     for (auto& c : m_capivaras) {
         if (!c.isDead()) { allDead = false; break; }
     }
-    if (m_professor && !m_professor->health.isDead()) {
+    if (m_boss && !m_boss->health.isDead()) {
         allDead = false;
     }
 
@@ -692,8 +692,8 @@ void Game::render() {
                 m_renderer.draw(c);
             }
         }
-        if (m_professor && !m_professor->health.isDead()) {
-            m_renderer.draw(*m_professor);
+        if (m_boss && !m_boss->health.isDead()) {
+            m_renderer.draw(*m_boss);
         }
         if (m_player && !m_player->health.isDead()) {
             m_renderer.draw(*m_player);
@@ -737,7 +737,7 @@ void Game::render() {
         for (auto& c : m_capivaras) {
             if (!c.isDead()) m_renderer.draw(c);
         }
-        if (m_professor && !m_professor->health.isDead()) m_renderer.draw(*m_professor);
+        if (m_boss && !m_boss->health.isDead()) m_renderer.draw(*m_boss);
         if (m_player && !m_player->health.isDead()) m_renderer.draw(*m_player);
 
         renderGameOver();
@@ -1059,7 +1059,7 @@ void Game::setState(State newState) {
 void Game::restartGame() {
     m_capivaras.clear();
     m_enemyHealthBars.clear();
-    m_professor.reset();
+    m_boss.reset();
     m_player.reset();
     m_currentLevel.reset();
     m_livesDisplay.reset();
@@ -1074,7 +1074,7 @@ void Game::restartGame() {
 void Game::restartPhase() {
     m_capivaras.clear();
     m_enemyHealthBars.clear();
-    m_professor.reset();
+    m_boss.reset();
     m_player.reset();
     m_currentLevel.reset();
     m_livesDisplay.reset();
@@ -1089,7 +1089,7 @@ void Game::advancePhase() {
     m_currentPhase++;
     m_capivaras.clear();
     m_enemyHealthBars.clear();
-    m_professor.reset();
+    m_boss.reset();
     m_currentLevel.reset();
     m_playerHealthBar.reset();
     m_projectiles.clear();
@@ -1113,6 +1113,12 @@ void Game::loadLevel(int phaseIndex) {
                        "assets/sprites/capivara/capivara_sheet.png");
     assets.loadTexture("professor",
                        "assets/sprites/professor/professor_sheet.png");
+    assets.loadTexture("rato",
+                       "assets/sprites/rato/rato_sheet.png");
+    assets.loadTexture("mandrake",
+                       "assets/sprites/mandrake/mandrake_sheet.png");
+    assets.loadTexture("peru",
+                       "assets/sprites/peru/peru_sheet.png");
     assets.loadTexture("exam",
                        "assets/projectiles/livro.png");
 
@@ -1145,7 +1151,7 @@ void Game::loadLevel(int phaseIndex) {
     // ── Enemies (from config) ────────────────────────────────────
     m_capivaras.clear();
     m_enemyHealthBars.clear();
-    m_professor.reset();
+    m_boss.reset();
 
     int enemyCount = phase.enemyCount;
     m_capivaras.reserve(static_cast<std::size_t>(enemyCount));
@@ -1162,13 +1168,25 @@ void Game::loadLevel(int phaseIndex) {
     }
 
     if (phase.hasBoss) {
-        m_professor = std::make_unique<Professor>(
-            assets.getTexture("professor"), m_frameConfig);
-        m_professor->setGroundY(groundY);
-        m_professor->setPosition({1700.0f, groundY - Professor::PROFESSOR_HEIGHT});
-        auto& bar = m_enemyHealthBars.emplace_back(m_professor->health);
-        auto profPos = m_professor->getPosition();
-        bar.setPosition({profPos.x - 50.0f, profPos.y - 30.0f});
+        const auto& bossType = phase.bossType;
+        if (bossType == "rato") {
+            m_boss = std::make_unique<Rato>(
+                assets.getTexture("rato"), m_frameConfig);
+        } else if (bossType == "mandrake") {
+            m_boss = std::make_unique<Mandrake>(
+                assets.getTexture("mandrake"), m_frameConfig);
+        } else if (bossType == "peru") {
+            m_boss = std::make_unique<Peru>(
+                assets.getTexture("peru"), m_frameConfig);
+        } else {
+            m_boss = std::make_unique<Professor>(
+                assets.getTexture("professor"), m_frameConfig);
+        }
+        m_boss->setGroundY(groundY);
+        m_boss->setPosition({1700.0f, groundY - Boss::BOSS_HEIGHT});
+        auto& bar = m_enemyHealthBars.emplace_back(m_boss->health);
+        auto bossPos = m_boss->getPosition();
+        bar.setPosition({bossPos.x - 50.0f, bossPos.y - 30.0f});
     }
 }
 

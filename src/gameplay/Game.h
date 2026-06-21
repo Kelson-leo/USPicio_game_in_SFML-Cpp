@@ -14,7 +14,11 @@
 #include "gameplay/PhaseConfig.h"
 #include "gameplay/Player.h"
 #include "gameplay/Capivara.h"
+#include "gameplay/Boss.h"
 #include "gameplay/Professor.h"
+#include "gameplay/Rato.h"
+#include "gameplay/Mandrake.h"
+#include "gameplay/Peru.h"
 #include "gameplay/Projectile.h"
 #include <SFML/Graphics.hpp>
 #include <memory>
@@ -132,7 +136,7 @@ private:
     // ── Entities (created per level) ──────────────────────────────
     std::unique_ptr<Player>    m_player;
     std::vector<Capivara>      m_capivaras;
-    std::unique_ptr<Professor> m_professor;
+    std::unique_ptr<Boss> m_boss;
 
     // ── Projectiles ───────────────────────────────────────────────
     std::vector<std::unique_ptr<Projectile>> m_projectiles;

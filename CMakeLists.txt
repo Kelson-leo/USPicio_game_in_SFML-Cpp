@@ -35,6 +35,10 @@ set(LIB_SOURCES
     src/gameplay/Player.cpp
     src/gameplay/Professor.cpp
     src/gameplay/Projectile.cpp
+    src/gameplay/Boss.cpp
+    src/gameplay/Rato.cpp
+    src/gameplay/Mandrake.cpp
+    src/gameplay/Peru.cpp
     src/gameplay/PhaseConfig.cpp
     src/infrastructure/AmmoDisplay.cpp
     src/infrastructure/AssetManager.cpp

@@ -59,16 +59,33 @@
 - 5 corações globais. Persistem entre Fase 1, 2 e 3.
 - Cada dano sofrido remove 1 coração.
 
-### Fases (Sprint 8 — Configurável via JSON)
+### Fases (Sprint 10 — 7 fases configuráveis via JSON)
 
-Configuração carregada de `assets/config/fases.json` via `PhaseConfig`. A estrutura é expansível: basta adicionar entradas ao JSON.
-
-| Fase | Nome | Dificuldade | Inimigos Comuns | Chefão |
+| Fase | Nome | Inimigos | Chefão | Chão |
 |---|---|---|---|---|
-| 1 | Pátio | Fácil | 2 Capivaras | — |
-| 2 | InterUSP | Fácil-Médio | 3 Capivaras | — |
-| 3 | Biblioteca | Médio | 4 Capivaras | — |
-| 4 | Reitoria | Difícil | 2 Capivaras | Professor |
+| 1 | Pátio | 2 Capivaras | — | 900 |
+| 2 | Bandeijão | 3 Capivaras | **Rato** | 900 |
+| 3 | InterUSP | 4 Capivaras | — | 900 |
+| 4 | Busão | 3 Capivaras | **Mandrake** | 900 |
+| 5 | SanFran | 4 Capivaras | **Peru** | 900 |
+| 6 | Biblioteca | 5 Capivaras | — | 900 |
+| 7 | Reitoria | 2 Capivaras | **Professor** | 990 |
+
+### Chefes (Sprint 10)
+
+Hierarquia: classe base `Boss` → subclasses `Professor`, `Rato`, `Mandrake`, `Peru`.
+
+| Chefe | Fase | Ranged | Melee | Projétil | Dano Ranged | Dano Melee |
+|---|---|---|---|---|---|---|
+| **Rato** | 2 (Bandeijão) | Panela (250px/s) | — | `ProjectileType::Pan` | 10 | — |
+| **Mandrake** | 4 (Busão) | Pedra (300px/s) | Soco/porrada | `ProjectileType::Stone` | 15 | 8 |
+| **Peru** | 5 (SanFran) | Copo (200px/s) | Bicada (1.2s cd) | `ProjectileType::Cup` | 8 | 6 |
+| **Professor** | 7 (Reitoria) | Prova (250px/s) | — | `ProjectileType::Exam` | 12 | — |
+
+- **Boss** base: `update()` dual-mode — se `m_canMelee && dx <= 300`: melee attack; senão se `dx <= 600`: ranged attack.
+- `getProjectileType()` virtual → cada subclasse retorna seu tipo.
+- `performMeleeAttack(Player&)` virtual → Mandrake e Peru sobrescrevem.
+- Fábrica em `Game::loadLevel()` por `chefao_tipo`.
 
 ### Progressão (Sprint 8)
 
@@ -78,11 +95,12 @@ Configuração carregada de `assets/config/fases.json` via `PhaseConfig`. A estr
 - **Restart:** reinicia da Fase 1 com estado limpo (5 vidas, 10 munição).
 - **Restart Phase:** reinicia a fase atual preservando vidas e munição.
 
-### Game Over (Sprint 8)
+### Game Over (Sprint 10)
 
-- Fases sem chefão (1, 2, 3) com 0 vidas → Tela vermelha + texto **"REPROVADO"** → Enter para Menu Principal.
-- Fase com chefão (4 — Reitoria/Professor) com 0 vidas → Tela vermelha + texto **"JUBILADO"** → Enter para Menu Principal.
-- A lógica usa `phase.hasBoss`: se `true` → "JUBILADO", senão → "REPROVADO".
+- Fases sem chefão (1, 3, 6) com 0 vidas → **"REPROVADO"**.
+- Fases com chefão (2, 4, 5, 7) com 0 vidas → **"JUBILADO"**.
+- Lógica: `phase.hasBoss` → "JUBILADO", senão "REPROVADO".
+- Vitória após derrotar o chefão da Fase 7 (Reitoria) → **"Formado!"**.
 
 ### Física
 - **Chão:** Y = 880 (tela 1080p). Altura do tile de chão: 200px.
@@ -268,16 +286,15 @@ Estado de agachamento acionado ao pressionar `Down Arrow` durante o jogo:
 
 ### Projectile System (Sprint 7)
 
-**Tipos:** `ProjectileType::Pen` (caneta do Player) e `ProjectileType::Exam` (prova do Professor).
+**Tipos:** `ProjectileType::Pen` (Player), `Exam` (Professor), `Pan` (Rato), `Stone` (Mandrake), `Cup` (Peru).
 
-| Propriedade | Pen | Exam |
-|---|---|---|
-| Velocidade | 500 px/s | 250 px/s |
-| Dano | 20 (Throw) | 12 (BossProjectile) |
-| Lifetime | 3.0s | 3.0s |
-| Escala | 1.5× (99×19.5px) | sem escala (62×67px) |
-| Disparo | Tecla X (Player) | IA do Professor (cooldown 2s, range 600px) |
-| Direção | Player's facing | Toward player |
+| Propriedade | Pen | Exam | Pan | Stone | Cup |
+|---|---|---|---|---|---|
+| Velocidade | 500 | 250 | 250 | 300 | 200 px/s |
+| Dano | 20 | 12 | 10 | 15 | 8 |
+| Lifetime | 3.0s | 3.0s | 3.0s | 3.0s | 3.0s |
+| Escala | 1.5× | — | — | — | — |
+| Dono | Player | Professor | Rato | Mandrake | Peru |
 
 **Frames** (`assets/config/frames.json` → `projectiles`):
 - `pen_left` (66×13), `pen_right` (66×13), `exam_left` (62×67)
@@ -533,4 +550,5 @@ Entidades em `src/gameplay/` implementam `core::Drawable` para renderização:
 | 6 | 2026-06-20 | Capivara enemy: real sprite frames (8 directional), animation system, AI movement toward player, edge clamping, contact damage, hurt/dead states, Fase 1=2, Fase 2=3, Fase 3=2+Professor |
 | 7 | 2026-06-20 | Projectile system: Pen (player, 500px/s, 20dmg) and Exam (professor, 250px/s, 12dmg), collision with enemies/player, professor AI shoots at range 600px with 2s cooldown, unique_ptr lifecycle with erase_if cleanup |
 | 8 | 2026-06-20 | Phase system restructure + Sprite outline/drop-shadow + Crouch state (8 anims, reduced hitbox, contextual punch/pen targeting) + Bugfixes: punch cooldown (0.3s), unified damage via Capivara::takeDamage(), vector reserve, pen scale 1.5x, dynamic groundY per phase (JSON-configurable), Professor ground alignment, victory message "Formado!", 92/92 tests |
-| 9 | 2026-06-20 | Audio system: background music (sf::Music, looped), AudioConfig (core), AudioManager (infrastructure), Options menu with Music/SFX volume sliders (0-100%, 5% steps), sfml-audio linked, 92/92 tests |
+| 9 | 2026-06-20 | Audio system: background music (sf::Music, looped, 4-track selector), AudioConfig/AudioManager, Options menu (volume sliders + track selector), Options accessible from Pause menu, 92/92 tests |
+| 10 | 2026-06-21 | Expand to 7 phases + 4 bosses: Boss base class with Professor/Rato/Mandrake/Peru subclasses, factory in loadLevel(), placeholder spritesheets, 95/95 tests |

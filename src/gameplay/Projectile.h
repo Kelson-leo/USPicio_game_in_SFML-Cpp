@@ -10,7 +10,7 @@
 
 namespace gameplay {
 
-enum class ProjectileType { Pen, Exam };
+enum class ProjectileType { Pen, Exam, Pan, Stone, Cup };
 
 class Projectile : public core::Drawable {
 public:
