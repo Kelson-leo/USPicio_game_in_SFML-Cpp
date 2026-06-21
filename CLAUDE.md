@@ -82,7 +82,7 @@ Hierarquia: classe base `Boss` → subclasses `Professor`, `Rato`, `Mandrake`, `
 | **Peru** | 5 (SanFran) | Copo (200px/s) | Bicada (1.2s cd) | `ProjectileType::Cup` | 8 | 6 |
 | **Professor** | 7 (Reitoria) | Prova (250px/s) | — | `ProjectileType::Exam` | 12 | — |
 
-- **Boss** base: `update()` dual-mode — se `m_canMelee && dx <= 300`: melee attack; senão se `dx <= 600`: ranged attack.
+- **Boss** base: `update()` dual-mode — se `m_canMelee && dx <= 150`: melee attack; senão se `dx <= 600`: ranged attack.
 - `getProjectileType()` virtual → cada subclasse retorna seu tipo.
 - `performMeleeAttack(Player&)` virtual → Mandrake e Peru sobrescrevem.
 - Fábrica em `Game::loadLevel()` por `chefao_tipo`.
@@ -293,12 +293,17 @@ Estado de agachamento acionado ao pressionar `Down Arrow` durante o jogo:
 | Velocidade | 500 | 250 | 250 | 300 | 200 px/s |
 | Dano | 20 | 12 | 10 | 15 | 8 |
 | Lifetime | 3.0s | 3.0s | 3.0s | 3.0s | 3.0s |
-| Escala | 1.5× | — | — | — | — |
+| Escala | 1.5× | 1.5× | 0.6× | 0.8× | 0.6× |
 | Dono | Player | Professor | Rato | Mandrake | Peru |
 
 **Frames** (`assets/config/frames.json` → `projectiles`):
-- `pen_left` (66×13), `pen_right` (66×13), `exam_left` (62×67)
-- `exam_right` usa `exam_left` com `setScale(-1, 1)` (espelhamento)
+- `pen_left` (66×13 → ~99×20), `pen_right` (66×13), `exam_left` (62×67 → ~93×100)
+- `panela_left` (137×79 → ~82×47), `panela_right` (137×79)
+- `copo_left` (123×69 → ~74×41), `copo_right` (123×69)
+- `pedra_left` (38×29 → ~30×23), `pedra_right` (38×29)
+- Coords obtidas via `convert <img> -trim` (auto-trim das bordas transparentes dos PNGs 200×200)
+- Tamanhos alvo: panela/copo ~80×45px, pedra ~30×23px (proporcionais à caneta ~60×20px)
+- `_right` usa `_left` com `setScale(-scale, scale)` (espelhamento + escala unificada)
 
 **Ciclo de vida:**
 - Criado via `std::make_unique<Projectile>()`, adicionado ao `std::vector<std::unique_ptr<Projectile>>` no Game
@@ -313,8 +318,14 @@ Estado de agachamento acionado ao pressionar `Down Arrow` durante o jogo:
 - Offset Y dinâmico: **20** (em pé) / **30** (agachado). Offset X: **40** (direita) / **-10** (esquerda)
 - **Comportamento:** Em pé → caneta passa por cima da capivara (base 797 < topo 817.5). Agachado → caneta acerta (base 831 > topo 817.5). Contra Professor funciona em ambos os estados (Professor é mais alto).
 
-**Disparo pelo Professor** (`Professor::shootProjectile`):
-- Dispara se vivo, cooldown ≤ 0, e distância ao player < 600px
+**Disparo pelos Chefes** (`Boss::shootProjectile`):
+- Cada chefe armazena sua própria textura de projétil via `setProjectileTexture()`:
+  - Rato → `assets.getTexture("panela")`, Professor → `assets.getTexture("exam")`
+  - Mandrake → `assets.getTexture("pedra")`, Peru → `assets.getTexture("copo")`
+- Dispara se vivo, cooldown ≤ 0, e distância ao player entre 80–600px (min 80px evita spawn dentro do player)
+- MELEE_RANGE = 150px (Mandrake/Peru só socam se o player estiver muito próximo)
+- Spawn offset: ±80px horizontal, +20px vertical a partir da posição do chefe
+- **Período de graça:** 0.1s — projétil não pode colidir nos primeiros 100ms (evita destruição antes do primeiro draw)
 - Reseta cooldown para 2.0s após cada disparo
 
 ### HUD / UI Display (Sprint 7)

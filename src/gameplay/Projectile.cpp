@@ -26,34 +26,43 @@ void Projectile::init(ProjectileType type, core::Direction dir,
         anim = "panela_left";
         m_velocity = {(dir == core::Direction::Right ? 250.0f : -250.0f), 0.0f};
         m_damage   = 10;
-        if (dir == core::Direction::Right) m_sprite.setScale(-1.0f, 1.0f);
     } else if (type == ProjectileType::Stone) {
         anim = "pedra_left";
         m_velocity = {(dir == core::Direction::Right ? 300.0f : -300.0f), 0.0f};
         m_damage   = 15;
-        if (dir == core::Direction::Right) m_sprite.setScale(-1.0f, 1.0f);
     } else if (type == ProjectileType::Cup) {
         anim = "copo_left";
         m_velocity = {(dir == core::Direction::Right ? 200.0f : -200.0f), 0.0f};
         m_damage   = 8;
-        if (dir == core::Direction::Right) m_sprite.setScale(-1.0f, 1.0f);
     } else {  // Exam
         anim = "exam_left";
         m_velocity = {(dir == core::Direction::Right ? 250.0f : -250.0f), 0.0f};
         m_damage   = 12;
-        if (dir == core::Direction::Right) {
-            m_sprite.setScale(-1.0f, 1.0f);
-        }
     }
 
     auto rect = frameConfig.getFrame("projectiles", anim, 0);
     m_sprite.setTextureRect(sf::IntRect({rect.left, rect.top},
                                         {rect.width, rect.height}));
 
-    // Pen scale makes it visually proportional and enables crouch-hit on capivaras
+    // Scale for visibility at 1080p — target sizes proportional to pen (~60×20)
+    float scale = 1.0f;
     if (type == ProjectileType::Pen) {
-        m_sprite.setScale(1.5f, 1.5f);
+        scale = 1.5f;   // 66×13 native → ~99×20
+    } else if (type == ProjectileType::Pan) {
+        scale = 0.6f;   // 137×79 native → ~82×47
+    } else if (type == ProjectileType::Stone) {
+        scale = 0.8f;   // 38×29 native → ~30×23
+    } else if (type == ProjectileType::Cup) {
+        scale = 0.6f;   // 123×69 native → ~74×41
+    } else {  // Exam
+        scale = 1.5f;   // 62×67 native → ~93×100
     }
+
+    // Apply scale with horizontal flip for right-facing projectiles
+    // Pen uses separate _right frames; others mirror the _left frame
+    float xScale = (dir == core::Direction::Right && type != ProjectileType::Pen)
+        ? -scale : scale;
+    m_sprite.setScale(xScale, scale);
 
     m_sprite.setPosition(startPos.x, startPos.y);
 }
@@ -88,6 +97,10 @@ bool Projectile::isActive() const {
 
 int Projectile::getDamage() const {
     return m_damage;
+}
+
+float Projectile::getLifetime() const {
+    return m_lifetime;
 }
 
 sf::FloatRect Projectile::getBounds() const {

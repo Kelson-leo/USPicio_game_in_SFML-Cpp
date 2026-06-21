@@ -30,8 +30,7 @@ void Boss::draw(core::IRenderer& renderer) const {
 
 void Boss::update(float dt, const Player& player,
                   std::vector<std::unique_ptr<Projectile>>& projectiles,
-                  infrastructure::FrameConfig& frameConfig,
-                  const sf::Texture& examTexture) {
+                  infrastructure::FrameConfig& frameConfig) {
     if (health.isDead()) return;
 
     float dx = std::abs(player.getPosition().x - m_position.x);
@@ -47,10 +46,11 @@ void Boss::update(float dt, const Player& player,
     }
 
     // ── Ranged attack ───────────────────────────────────────────
-    if (dx <= RANGED_RANGE) {
+    // Minimum distance prevents spawning inside the player (instant collision → invisible)
+    if (dx <= RANGED_RANGE && dx > 80.0f && m_projectileTexture) {
         m_rangedCooldown -= dt;
         if (m_rangedCooldown <= 0.0f) {
-            shootProjectile(projectiles, frameConfig, examTexture, player);
+            shootProjectile(projectiles, frameConfig, player);
         }
     }
 }
@@ -62,10 +62,9 @@ ProjectileType Boss::getProjectileType() const {
 void Boss::shootProjectile(
     std::vector<std::unique_ptr<Projectile>>& projectiles,
     infrastructure::FrameConfig& frameConfig,
-    const sf::Texture& texture,
     const Player& player) {
 
-    if (health.isDead()) return;
+    if (health.isDead() || !m_projectileTexture) return;
 
     auto pPos = player.getPosition();
     core::Direction dir = (pPos.x > m_position.x)
@@ -74,9 +73,9 @@ void Boss::shootProjectile(
 
     auto proj = std::make_unique<Projectile>();
     sf::Vector2f offset = (dir == core::Direction::Right)
-        ? sf::Vector2f(30.0f, 20.0f)
-        : sf::Vector2f(-60.0f, 20.0f);
-    proj->init(getProjectileType(), dir, texture,
+        ? sf::Vector2f(80.0f, 20.0f)
+        : sf::Vector2f(-80.0f, 20.0f);
+    proj->init(getProjectileType(), dir, *m_projectileTexture,
                frameConfig, m_position + offset);
     projectiles.push_back(std::move(proj));
 
@@ -104,6 +103,10 @@ void Boss::setGroundY(float y) {
 
 void Boss::setCanMelee(bool can) {
     m_canMelee = can;
+}
+
+void Boss::setProjectileTexture(const sf::Texture& tex) {
+    m_projectileTexture = &tex;
 }
 
 } // namespace gameplay

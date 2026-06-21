@@ -546,11 +546,9 @@ void Game::update(float dt) {
         }
     }
 
-    // ── Professor AI ─────────────────────────────────────────────
+    // ── Boss AI ──────────────────────────────────────────────────
     if (m_boss && m_player) {
-        m_boss->update(dt, *m_player, m_projectiles,
-                            m_frameConfig,
-                            assets.getTexture("exam"));
+        m_boss->update(dt, *m_player, m_projectiles, m_frameConfig);
     }
 
     // ── Projectiles update ───────────────────────────────────────
@@ -586,7 +584,11 @@ void Game::update(float dt) {
                     p->deactivate();
                 }
             }
-        } else {  // Exam (professor projectile) vs player
+        } else {  // Boss projectile vs player
+            // Grace period: skip collision for first 0.1s so projectile
+            // is visible before it can be destroyed (lifetime starts at 3.0)
+            if (p->getLifetime() > 2.9f) continue;
+
             if (!m_player->health.isDead()) {
                 auto pPos = m_player->getPosition();
                 float playerH = m_player->getCurrentHeight();
@@ -1121,6 +1123,12 @@ void Game::loadLevel(int phaseIndex) {
                        "assets/sprites/peru/peru_sheet.png");
     assets.loadTexture("exam",
                        "assets/projectiles/livro.png");
+    assets.loadTexture("panela",
+                       "assets/projectiles/panela.png");
+    assets.loadTexture("copo",
+                       "assets/projectiles/copo.png");
+    assets.loadTexture("pedra",
+                       "assets/projectiles/pedra.png");
 
     // ── Player ───────────────────────────────────────────────────
     // Preserve lives/ammo if player already exists (phase transition)
@@ -1172,15 +1180,19 @@ void Game::loadLevel(int phaseIndex) {
         if (bossType == "rato") {
             m_boss = std::make_unique<Rato>(
                 assets.getTexture("rato"), m_frameConfig);
+            m_boss->setProjectileTexture(assets.getTexture("panela"));
         } else if (bossType == "mandrake") {
             m_boss = std::make_unique<Mandrake>(
                 assets.getTexture("mandrake"), m_frameConfig);
+            m_boss->setProjectileTexture(assets.getTexture("pedra"));
         } else if (bossType == "peru") {
             m_boss = std::make_unique<Peru>(
                 assets.getTexture("peru"), m_frameConfig);
+            m_boss->setProjectileTexture(assets.getTexture("copo"));
         } else {
             m_boss = std::make_unique<Professor>(
                 assets.getTexture("professor"), m_frameConfig);
+            m_boss->setProjectileTexture(assets.getTexture("exam"));
         }
         m_boss->setGroundY(groundY);
         m_boss->setPosition({1700.0f, groundY - Boss::BOSS_HEIGHT});

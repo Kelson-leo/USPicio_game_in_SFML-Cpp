@@ -27,6 +27,7 @@ public:
 
     bool isActive() const;
     int  getDamage() const;
+    float getLifetime() const;
     sf::FloatRect getBounds() const;
 
 private:

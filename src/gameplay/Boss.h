@@ -31,12 +31,10 @@ public:
 
     virtual void update(float dt, const Player& player,
                         std::vector<std::unique_ptr<Projectile>>& projectiles,
-                        infrastructure::FrameConfig& frameConfig,
-                        const sf::Texture& examTexture);
+                        infrastructure::FrameConfig& frameConfig);
 
     virtual void shootProjectile(std::vector<std::unique_ptr<Projectile>>& projectiles,
                                  infrastructure::FrameConfig& frameConfig,
-                                 const sf::Texture& texture,
                                  const Player& player);
 
     /// Melee attack — override in subclasses that support it.
@@ -46,12 +44,13 @@ public:
     void setPosition(sf::Vector2f pos);
     void setGroundY(float y);
     void setCanMelee(bool can);
+    void setProjectileTexture(const sf::Texture& tex);
 
     core::HealthComponent health;
 
     static constexpr float RANGED_COOLDOWN = 2.0f;
     static constexpr float RANGED_RANGE    = 600.0f;
-    static constexpr float MELEE_RANGE     = 300.0f;
+    static constexpr float MELEE_RANGE     = 150.0f;
     static constexpr float MELEE_COOLDOWN  = 1.5f;
     static constexpr float BOSS_HEIGHT     = 80.0f;
 
@@ -62,6 +61,7 @@ protected:
     infrastructure::SfmlSprite   m_sprite;
     infrastructure::FrameConfig& m_frameConfig;
     std::string                  m_bossName;
+    const sf::Texture*           m_projectileTexture = nullptr;
     sf::Vector2f                 m_position;
     float                        m_groundY           = core::GROUND_Y;
     float                        m_rangedCooldown     = 0.0f;
