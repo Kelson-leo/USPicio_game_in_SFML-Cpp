@@ -25,8 +25,8 @@ void LivesDisplay::draw(core::IRenderer& renderer) const {
     const float iconH = 20.0f;
     sf::RectangleShape bg{{
         .position = {m_position.x - 4.0f, m_position.y - 2.0f},
-        .size = {m_step * m_lives.maxLives + 4.0f, iconH + 8.0f},
-        .fillColor = sf::Color{255, 255, 255, 35}
+        .fillColor = sf::Color{255, 255, 255, 35},
+        .size = {m_step * m_lives.maxLives + 4.0f, iconH + 8.0f}
     }};
     sfml.drawSfml(bg);
 

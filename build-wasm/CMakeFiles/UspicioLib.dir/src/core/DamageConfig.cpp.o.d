@@ -127,74 +127,25 @@ CMakeFiles/UspicioLib.dir/src/core/DamageConfig.cpp.o: \
   /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__utility/unreachable.h \
   /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/limits \
   /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/version \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/type_traits \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__type_traits/add_cv_quals.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__type_traits/aligned_storage.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__type_traits/aligned_union.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__type_traits/alignment_of.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__type_traits/has_virtual_destructor.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__type_traits/is_abstract.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__type_traits/is_compound.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__type_traits/is_fundamental.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__type_traits/is_null_pointer.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__cstddef/nullptr_t.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__type_traits/is_const.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__type_traits/is_empty.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__type_traits/is_literal_type.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__type_traits/is_pod.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__type_traits/is_polymorphic.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__type_traits/is_scalar.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__type_traits/is_standard_layout.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__type_traits/is_trivial.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__type_traits/is_trivially_assignable.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__type_traits/is_trivially_constructible.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__type_traits/is_trivially_copyable.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/cstdint \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/lib/clang/23/include/stdint.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/stdint.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/bits/alltypes.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__type_traits/is_trivially_destructible.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__type_traits/is_unsigned.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__type_traits/is_volatile.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__type_traits/make_unsigned.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__type_traits/rank.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__type_traits/remove_pointer.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__type_traits/remove_volatile.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__type_traits/result_of.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__type_traits/is_final.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__type_traits/has_unique_object_representation.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__type_traits/is_aggregate.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__type_traits/negation.h \
   /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__iterator/distance.h \
   /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__ranges/access.h \
   /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__ranges/enable_borrowed_range.h \
   /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__utility/auto_cast.h \
   /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__ranges/concepts.h \
   /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__ranges/data.h \
+  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__type_traits/remove_pointer.h \
   /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__ranges/enable_view.h \
   /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__ranges/size.h \
+  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__type_traits/make_unsigned.h \
+  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__type_traits/is_unsigned.h \
   /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/initializer_list \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/cstddef \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/stddef.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/lib/clang/23/include/stddef.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/stddef.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/lib/clang/23/include/__stddef_header_macro.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/lib/clang/23/include/__stddef_ptrdiff_t.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/lib/clang/23/include/__stddef_size_t.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/lib/clang/23/include/__stddef_wchar_t.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/lib/clang/23/include/__stddef_null.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/lib/clang/23/include/__stddef_nullptr_t.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/lib/clang/23/include/__stddef_max_align_t.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/lib/clang/23/include/__stddef_offsetof.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__cstddef/byte.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__fwd/byte.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__cstddef/max_align_t.h \
   /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__iterator/iter_swap.h \
   /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__iterator/next.h \
   /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__iterator/prev.h \
   /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__functional/identity.h \
   /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__type_traits/is_callable.h \
   /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__functional/hash.h \
+  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__cstddef/nullptr_t.h \
   /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__functional/unary_function.h \
   /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__type_traits/is_unqualified.h \
   /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__utility/pair.h \
@@ -207,8 +158,15 @@ CMakeFiles/UspicioLib.dir/src/core/DamageConfig.cpp.o: \
   /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__tuple/tuple_like_no_subrange.h \
   /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__fwd/complex.h \
   /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__tuple/tuple_size.h \
+  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__type_traits/is_const.h \
+  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__type_traits/is_volatile.h \
   /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__type_traits/is_implicitly_default_constructible.h \
   /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__type_traits/is_replaceable.h \
+  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__type_traits/is_trivially_copyable.h \
+  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/cstdint \
+  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/lib/clang/23/include/stdint.h \
+  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/stdint.h \
+  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/bits/alltypes.h \
   /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__type_traits/is_trivially_relocatable.h \
   /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__type_traits/unwrap_ref.h \
   /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__utility/piecewise_construct.h \
@@ -236,13 +194,17 @@ CMakeFiles/UspicioLib.dir/src/core/DamageConfig.cpp.o: \
   /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__fwd/memory.h \
   /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__memory/construct_at.h \
   /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__new/placement_new_delete.h \
+  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__type_traits/is_empty.h \
   /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__memory/compressed_pair.h \
   /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__type_traits/datasizeof.h \
+  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__type_traits/is_final.h \
   /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__memory/swap_allocator.h \
   /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__memory/unique_ptr.h \
   /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__compare/compare_three_way.h \
   /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__compare/compare_three_way_result.h \
   /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__memory/array_cookie.h \
+  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__type_traits/is_trivially_destructible.h \
+  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__type_traits/negation.h \
   /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__memory/auto_ptr.h \
   /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__type_traits/dependent_type.h \
   /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__type_traits/is_bounded_array.h \
@@ -256,6 +218,18 @@ CMakeFiles/UspicioLib.dir/src/core/DamageConfig.cpp.o: \
   /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__memory/allocator.h \
   /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__memory/allocate_at_least.h \
   /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__new/allocate.h \
+  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__cstddef/max_align_t.h \
+  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/stddef.h \
+  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/lib/clang/23/include/stddef.h \
+  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/stddef.h \
+  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/lib/clang/23/include/__stddef_header_macro.h \
+  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/lib/clang/23/include/__stddef_ptrdiff_t.h \
+  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/lib/clang/23/include/__stddef_size_t.h \
+  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/lib/clang/23/include/__stddef_wchar_t.h \
+  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/lib/clang/23/include/__stddef_null.h \
+  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/lib/clang/23/include/__stddef_nullptr_t.h \
+  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/lib/clang/23/include/__stddef_max_align_t.h \
+  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/lib/clang/23/include/__stddef_offsetof.h \
   /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__new/align_val_t.h \
   /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__new/global_new_delete.h \
   /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__new/exceptions.h \
@@ -263,6 +237,8 @@ CMakeFiles/UspicioLib.dir/src/core/DamageConfig.cpp.o: \
   /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__new/nothrow_t.h \
   /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__utility/element_count.h \
   /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__memory_resource/polymorphic_allocator.h \
+  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__cstddef/byte.h \
+  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__fwd/byte.h \
   /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__memory_resource/memory_resource.h \
   /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__fwd/memory_resource.h \
   /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__utility/exception_guard.h \
@@ -278,276 +254,48 @@ CMakeFiles/UspicioLib.dir/src/core/DamageConfig.cpp.o: \
   /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__type_traits/maybe_const.h \
   /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__type_traits/reference_constructs_from_temporary.h \
   /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/compare \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/cmath \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__math/hypot.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__math/abs.h \
+  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__compare/compare_partial_order_fallback.h \
+  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__compare/partial_order.h \
+  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__compare/weak_order.h \
+  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__compare/strong_order.h \
+  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__bit/bit_cast.h \
   /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__math/exponential_functions.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__math/min_max.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__math/roots.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__math/special_functions.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__math/copysign.h \
   /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__math/traits.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/compat/math.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/math.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/math.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__math/error_functions.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__math/fdim.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__math/fma.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__math/gamma.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__math/hyperbolic_functions.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__math/inverse_hyperbolic_functions.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__math/inverse_trigonometric_functions.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__math/logarithms.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__math/modulo.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__math/remainder.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__math/trigonometric_functions.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/exception \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__exception/exception_ptr.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__exception/operations.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/cstdlib \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/compat/stdlib.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/stdlib.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/stdlib.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/alloca.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/typeinfo \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__exception/nested_exception.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__exception/terminate.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/new \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__new/new_handler.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__new/interference_size.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/iosfwd \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__fwd/fstream.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__fwd/string.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__fwd/ios.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__fwd/istream.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__fwd/ostream.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__fwd/sstream.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__fwd/streambuf.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__std_mbstate_t.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__mbstate_t.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/utility \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__utility/rel_ops.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__utility/as_const.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__utility/in_place.h \
+  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__utility/priority_tag.h \
+  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__compare/compare_strong_order_fallback.h \
+  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__compare/compare_weak_order_fallback.h \
+  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__compare/is_eq.h \
   /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__node_handle \
   /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__type_traits/is_specialization.h \
   /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/optional \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/atomic \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__atomic/aliases.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__atomic/atomic.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__atomic/atomic_sync.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__atomic/contention_t.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__atomic/support.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__atomic/support/c11.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__atomic/memory_order.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__atomic/to_gcc_order.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__chrono/duration.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/ratio \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/climits \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/lib/clang/23/include/limits.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/limits.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/bits/limits.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__thread/poll_with_backoff.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__chrono/high_resolution_clock.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__chrono/steady_clock.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__chrono/time_point.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__chrono/system_clock.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/ctime \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/compat/time.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/time.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__atomic/check_memory_order.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__atomic/is_always_lock_free.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__atomic/atomic_lock_free.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__atomic/atomic_flag.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__thread/support.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__thread/support/pthread.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__chrono/convert_to_timespec.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/errno.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/errno.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/bits/errno.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/wasi/api.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/pthread.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/sched.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__atomic/atomic_init.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__atomic/fence.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__atomic/kill_dependency.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/concepts \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/iterator \
+  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__type_traits/is_scalar.h \
+  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__type_traits/is_null_pointer.h \
+  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__type_traits/is_trivially_assignable.h \
+  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__type_traits/is_trivially_constructible.h \
+  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__utility/in_place.h \
+  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__ranges/container_compatible_range.h \
+  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__ranges/from_range.h \
+  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__type_traits/container_traits.h \
+  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__type_traits/is_allocator.h \
+  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/stdexcept \
+  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__fwd/string.h \
   /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__iterator/access.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__iterator/back_insert_iterator.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__iterator/iterator.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__iterator/front_insert_iterator.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__iterator/insert_iterator.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__iterator/istream_iterator.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__iterator/default_sentinel.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__iterator/istreambuf_iterator.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__string/char_traits.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__algorithm/fill_n.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__fwd/bit_reference.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__algorithm/find.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__algorithm/find_segment_if.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__iterator/segmented_iterator.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__algorithm/unwrap_iter.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__bit/countr.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__bit/invert_if.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__string/constexpr_c_functions.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__type_traits/is_always_bitcastable.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__type_traits/is_equality_comparable.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__type_traits/is_trivially_lexicographically_comparable.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__utility/is_pointer_in_range.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__utility/is_valid_range.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/cwchar \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/cwctype \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/cctype \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/ctype.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/ctype.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/wctype.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/wctype.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/wchar.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/wchar.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__algorithm/find_end.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__algorithm/find_first_of.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/cstdio \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/stdio.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/stdio.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__iterator/move_iterator.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__iterator/move_sentinel.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__iterator/ostream_iterator.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__iterator/ostreambuf_iterator.h \
+  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__iterator/data.h \
+  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__iterator/empty.h \
+  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__iterator/reverse_access.h \
   /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__iterator/reverse_iterator.h \
+  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__algorithm/unwrap_iter.h \
+  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__iterator/iterator.h \
+  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__iterator/segmented_iterator.h \
   /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__ranges/subrange.h \
   /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__fwd/subrange.h \
   /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__ranges/dangling.h \
   /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__ranges/view_interface.h \
   /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__ranges/empty.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__iterator/wrap_iter.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__iterator/reverse_access.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__iterator/data.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__iterator/empty.h \
   /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__iterator/size.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/variant \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__fwd/variant.h \
+  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/utility \
+  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__utility/rel_ops.h \
+  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__utility/as_const.h \
+  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__utility/cmp.h \
   /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__utility/forward_like.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__variant/monostate.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/memory \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__memory/align.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__memory/inout_ptr.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__memory/shared_ptr.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__functional/reference_wrapper.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__functional/weak_result_type.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__memory/allocation_guard.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__memory/allocator_destructor.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__memory/destroy.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__memory/shared_count.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__memory/uninitialized_algorithms.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__algorithm/copy.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__algorithm/copy_move_common.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__algorithm/unwrap_range.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__algorithm/for_each_segment.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__algorithm/move.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__memory/is_sufficiently_aligned.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__memory/out_ptr.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__memory/raw_storage_iterator.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__memory/temporary_buffer.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__memory/unique_temporary_buffer.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/stdexcept \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__ranges/container_compatible_range.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__ranges/from_range.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__type_traits/container_traits.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__type_traits/is_allocator.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/algorithm \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__algorithm/adjacent_find.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__algorithm/all_of.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__algorithm/any_of.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__algorithm/binary_search.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__algorithm/lower_bound.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__algorithm/half_positive.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__algorithm/copy_backward.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__algorithm/copy_n.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__algorithm/copy_if.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__algorithm/count.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__bit/popcount.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__algorithm/count_if.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__algorithm/equal.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__algorithm/equal_range.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__algorithm/upper_bound.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__algorithm/fill.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__algorithm/find_if.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__algorithm/find_if_not.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__algorithm/for_each.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__algorithm/generate.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__algorithm/generate_n.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__algorithm/includes.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__algorithm/inplace_merge.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__algorithm/rotate.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__algorithm/move_backward.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__algorithm/swap_ranges.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__memory/destruct_n.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__algorithm/is_heap.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__algorithm/is_heap_until.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__algorithm/is_partitioned.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__algorithm/is_sorted.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__algorithm/is_sorted_until.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__algorithm/lexicographical_compare.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__algorithm/mismatch.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__algorithm/simd_utils.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__bit/bit_cast.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__iterator/aliasing_iterator.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__algorithm/make_heap.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__algorithm/sift_down.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__algorithm/merge.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__algorithm/minmax.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__algorithm/minmax_element.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__algorithm/next_permutation.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__algorithm/reverse.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__algorithm/none_of.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__algorithm/nth_element.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__algorithm/sort.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__algorithm/partial_sort.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__algorithm/sort_heap.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__algorithm/pop_heap.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__algorithm/push_heap.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__debug_utils/strict_weak_ordering_check.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__debug_utils/randomize_range.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__bit/bit_log2.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__bit/blsr.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__functional/ranges_operations.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__algorithm/partial_sort_copy.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__algorithm/make_projected.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__algorithm/partition.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__algorithm/partition_copy.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__algorithm/partition_point.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__algorithm/prev_permutation.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__algorithm/remove.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__algorithm/remove_copy.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__algorithm/remove_copy_if.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__algorithm/remove_if.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__algorithm/replace.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__algorithm/replace_copy.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__algorithm/replace_copy_if.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__algorithm/replace_if.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__algorithm/reverse_copy.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__algorithm/rotate_copy.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__algorithm/search.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__algorithm/search_n.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__algorithm/set_difference.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__algorithm/set_intersection.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__algorithm/set_symmetric_difference.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__algorithm/set_union.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__algorithm/shuffle.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__random/uniform_int_distribution.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__random/is_valid.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__random/log2.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__algorithm/stable_partition.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__algorithm/stable_sort.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__algorithm/radix_sort.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__numeric/partial_sum.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__algorithm/transform.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__algorithm/unique.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__algorithm/unique_copy.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__algorithm/clamp.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__algorithm/for_each_n.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__algorithm/for_each_n_segment.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__algorithm/pstl.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__algorithm/sample.h \
-  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/bit
+  /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1/__utility/to_underlying.h

@@ -36,8 +36,6 @@ Game::Game(core::IRenderer& renderer, core::IInputHandler& input)
 
     , m_input(input) {
 
-
-
     // ── Font ─────────────────────────────────────────────────────
 
     {

@@ -53,8 +53,8 @@ private:
     std::string                  m_currentAnim;
     std::size_t                  m_frameIndex = 0;
     float                        m_frameTimer = 0.0f;
-    sf::Vec2f                 m_position;
     float                        m_groundY   = core::GROUND_Y;
+    sf::Vec2f                 m_position;
     float                        m_velocityY = 0.0f;
     float                        m_attackCooldown = 0.0f;
     bool                         m_isAlive = true;

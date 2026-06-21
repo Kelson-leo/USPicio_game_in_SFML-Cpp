@@ -101,8 +101,8 @@ private:
     std::string                      m_currentAnim;
     std::size_t                      m_frameIndex = 0;
     float                            m_frameTimer = 0.0f;
-    sf::Vec2f                     m_position;
     float                            m_groundY      = core::GROUND_Y;
+    sf::Vec2f                     m_position;
     bool                             m_isDefending  = false;
     bool                             m_isCrouching  = false;
 };

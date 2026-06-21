@@ -63,13 +63,17 @@ CMAKE_BINARY_DIR = /home/userdebian/Documentos/Programming/Cpp_Language/Games/Us
 # Directory level rules for the build root directory
 
 # The main recursive "all" target.
+all: CMakeFiles/gtest.dir/all
 all: CMakeFiles/UspicioLib.dir/all
 all: CMakeFiles/UspicioGame.dir/all
+all: CMakeFiles/unit_tests.dir/all
 .PHONY : all
 
 # The main recursive "codegen" target.
+codegen: CMakeFiles/gtest.dir/codegen
 codegen: CMakeFiles/UspicioLib.dir/codegen
 codegen: CMakeFiles/UspicioGame.dir/codegen
+codegen: CMakeFiles/unit_tests.dir/codegen
 .PHONY : codegen
 
 # The main recursive "preinstall" target.
@@ -77,9 +81,43 @@ preinstall:
 .PHONY : preinstall
 
 # The main recursive "clean" target.
+clean: CMakeFiles/gtest.dir/clean
 clean: CMakeFiles/UspicioLib.dir/clean
 clean: CMakeFiles/UspicioGame.dir/clean
+clean: CMakeFiles/unit_tests.dir/clean
 .PHONY : clean
+
+#=============================================================================
+# Target rules for target CMakeFiles/gtest.dir
+
+# All Build rule for target.
+CMakeFiles/gtest.dir/all:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/gtest.dir/build.make CMakeFiles/gtest.dir/depend
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/gtest.dir/build.make CMakeFiles/gtest.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/build-wasm/CMakeFiles --progress-num=28,29,30 "Built target gtest"
+.PHONY : CMakeFiles/gtest.dir/all
+
+# Build rule for subdir invocation for target.
+CMakeFiles/gtest.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/build-wasm/CMakeFiles 3
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/gtest.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/build-wasm/CMakeFiles 0
+.PHONY : CMakeFiles/gtest.dir/rule
+
+# Convenience name for target.
+gtest: CMakeFiles/gtest.dir/rule
+.PHONY : gtest
+
+# codegen rule for target.
+CMakeFiles/gtest.dir/codegen:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/gtest.dir/build.make CMakeFiles/gtest.dir/codegen
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/build-wasm/CMakeFiles --progress-num=28,29,30 "Finished codegen for target gtest"
+.PHONY : CMakeFiles/gtest.dir/codegen
+
+# clean rule for target.
+CMakeFiles/gtest.dir/clean:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/gtest.dir/build.make CMakeFiles/gtest.dir/clean
+.PHONY : CMakeFiles/gtest.dir/clean
 
 #=============================================================================
 # Target rules for target CMakeFiles/UspicioLib.dir
@@ -144,6 +182,39 @@ CMakeFiles/UspicioGame.dir/codegen:
 CMakeFiles/UspicioGame.dir/clean:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/UspicioGame.dir/build.make CMakeFiles/UspicioGame.dir/clean
 .PHONY : CMakeFiles/UspicioGame.dir/clean
+
+#=============================================================================
+# Target rules for target CMakeFiles/unit_tests.dir
+
+# All Build rule for target.
+CMakeFiles/unit_tests.dir/all: CMakeFiles/gtest.dir/all
+CMakeFiles/unit_tests.dir/all: CMakeFiles/UspicioLib.dir/all
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/unit_tests.dir/build.make CMakeFiles/unit_tests.dir/depend
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/unit_tests.dir/build.make CMakeFiles/unit_tests.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/build-wasm/CMakeFiles --progress-num=31,32,33,34,35,36,37,38,39,40,41,42 "Built target unit_tests"
+.PHONY : CMakeFiles/unit_tests.dir/all
+
+# Build rule for subdir invocation for target.
+CMakeFiles/unit_tests.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/build-wasm/CMakeFiles 40
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/unit_tests.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/build-wasm/CMakeFiles 0
+.PHONY : CMakeFiles/unit_tests.dir/rule
+
+# Convenience name for target.
+unit_tests: CMakeFiles/unit_tests.dir/rule
+.PHONY : unit_tests
+
+# codegen rule for target.
+CMakeFiles/unit_tests.dir/codegen:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/unit_tests.dir/build.make CMakeFiles/unit_tests.dir/codegen
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/build-wasm/CMakeFiles --progress-num=31,32,33,34,35,36,37,38,39,40,41,42 "Finished codegen for target unit_tests"
+.PHONY : CMakeFiles/unit_tests.dir/codegen
+
+# clean rule for target.
+CMakeFiles/unit_tests.dir/clean:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/unit_tests.dir/build.make CMakeFiles/unit_tests.dir/clean
+.PHONY : CMakeFiles/unit_tests.dir/clean
 
 #=============================================================================
 # Special targets to cleanup operation of make.

@@ -117,6 +117,19 @@ depend:
 .PHONY : depend
 
 #=============================================================================
+# Target rules for targets named gtest
+
+# Build rule for target.
+gtest: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 gtest
+.PHONY : gtest
+
+# fast build rule for target.
+gtest/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/gtest.dir/build.make CMakeFiles/gtest.dir/build
+.PHONY : gtest/fast
+
+#=============================================================================
 # Target rules for targets named UspicioLib
 
 # Build rule for target.
@@ -141,6 +154,67 @@ UspicioGame: cmake_check_build_system
 UspicioGame/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/UspicioGame.dir/build.make CMakeFiles/UspicioGame.dir/build
 .PHONY : UspicioGame/fast
+
+#=============================================================================
+# Target rules for targets named unit_tests
+
+# Build rule for target.
+unit_tests: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 unit_tests
+.PHONY : unit_tests
+
+# fast build rule for target.
+unit_tests/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/unit_tests.dir/build.make CMakeFiles/unit_tests.dir/build
+.PHONY : unit_tests/fast
+
+build/_deps/googletest-src/googletest/src/gtest-all.o: build/_deps/googletest-src/googletest/src/gtest-all.cc.o
+.PHONY : build/_deps/googletest-src/googletest/src/gtest-all.o
+
+# target to build an object file
+build/_deps/googletest-src/googletest/src/gtest-all.cc.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/gtest.dir/build.make CMakeFiles/gtest.dir/build/_deps/googletest-src/googletest/src/gtest-all.cc.o
+.PHONY : build/_deps/googletest-src/googletest/src/gtest-all.cc.o
+
+build/_deps/googletest-src/googletest/src/gtest-all.i: build/_deps/googletest-src/googletest/src/gtest-all.cc.i
+.PHONY : build/_deps/googletest-src/googletest/src/gtest-all.i
+
+# target to preprocess a source file
+build/_deps/googletest-src/googletest/src/gtest-all.cc.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/gtest.dir/build.make CMakeFiles/gtest.dir/build/_deps/googletest-src/googletest/src/gtest-all.cc.i
+.PHONY : build/_deps/googletest-src/googletest/src/gtest-all.cc.i
+
+build/_deps/googletest-src/googletest/src/gtest-all.s: build/_deps/googletest-src/googletest/src/gtest-all.cc.s
+.PHONY : build/_deps/googletest-src/googletest/src/gtest-all.s
+
+# target to generate assembly for a file
+build/_deps/googletest-src/googletest/src/gtest-all.cc.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/gtest.dir/build.make CMakeFiles/gtest.dir/build/_deps/googletest-src/googletest/src/gtest-all.cc.s
+.PHONY : build/_deps/googletest-src/googletest/src/gtest-all.cc.s
+
+build/_deps/googletest-src/googletest/src/gtest_main.o: build/_deps/googletest-src/googletest/src/gtest_main.cc.o
+.PHONY : build/_deps/googletest-src/googletest/src/gtest_main.o
+
+# target to build an object file
+build/_deps/googletest-src/googletest/src/gtest_main.cc.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/gtest.dir/build.make CMakeFiles/gtest.dir/build/_deps/googletest-src/googletest/src/gtest_main.cc.o
+.PHONY : build/_deps/googletest-src/googletest/src/gtest_main.cc.o
+
+build/_deps/googletest-src/googletest/src/gtest_main.i: build/_deps/googletest-src/googletest/src/gtest_main.cc.i
+.PHONY : build/_deps/googletest-src/googletest/src/gtest_main.i
+
+# target to preprocess a source file
+build/_deps/googletest-src/googletest/src/gtest_main.cc.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/gtest.dir/build.make CMakeFiles/gtest.dir/build/_deps/googletest-src/googletest/src/gtest_main.cc.i
+.PHONY : build/_deps/googletest-src/googletest/src/gtest_main.cc.i
+
+build/_deps/googletest-src/googletest/src/gtest_main.s: build/_deps/googletest-src/googletest/src/gtest_main.cc.s
+.PHONY : build/_deps/googletest-src/googletest/src/gtest_main.s
+
+# target to generate assembly for a file
+build/_deps/googletest-src/googletest/src/gtest_main.cc.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/gtest.dir/build.make CMakeFiles/gtest.dir/build/_deps/googletest-src/googletest/src/gtest_main.cc.s
+.PHONY : build/_deps/googletest-src/googletest/src/gtest_main.cc.s
 
 src/core/DamageConfig.o: src/core/DamageConfig.cpp.o
 .PHONY : src/core/DamageConfig.o
@@ -742,6 +816,270 @@ src/main.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/UspicioGame.dir/build.make CMakeFiles/UspicioGame.dir/src/main.cpp.s
 .PHONY : src/main.cpp.s
 
+tests/unit/test_ammo_component.o: tests/unit/test_ammo_component.cpp.o
+.PHONY : tests/unit/test_ammo_component.o
+
+# target to build an object file
+tests/unit/test_ammo_component.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/unit_tests.dir/build.make CMakeFiles/unit_tests.dir/tests/unit/test_ammo_component.cpp.o
+.PHONY : tests/unit/test_ammo_component.cpp.o
+
+tests/unit/test_ammo_component.i: tests/unit/test_ammo_component.cpp.i
+.PHONY : tests/unit/test_ammo_component.i
+
+# target to preprocess a source file
+tests/unit/test_ammo_component.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/unit_tests.dir/build.make CMakeFiles/unit_tests.dir/tests/unit/test_ammo_component.cpp.i
+.PHONY : tests/unit/test_ammo_component.cpp.i
+
+tests/unit/test_ammo_component.s: tests/unit/test_ammo_component.cpp.s
+.PHONY : tests/unit/test_ammo_component.s
+
+# target to generate assembly for a file
+tests/unit/test_ammo_component.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/unit_tests.dir/build.make CMakeFiles/unit_tests.dir/tests/unit/test_ammo_component.cpp.s
+.PHONY : tests/unit/test_ammo_component.cpp.s
+
+tests/unit/test_animation.o: tests/unit/test_animation.cpp.o
+.PHONY : tests/unit/test_animation.o
+
+# target to build an object file
+tests/unit/test_animation.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/unit_tests.dir/build.make CMakeFiles/unit_tests.dir/tests/unit/test_animation.cpp.o
+.PHONY : tests/unit/test_animation.cpp.o
+
+tests/unit/test_animation.i: tests/unit/test_animation.cpp.i
+.PHONY : tests/unit/test_animation.i
+
+# target to preprocess a source file
+tests/unit/test_animation.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/unit_tests.dir/build.make CMakeFiles/unit_tests.dir/tests/unit/test_animation.cpp.i
+.PHONY : tests/unit/test_animation.cpp.i
+
+tests/unit/test_animation.s: tests/unit/test_animation.cpp.s
+.PHONY : tests/unit/test_animation.s
+
+# target to generate assembly for a file
+tests/unit/test_animation.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/unit_tests.dir/build.make CMakeFiles/unit_tests.dir/tests/unit/test_animation.cpp.s
+.PHONY : tests/unit/test_animation.cpp.s
+
+tests/unit/test_asset_manager.o: tests/unit/test_asset_manager.cpp.o
+.PHONY : tests/unit/test_asset_manager.o
+
+# target to build an object file
+tests/unit/test_asset_manager.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/unit_tests.dir/build.make CMakeFiles/unit_tests.dir/tests/unit/test_asset_manager.cpp.o
+.PHONY : tests/unit/test_asset_manager.cpp.o
+
+tests/unit/test_asset_manager.i: tests/unit/test_asset_manager.cpp.i
+.PHONY : tests/unit/test_asset_manager.i
+
+# target to preprocess a source file
+tests/unit/test_asset_manager.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/unit_tests.dir/build.make CMakeFiles/unit_tests.dir/tests/unit/test_asset_manager.cpp.i
+.PHONY : tests/unit/test_asset_manager.cpp.i
+
+tests/unit/test_asset_manager.s: tests/unit/test_asset_manager.cpp.s
+.PHONY : tests/unit/test_asset_manager.s
+
+# target to generate assembly for a file
+tests/unit/test_asset_manager.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/unit_tests.dir/build.make CMakeFiles/unit_tests.dir/tests/unit/test_asset_manager.cpp.s
+.PHONY : tests/unit/test_asset_manager.cpp.s
+
+tests/unit/test_chest.o: tests/unit/test_chest.cpp.o
+.PHONY : tests/unit/test_chest.o
+
+# target to build an object file
+tests/unit/test_chest.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/unit_tests.dir/build.make CMakeFiles/unit_tests.dir/tests/unit/test_chest.cpp.o
+.PHONY : tests/unit/test_chest.cpp.o
+
+tests/unit/test_chest.i: tests/unit/test_chest.cpp.i
+.PHONY : tests/unit/test_chest.i
+
+# target to preprocess a source file
+tests/unit/test_chest.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/unit_tests.dir/build.make CMakeFiles/unit_tests.dir/tests/unit/test_chest.cpp.i
+.PHONY : tests/unit/test_chest.cpp.i
+
+tests/unit/test_chest.s: tests/unit/test_chest.cpp.s
+.PHONY : tests/unit/test_chest.s
+
+# target to generate assembly for a file
+tests/unit/test_chest.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/unit_tests.dir/build.make CMakeFiles/unit_tests.dir/tests/unit/test_chest.cpp.s
+.PHONY : tests/unit/test_chest.cpp.s
+
+tests/unit/test_damage_config.o: tests/unit/test_damage_config.cpp.o
+.PHONY : tests/unit/test_damage_config.o
+
+# target to build an object file
+tests/unit/test_damage_config.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/unit_tests.dir/build.make CMakeFiles/unit_tests.dir/tests/unit/test_damage_config.cpp.o
+.PHONY : tests/unit/test_damage_config.cpp.o
+
+tests/unit/test_damage_config.i: tests/unit/test_damage_config.cpp.i
+.PHONY : tests/unit/test_damage_config.i
+
+# target to preprocess a source file
+tests/unit/test_damage_config.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/unit_tests.dir/build.make CMakeFiles/unit_tests.dir/tests/unit/test_damage_config.cpp.i
+.PHONY : tests/unit/test_damage_config.cpp.i
+
+tests/unit/test_damage_config.s: tests/unit/test_damage_config.cpp.s
+.PHONY : tests/unit/test_damage_config.s
+
+# target to generate assembly for a file
+tests/unit/test_damage_config.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/unit_tests.dir/build.make CMakeFiles/unit_tests.dir/tests/unit/test_damage_config.cpp.s
+.PHONY : tests/unit/test_damage_config.cpp.s
+
+tests/unit/test_engine.o: tests/unit/test_engine.cpp.o
+.PHONY : tests/unit/test_engine.o
+
+# target to build an object file
+tests/unit/test_engine.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/unit_tests.dir/build.make CMakeFiles/unit_tests.dir/tests/unit/test_engine.cpp.o
+.PHONY : tests/unit/test_engine.cpp.o
+
+tests/unit/test_engine.i: tests/unit/test_engine.cpp.i
+.PHONY : tests/unit/test_engine.i
+
+# target to preprocess a source file
+tests/unit/test_engine.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/unit_tests.dir/build.make CMakeFiles/unit_tests.dir/tests/unit/test_engine.cpp.i
+.PHONY : tests/unit/test_engine.cpp.i
+
+tests/unit/test_engine.s: tests/unit/test_engine.cpp.s
+.PHONY : tests/unit/test_engine.s
+
+# target to generate assembly for a file
+tests/unit/test_engine.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/unit_tests.dir/build.make CMakeFiles/unit_tests.dir/tests/unit/test_engine.cpp.s
+.PHONY : tests/unit/test_engine.cpp.s
+
+tests/unit/test_frame_config.o: tests/unit/test_frame_config.cpp.o
+.PHONY : tests/unit/test_frame_config.o
+
+# target to build an object file
+tests/unit/test_frame_config.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/unit_tests.dir/build.make CMakeFiles/unit_tests.dir/tests/unit/test_frame_config.cpp.o
+.PHONY : tests/unit/test_frame_config.cpp.o
+
+tests/unit/test_frame_config.i: tests/unit/test_frame_config.cpp.i
+.PHONY : tests/unit/test_frame_config.i
+
+# target to preprocess a source file
+tests/unit/test_frame_config.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/unit_tests.dir/build.make CMakeFiles/unit_tests.dir/tests/unit/test_frame_config.cpp.i
+.PHONY : tests/unit/test_frame_config.cpp.i
+
+tests/unit/test_frame_config.s: tests/unit/test_frame_config.cpp.s
+.PHONY : tests/unit/test_frame_config.s
+
+# target to generate assembly for a file
+tests/unit/test_frame_config.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/unit_tests.dir/build.make CMakeFiles/unit_tests.dir/tests/unit/test_frame_config.cpp.s
+.PHONY : tests/unit/test_frame_config.cpp.s
+
+tests/unit/test_health_component.o: tests/unit/test_health_component.cpp.o
+.PHONY : tests/unit/test_health_component.o
+
+# target to build an object file
+tests/unit/test_health_component.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/unit_tests.dir/build.make CMakeFiles/unit_tests.dir/tests/unit/test_health_component.cpp.o
+.PHONY : tests/unit/test_health_component.cpp.o
+
+tests/unit/test_health_component.i: tests/unit/test_health_component.cpp.i
+.PHONY : tests/unit/test_health_component.i
+
+# target to preprocess a source file
+tests/unit/test_health_component.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/unit_tests.dir/build.make CMakeFiles/unit_tests.dir/tests/unit/test_health_component.cpp.i
+.PHONY : tests/unit/test_health_component.cpp.i
+
+tests/unit/test_health_component.s: tests/unit/test_health_component.cpp.s
+.PHONY : tests/unit/test_health_component.s
+
+# target to generate assembly for a file
+tests/unit/test_health_component.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/unit_tests.dir/build.make CMakeFiles/unit_tests.dir/tests/unit/test_health_component.cpp.s
+.PHONY : tests/unit/test_health_component.cpp.s
+
+tests/unit/test_lives_component.o: tests/unit/test_lives_component.cpp.o
+.PHONY : tests/unit/test_lives_component.o
+
+# target to build an object file
+tests/unit/test_lives_component.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/unit_tests.dir/build.make CMakeFiles/unit_tests.dir/tests/unit/test_lives_component.cpp.o
+.PHONY : tests/unit/test_lives_component.cpp.o
+
+tests/unit/test_lives_component.i: tests/unit/test_lives_component.cpp.i
+.PHONY : tests/unit/test_lives_component.i
+
+# target to preprocess a source file
+tests/unit/test_lives_component.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/unit_tests.dir/build.make CMakeFiles/unit_tests.dir/tests/unit/test_lives_component.cpp.i
+.PHONY : tests/unit/test_lives_component.cpp.i
+
+tests/unit/test_lives_component.s: tests/unit/test_lives_component.cpp.s
+.PHONY : tests/unit/test_lives_component.s
+
+# target to generate assembly for a file
+tests/unit/test_lives_component.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/unit_tests.dir/build.make CMakeFiles/unit_tests.dir/tests/unit/test_lives_component.cpp.s
+.PHONY : tests/unit/test_lives_component.cpp.s
+
+tests/unit/test_phase_config.o: tests/unit/test_phase_config.cpp.o
+.PHONY : tests/unit/test_phase_config.o
+
+# target to build an object file
+tests/unit/test_phase_config.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/unit_tests.dir/build.make CMakeFiles/unit_tests.dir/tests/unit/test_phase_config.cpp.o
+.PHONY : tests/unit/test_phase_config.cpp.o
+
+tests/unit/test_phase_config.i: tests/unit/test_phase_config.cpp.i
+.PHONY : tests/unit/test_phase_config.i
+
+# target to preprocess a source file
+tests/unit/test_phase_config.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/unit_tests.dir/build.make CMakeFiles/unit_tests.dir/tests/unit/test_phase_config.cpp.i
+.PHONY : tests/unit/test_phase_config.cpp.i
+
+tests/unit/test_phase_config.s: tests/unit/test_phase_config.cpp.s
+.PHONY : tests/unit/test_phase_config.s
+
+# target to generate assembly for a file
+tests/unit/test_phase_config.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/unit_tests.dir/build.make CMakeFiles/unit_tests.dir/tests/unit/test_phase_config.cpp.s
+.PHONY : tests/unit/test_phase_config.cpp.s
+
+tests/unit/test_ui_components.o: tests/unit/test_ui_components.cpp.o
+.PHONY : tests/unit/test_ui_components.o
+
+# target to build an object file
+tests/unit/test_ui_components.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/unit_tests.dir/build.make CMakeFiles/unit_tests.dir/tests/unit/test_ui_components.cpp.o
+.PHONY : tests/unit/test_ui_components.cpp.o
+
+tests/unit/test_ui_components.i: tests/unit/test_ui_components.cpp.i
+.PHONY : tests/unit/test_ui_components.i
+
+# target to preprocess a source file
+tests/unit/test_ui_components.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/unit_tests.dir/build.make CMakeFiles/unit_tests.dir/tests/unit/test_ui_components.cpp.i
+.PHONY : tests/unit/test_ui_components.cpp.i
+
+tests/unit/test_ui_components.s: tests/unit/test_ui_components.cpp.s
+.PHONY : tests/unit/test_ui_components.s
+
+# target to generate assembly for a file
+tests/unit/test_ui_components.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/unit_tests.dir/build.make CMakeFiles/unit_tests.dir/tests/unit/test_ui_components.cpp.s
+.PHONY : tests/unit/test_ui_components.cpp.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -752,6 +1090,14 @@ help:
 	@echo "... rebuild_cache"
 	@echo "... UspicioGame"
 	@echo "... UspicioLib"
+	@echo "... gtest"
+	@echo "... unit_tests"
+	@echo "... build/_deps/googletest-src/googletest/src/gtest-all.o"
+	@echo "... build/_deps/googletest-src/googletest/src/gtest-all.i"
+	@echo "... build/_deps/googletest-src/googletest/src/gtest-all.s"
+	@echo "... build/_deps/googletest-src/googletest/src/gtest_main.o"
+	@echo "... build/_deps/googletest-src/googletest/src/gtest_main.i"
+	@echo "... build/_deps/googletest-src/googletest/src/gtest_main.s"
 	@echo "... src/core/DamageConfig.o"
 	@echo "... src/core/DamageConfig.i"
 	@echo "... src/core/DamageConfig.s"
@@ -827,6 +1173,39 @@ help:
 	@echo "... src/main.o"
 	@echo "... src/main.i"
 	@echo "... src/main.s"
+	@echo "... tests/unit/test_ammo_component.o"
+	@echo "... tests/unit/test_ammo_component.i"
+	@echo "... tests/unit/test_ammo_component.s"
+	@echo "... tests/unit/test_animation.o"
+	@echo "... tests/unit/test_animation.i"
+	@echo "... tests/unit/test_animation.s"
+	@echo "... tests/unit/test_asset_manager.o"
+	@echo "... tests/unit/test_asset_manager.i"
+	@echo "... tests/unit/test_asset_manager.s"
+	@echo "... tests/unit/test_chest.o"
+	@echo "... tests/unit/test_chest.i"
+	@echo "... tests/unit/test_chest.s"
+	@echo "... tests/unit/test_damage_config.o"
+	@echo "... tests/unit/test_damage_config.i"
+	@echo "... tests/unit/test_damage_config.s"
+	@echo "... tests/unit/test_engine.o"
+	@echo "... tests/unit/test_engine.i"
+	@echo "... tests/unit/test_engine.s"
+	@echo "... tests/unit/test_frame_config.o"
+	@echo "... tests/unit/test_frame_config.i"
+	@echo "... tests/unit/test_frame_config.s"
+	@echo "... tests/unit/test_health_component.o"
+	@echo "... tests/unit/test_health_component.i"
+	@echo "... tests/unit/test_health_component.s"
+	@echo "... tests/unit/test_lives_component.o"
+	@echo "... tests/unit/test_lives_component.i"
+	@echo "... tests/unit/test_lives_component.s"
+	@echo "... tests/unit/test_phase_config.o"
+	@echo "... tests/unit/test_phase_config.i"
+	@echo "... tests/unit/test_phase_config.s"
+	@echo "... tests/unit/test_ui_components.o"
+	@echo "... tests/unit/test_ui_components.i"
+	@echo "... tests/unit/test_ui_components.s"
 .PHONY : help
 
 

@@ -100,6 +100,7 @@ UspicioGame.html: /home/userdebian/Documentos/Programming/Cpp_Language/Games/Usp
 UspicioGame.html: /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/vrsfml/install/lib/libfreetype.a
 UspicioGame.html: /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/vrsfml/install/lib/libsfml-glutils-s.html
 UspicioGame.html: /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/vrsfml/install/lib/libsfml-window-s.html
+UspicioGame.html: /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/vrsfml/install/lib/libSDL3.a
 UspicioGame.html: /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/vrsfml/install/lib/libsfml-audio-s.html
 UspicioGame.html: /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/vrsfml/install/lib/libsfml-system-s.html
 UspicioGame.html: /home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/vrsfml/install/lib/libvorbis.a

@@ -72,8 +72,8 @@ protected:
     infrastructure::FrameConfig& m_frameConfig;
     std::string                  m_bossName;
     const sf::Texture*           m_projectileTexture = nullptr;
-    sf::Vec2f                 m_position;
     float                        m_groundY           = core::GROUND_Y;
+    sf::Vec2f                 m_position;
     float                        m_rangedCooldown     = 0.0f;
     float                        m_meleeCooldown      = 0.0f;
     bool                         m_canMelee           = false;

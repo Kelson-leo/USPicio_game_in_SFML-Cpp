@@ -17,8 +17,8 @@ void HealthBar::draw(core::IRenderer& renderer) const {
     // Background (red)
     sf::RectangleShape bg{{
         .position = {m_position.x, m_position.y},
-        .size = {m_size.x, m_size.y},
-        .fillColor = sf::Color::Red
+        .fillColor = sf::Color::Red,
+        .size = {m_size.x, m_size.y}
     }};
     sfml.drawSfml(bg);
 
@@ -28,8 +28,8 @@ void HealthBar::draw(core::IRenderer& renderer) const {
 
     sf::RectangleShape fill{{
         .position = {m_position.x, m_position.y},
-        .size = {m_size.x * ratio, m_size.y},
-        .fillColor = sf::Color::Green
+        .fillColor = sf::Color::Green,
+        .size = {m_size.x * ratio, m_size.y}
     }};
     sfml.drawSfml(fill);
 }
