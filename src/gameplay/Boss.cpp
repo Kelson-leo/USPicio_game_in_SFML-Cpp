@@ -46,8 +46,15 @@ void Boss::update(float dt, const Player& player,
     }
 
     // ── Ranged attack ───────────────────────────────────────────
-    // Minimum distance prevents spawning inside the player (instant collision → invisible)
-    if (dx <= RANGED_RANGE && dx > 80.0f && m_projectileTexture) {
+    // Non-melee bosses (Rato, Professor) shoot at any range ≤ RANGED_RANGE.
+    // Melee bosses (Mandrake, Peru) require minimum distance so melee takes priority.
+    bool canShoot = (dx <= RANGED_RANGE && m_projectileTexture);
+    if (!m_canMelee) {
+        // no minimum distance — shoot at any range
+    } else {
+        canShoot = canShoot && (dx > 80.0f);  // let melee handle close range
+    }
+    if (canShoot) {
         m_rangedCooldown -= dt;
         if (m_rangedCooldown <= 0.0f) {
             shootProjectile(projectiles, frameConfig, player);
@@ -72,9 +79,10 @@ void Boss::shootProjectile(
         : core::Direction::Left;
 
     auto proj = std::make_unique<Projectile>();
+    float yOff = getProjectileOffsetY();
     sf::Vector2f offset = (dir == core::Direction::Right)
-        ? sf::Vector2f(80.0f, -10.0f)
-        : sf::Vector2f(-80.0f, -10.0f);
+        ? sf::Vector2f(80.0f, yOff)
+        : sf::Vector2f(-80.0f, yOff);
     proj->init(getProjectileType(), dir, *m_projectileTexture,
                frameConfig, m_position + offset);
     projectiles.push_back(std::move(proj));

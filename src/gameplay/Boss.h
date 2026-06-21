@@ -49,6 +49,10 @@ public:
     /// Boss sprite height for ground alignment (subclasses can override).
     virtual float getHeight() const { return BOSS_HEIGHT; }
 
+    /// Y offset for projectile spawn relative to boss position.
+    /// Subclasses override to adjust projectile height (e.g. Mandrake stone).
+    virtual float getProjectileOffsetY() const { return -10.0f; }
+
     core::HealthComponent health;
 
     static constexpr float RANGED_COOLDOWN = 2.0f;

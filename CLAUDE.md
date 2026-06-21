@@ -327,7 +327,7 @@ Estado de agachamento acionado ao pressionar `Down Arrow` durante o jogo:
   - Mandrake → `assets.getTexture("pedra")`, Peru → `assets.getTexture("copo")`
 - Dispara se vivo, cooldown ≤ 0, e distância ao player entre 80–600px (min 80px evita spawn dentro do player)
 - MELEE_RANGE = 150px (Mandrake/Peru só socam se o player estiver muito próximo)
-- Spawn offset: ±80px horizontal, -10px vertical (altura da mão, próximo ao centro do chefe)
+- Spawn offset: ±80px horizontal. Y offset: -10 (default), 0 (Mandrake — pedra mais baixa). Configurável via `getProjectileOffsetY()` virtual.
 - **Período de graça:** 0.1s — projétil não pode colidir nos primeiros 100ms (evita destruição antes do primeiro draw)
 - Reseta cooldown para 2.0s após cada disparo
 
@@ -335,7 +335,7 @@ Estado de agachamento acionado ao pressionar `Down Arrow` durante o jogo:
 
 Baú interativo exclusivo da Fase 5 (Sanfran). Restaura vidas e munição ao ser tocado.
 
-- **Localização:** Fase 5, `x = 200`, `y = groundY - CHEST_HEIGHT`
+- **Localização:** Fase 5, `x = 500`, `y = groundY - CHEST_HEIGHT`
 - **Uso único:** Abre no primeiro toque e permanece aberto (frame "open")
 - **Condição de ativação:** `THRESHOLD = 0.8f` — só abre se vidas < 80% do max OU munição < 80% do max
   - 4/5 vidas (80%) e 8/10 munição (80%) → NÃO abre (igual ao threshold, não abaixo)

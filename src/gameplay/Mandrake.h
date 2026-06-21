@@ -19,6 +19,7 @@ public:
     void performMeleeAttack(Player& player) override;
 
     float getHeight() const override { return FRAME_H * MANDRAKE_SCALE; }  // ~159
+    float getProjectileOffsetY() const override { return 0.0f; }  // stone at hand height
 
     static constexpr float MANDRAKE_SCALE        = 0.5f;
     static constexpr float FRAME_H               = 318.0f;
