@@ -15,16 +15,25 @@ TEST(HealthComponentTest, TakeDamage) {
     EXPECT_FALSE(h.isDead());
 }
 
-TEST(HealthComponentTest, TakeDamageWithDefenseReduces80Percent) {
+TEST(HealthComponentTest, TakeDamageWithDefense70PercentReduction) {
     core::HealthComponent h;
     h.takeDamage(30, true);
-    EXPECT_EQ(h.currentHP, 94);  // 100 - (30/5) = 100 - 6
+    // ceil(30 * 0.3) = 9 → 100 - 9 = 91
+    EXPECT_EQ(h.currentHP, 91);
 }
 
-TEST(HealthComponentTest, TakeDamageWithDefense80Percent) {
+TEST(HealthComponentTest, TakeDamageWithDefense30PercentTaken) {
     core::HealthComponent h;
     h.takeDamage(20, true);
-    EXPECT_EQ(h.currentHP, 96);  // 100 - (20/5) = 100 - 4
+    // ceil(20 * 0.3) = 6 → 100 - 6 = 94
+    EXPECT_EQ(h.currentHP, 94);
+}
+
+TEST(HealthComponentTest, TakeDamageWithDefense10Damage) {
+    core::HealthComponent h;
+    h.takeDamage(10, true);
+    // ceil(10 * 0.3) = 3 → 100 - 3 = 97
+    EXPECT_EQ(h.currentHP, 97);
 }
 
 TEST(HealthComponentTest, DefenseFloorIsOne) {

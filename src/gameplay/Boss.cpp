@@ -73,8 +73,8 @@ void Boss::shootProjectile(
 
     auto proj = std::make_unique<Projectile>();
     sf::Vector2f offset = (dir == core::Direction::Right)
-        ? sf::Vector2f(80.0f, 20.0f)
-        : sf::Vector2f(-80.0f, 20.0f);
+        ? sf::Vector2f(80.0f, -40.0f)
+        : sf::Vector2f(-80.0f, -40.0f);
     proj->init(getProjectileType(), dir, *m_projectileTexture,
                frameConfig, m_position + offset);
     projectiles.push_back(std::move(proj));

@@ -164,7 +164,7 @@ void Player::throwProjectile(std::vector<std::unique_ptr<Projectile>>& projectil
     m_shootCooldown = SHOOT_COOLDOWN;
 
     auto proj = std::make_unique<Projectile>();
-    float offsetY = m_isCrouching ? 30.0f : 20.0f;
+    float offsetY = m_isCrouching ? 0.0f : -30.0f;
     float offsetX = (m_direction == core::Direction::Right) ? 40.0f : -10.0f;
     proj->init(ProjectileType::Pen, m_direction, texture,
                frameConfig, m_position + sf::Vector2f(offsetX, offsetY));

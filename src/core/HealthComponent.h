@@ -1,6 +1,7 @@
 #pragma once
 
 #include <algorithm>
+#include <cmath>
 
 namespace core {
 
@@ -11,7 +12,8 @@ struct HealthComponent {
     void takeDamage(int amount, bool isDefending = false) {
         int finalDamage = amount;
         if (isDefending) {
-            finalDamage = std::max(1, amount / 5);  // 80% reduction
+            // 70% reduction → player takes 30% of damage, minimum 1
+            finalDamage = std::max(1, static_cast<int>(std::ceil(amount * 0.3f)));
         }
         currentHP = std::max(0, currentHP - finalDamage);
     }

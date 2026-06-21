@@ -55,7 +55,7 @@ void Projectile::init(ProjectileType type, core::Direction dir,
     } else if (type == ProjectileType::Cup) {
         scale = 0.6f;   // 123×69 native → ~74×41
     } else {  // Exam
-        scale = 1.5f;   // 62×67 native → ~93×100
+        scale = 1.0f;   // 62×67 native → ~62×67 (already large enough)
     }
 
     // Apply scale with horizontal flip for right-facing projectiles
