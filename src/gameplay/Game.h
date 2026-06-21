@@ -20,6 +20,7 @@
 #include "gameplay/Mandrake.h"
 #include "gameplay/Peru.h"
 #include "gameplay/Projectile.h"
+#include "gameplay/Chest.h"
 #include <SFML/Graphics.hpp>
 #include <memory>
 #include <string>
@@ -136,7 +137,8 @@ private:
     // ── Entities (created per level) ──────────────────────────────
     std::unique_ptr<Player>    m_player;
     std::vector<Capivara>      m_capivaras;
-    std::unique_ptr<Boss> m_boss;
+    std::unique_ptr<Boss>      m_boss;
+    std::unique_ptr<Chest>     m_chest;
 
     // ── Projectiles ───────────────────────────────────────────────
     std::vector<std::unique_ptr<Projectile>> m_projectiles;

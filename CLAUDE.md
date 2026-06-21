@@ -67,7 +67,7 @@
 | 2 | Bandeijão | 3 Capivaras | **Rato** | 900 |
 | 3 | InterUSP | 4 Capivaras | — | 900 |
 | 4 | Busão | 3 Capivaras | **Mandrake** | 900 |
-| 5 | SanFran | 4 Capivaras | **Peru** | 900 |
+| 5 | SanFran | 4 Capivaras | **Peru** + **Bau** | 900 |
 | 6 | Biblioteca | 5 Capivaras | — | 900 |
 | 7 | Reitoria | 2 Capivaras | **Professor** | 990 |
 
@@ -328,6 +328,24 @@ Estado de agachamento acionado ao pressionar `Down Arrow` durante o jogo:
 - **Período de graça:** 0.1s — projétil não pode colidir nos primeiros 100ms (evita destruição antes do primeiro draw)
 - Reseta cooldown para 2.0s após cada disparo
 
+### Chest / Bau (Sprint 11)
+
+Baú interativo exclusivo da Fase 5 (Sanfran). Restaura vidas e munição ao ser tocado.
+
+- **Localização:** Fase 5, `x = 200`, `y = groundY - CHEST_HEIGHT`
+- **Uso único:** Abre no primeiro toque e permanece aberto (frame "open")
+- **Condição de ativação:** `THRESHOLD = 0.8f` — só abre se vidas < 80% do max OU munição < 80% do max
+  - 4/5 vidas (80%) e 8/10 munição (80%) → NÃO abre (igual ao threshold, não abaixo)
+  - 3/5 vidas (60%) → abre mesmo com munição cheia
+  - 7/10 munição (70%) → abre mesmo com vidas cheias
+- **Bônus:** `HEAL_PERCENT = 0.8f` (80%) das vidas e munição perdidas, arredondado com `std::ceil`
+  - Ex: perdeu 2 vidas → `ceil(2 * 0.8) = 2` restauradas
+  - Ex: perdeu 1 vida → `ceil(1 * 0.8) = 1` restaurada
+- **Frames:** `assets/config/frames.json` → `"chest"` → `"closed"` (0,0,80,80) e `"open"` (80,0,80,80) [placeholder]
+- **Textura:** `assets/sprites/chest/chest_sheet.png` (placeholder, coordenadas reais pendentes do PO)
+- **Colisão:** Bounding-box (`CHEST_WIDTH=80, CHEST_HEIGHT=80`) vs Player bounds
+- **Integração:** `m_chest` (unique_ptr) em Game, criado em `loadLevel()` se `m_currentPhase == 4`
+
 ### HUD / UI Display (Sprint 7)
 
 **LivesDisplay** (corações, topo-esquerda):
@@ -563,3 +581,4 @@ Entidades em `src/gameplay/` implementam `core::Drawable` para renderização:
 | 8 | 2026-06-20 | Phase system restructure + Sprite outline/drop-shadow + Crouch state (8 anims, reduced hitbox, contextual punch/pen targeting) + Bugfixes: punch cooldown (0.3s), unified damage via Capivara::takeDamage(), vector reserve, pen scale 1.5x, dynamic groundY per phase (JSON-configurable), Professor ground alignment, victory message "Formado!", 92/92 tests |
 | 9 | 2026-06-20 | Audio system: background music (sf::Music, looped, 4-track selector), AudioConfig/AudioManager, Options menu (volume sliders + track selector), Options accessible from Pause menu, 92/92 tests |
 | 10 | 2026-06-21 | Expand to 7 phases + 4 bosses: Boss base class with Professor/Rato/Mandrake/Peru subclasses, factory in loadLevel(), placeholder spritesheets, 95/95 tests |
+| 11 | 2026-06-21 | Chest power-up in Phase 5 (Sanfran): restores 80% lost lives/ammo (ceil), single-use, frame switching, 107/107 tests |

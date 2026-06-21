@@ -10,6 +10,7 @@ add_executable(unit_tests
     test_ui_components.cpp
     test_animation.cpp
     test_phase_config.cpp
+    test_chest.cpp
 )
 
 target_link_libraries(unit_tests PRIVATE

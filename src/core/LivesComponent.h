@@ -12,6 +12,10 @@ struct LivesComponent {
         currentLives = std::max(0, currentLives - 1);
     }
 
+    void restoreLives(int amount) {
+        currentLives = std::min(maxLives, currentLives + amount);
+    }
+
     bool isGameOver() const {
         return currentLives <= 0;
     }

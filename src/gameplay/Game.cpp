@@ -551,6 +551,11 @@ void Game::update(float dt) {
         m_boss->update(dt, *m_player, m_projectiles, m_frameConfig);
     }
 
+    // ── Chest interaction ─────────────────────────────────────────
+    if (m_chest && m_player && !m_chest->isOpen()) {
+        m_chest->update(*m_player);
+    }
+
     // ── Projectiles update ───────────────────────────────────────
     for (auto& p : m_projectiles) {
         if (p->isActive()) {
@@ -697,6 +702,9 @@ void Game::render() {
         if (m_boss && !m_boss->health.isDead()) {
             m_renderer.draw(*m_boss);
         }
+        if (m_chest) {
+            m_renderer.draw(*m_chest);
+        }
         if (m_player && !m_player->health.isDead()) {
             m_renderer.draw(*m_player);
         }
@@ -740,6 +748,7 @@ void Game::render() {
             if (!c.isDead()) m_renderer.draw(c);
         }
         if (m_boss && !m_boss->health.isDead()) m_renderer.draw(*m_boss);
+        if (m_chest) m_renderer.draw(*m_chest);
         if (m_player && !m_player->health.isDead()) m_renderer.draw(*m_player);
 
         renderGameOver();
@@ -1199,6 +1208,16 @@ void Game::loadLevel(int phaseIndex) {
         auto& bar = m_enemyHealthBars.emplace_back(m_boss->health);
         auto bossPos = m_boss->getPosition();
         bar.setPosition({bossPos.x - 50.0f, bossPos.y - 30.0f});
+    }
+
+    // ── Chest (Phase 5 only) ──────────────────────────────────────
+    m_chest.reset();
+    if (m_currentPhase == 4) {  // 0-based: phase 5 = index 4 (Sanfran)
+        assets.loadTexture("chest",
+                           "assets/sprites/chest/chest_sheet.png");
+        m_chest = std::make_unique<Chest>();
+        m_chest->init(assets.getTexture("chest"), m_frameConfig,
+                      {200.0f, groundY - Chest::CHEST_HEIGHT}, groundY);
     }
 }
 

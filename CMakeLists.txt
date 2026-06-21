@@ -30,6 +30,7 @@ FetchContent_MakeAvailable(json)
 set(LIB_SOURCES
     src/core/DamageConfig.cpp
     src/gameplay/Capivara.cpp
+    src/gameplay/Chest.cpp
     src/gameplay/Game.cpp
     src/gameplay/Level.cpp
     src/gameplay/Player.cpp
