@@ -331,6 +331,14 @@ Adapters que implementam `core::Drawable` encapsulando `sf::Sprite` e `sf::Text`
 - `SfmlText` — análogo para texto
 - **Resolve TD-01**: Game agora usa `core::Drawable` sem `dynamic_cast` direto
 
+### Sprite Outline / Drop Shadow (Sprint 8)
+
+Player e Capivara desenham contorno escuro para destacar do background:
+- **Técnica:** Drop shadow 8-directional — sprite desenhado 8 vezes com offset de 1px em `(0,0,0,180)` antes do sprite original.
+- **Implementação:** Nos métodos `draw()` de `Player` e `Capivara`.
+- `SfmlSprite::m_sprite` é `mutable` para permitir mudanças visuais temporárias em método `draw() const`.
+- `getSfmlSprite()` const retorna `sf::Sprite&` não-const.
+
 ### FrameConfig (Sprint 2.5)
 
 Sistema de configuração de frames via JSON (`assets/config/frames.json`):
@@ -472,4 +480,4 @@ Entidades em `src/gameplay/` implementam `core::Drawable` para renderização:
 | 5 | 2026-06-20 | Menu system (Start/Restart/Info with Up/Down/Enter navigation), Info screen (developer, copyright, controls overlay), Player scale 1.5x, keyboard controls documented, Restart fully resets game state |
 | 6 | 2026-06-20 | Capivara enemy: real sprite frames (8 directional), animation system, AI movement toward player, edge clamping, contact damage, hurt/dead states, Fase 1=2, Fase 2=3, Fase 3=2+Professor |
 | 7 | 2026-06-20 | Projectile system: Pen (player, 500px/s, 20dmg) and Exam (professor, 250px/s, 12dmg), collision with enemies/player, professor AI shoots at range 600px with 2s cooldown, unique_ptr lifecycle with erase_if cleanup |
-| 8 | 2026-06-20 | Phase system restructure: JSON-configurable phases (fases.json), PhaseConfig class, dynamic background loading, 4-phase progression (Patio→InterUSP→Biblioteca→Reitoria), auto-advance on enemy clear, victory screen ("PARABENS!"), game over with contextual messages (REPROVADO/JUBILADO based on hasBoss), lives/ammo persist across phases, 91/91 tests |
+| 8 | 2026-06-20 | Phase system restructure (JSON-configurable phases, PhaseConfig class, 4-phase progression Patio→InterUSP→Biblioteca→Reitoria, auto-advance, victory/game-over screens) + Sprite outline/drop-shadow on Player and Capivara (8-directional 1px dark outline via mutable SfmlSprite), 91/91 tests |

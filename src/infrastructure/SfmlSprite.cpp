@@ -42,8 +42,16 @@ sf::Sprite& SfmlSprite::getSfmlSprite() {
     return m_sprite;
 }
 
-const sf::Sprite& SfmlSprite::getSfmlSprite() const {
+sf::Sprite& SfmlSprite::getSfmlSprite() const {
     return m_sprite;
+}
+
+sf::Color SfmlSprite::getColor() const {
+    return m_sprite.getColor();
+}
+
+sf::Vector2f SfmlSprite::getPosition() const {
+    return m_sprite.getPosition();
 }
 
 } // namespace infrastructure

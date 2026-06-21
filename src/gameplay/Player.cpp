@@ -85,6 +85,26 @@ bool Player::isAttacking() const {
 
 void Player::draw(core::IRenderer& renderer) const {
     if (m_currentAnim.empty()) return;
+
+    // ── Dark outline (8-directional, 1px) ─────────────────────────
+    auto& sfSprite = m_sprite.getSfmlSprite();
+    const auto origColor = sfSprite.getColor();
+    const auto origPos   = sfSprite.getPosition();
+
+    sfSprite.setColor(sf::Color(0, 0, 0, 180));
+    const sf::Vector2f offsets[] = {
+        {-1, -1}, {0, -1}, {1, -1},
+        {-1,  0},          {1,  0},
+        {-1,  1}, {0,  1}, {1,  1}
+    };
+    for (const auto& off : offsets) {
+        sfSprite.setPosition(origPos.x + off.x, origPos.y + off.y);
+        m_sprite.draw(renderer);
+    }
+
+    // ── Main sprite on top ────────────────────────────────────────
+    sfSprite.setColor(origColor);
+    sfSprite.setPosition(origPos);
     m_sprite.draw(renderer);
 }
 

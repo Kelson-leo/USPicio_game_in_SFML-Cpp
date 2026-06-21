@@ -29,10 +29,13 @@ public:
     void setColor(const sf::Color& color);
 
     sf::Sprite&       getSfmlSprite();
-    const sf::Sprite& getSfmlSprite() const;
+    sf::Sprite&       getSfmlSprite() const;  // mutable sprite, safe to return non-const
+
+    sf::Color getColor() const;
+    sf::Vector2f getPosition() const;
 
 private:
-    sf::Sprite m_sprite;
+    mutable sf::Sprite m_sprite;  // mutable: visual-only changes in const draw
 };
 
 } // namespace infrastructure
