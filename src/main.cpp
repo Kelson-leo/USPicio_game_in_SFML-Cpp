@@ -3,9 +3,11 @@
 #include "infrastructure/AssetManager.h"
 #include "gameplay/Game.h"
 #include <SFML/Window/WindowContext.hpp>
+#include <SFML/Graphics/GraphicsContext.hpp>
 
 int main() {
     auto windowContext = sf::WindowContext::create().value();
+    auto graphicsContext = sf::GraphicsContext::create().value();
 
     {
         infrastructure::SfmlRenderer renderer;
@@ -18,7 +20,7 @@ int main() {
         game.run();
     }
 
-    // Clear singletons before WindowContext is destroyed to avoid
+    // Clear singletons before graphics subsystem is destroyed to avoid
     // texture cleanup attempting to use an already-destroyed GL context.
     infrastructure::AssetManager::instance().clear();
 
