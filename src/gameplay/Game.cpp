@@ -24,6 +24,12 @@ Game::Game(core::IRenderer& renderer, core::IInputHandler& input)
     // ── Frame config ─────────────────────────────────────────────
     m_frameConfig.loadFromFile("assets/config/frames.json");
 
+    // ── Phase config ─────────────────────────────────────────────
+    if (!m_phaseConfig.loadFromFile("assets/config/fases.json")) {
+        std::cerr << "[Game] WARNING: Could not load phase config. "
+                     "Game will have no phases.\n";
+    }
+
     // ── Preload menu / common assets ─────────────────────────────
     auto& assets = infrastructure::AssetManager::instance();
     assets.loadTexture("background_fase1",
@@ -34,6 +40,17 @@ Game::Game(core::IRenderer& renderer, core::IInputHandler& input)
                        "assets/projectiles/caneta.png");
     assets.loadTexture("caneta_disp",
                        "assets/projectiles/caneta_disp.png");
+
+    // ── Preload all phase backgrounds ────────────────────────────
+    for (int i = 0; i < m_phaseConfig.size(); ++i) {
+        const auto& bgPath = m_phaseConfig.getBackground(i);
+        // Derive a key matching Level's scheme
+        auto start = bgPath.rfind('/');
+        if (start == std::string::npos) start = 0; else ++start;
+        auto end = bgPath.rfind('.');
+        std::string bgId = "bg_" + bgPath.substr(start, end - start);
+        assets.loadTexture(bgId, bgPath);
+    }
 
     // ── Menu background ──────────────────────────────────────────
     m_menuBg.setTexture(assets.getTexture("background_fase1"), true);
@@ -110,6 +127,20 @@ Game::Game(core::IRenderer& renderer, core::IInputHandler& input)
         item.setFillColor(sf::Color::White);
     }
 
+    // ── Game Over / Victory overlay (shared) ─────────────────────
+    m_gameOverOverlay.setSize({600.0f, 300.0f});
+    m_gameOverOverlay.setFillColor(sf::Color(80, 10, 10, 235));
+
+    m_gameOverTitle.setFont(m_font);
+    m_gameOverTitle.setCharacterSize(56);
+    m_gameOverTitle.setFillColor(sf::Color::Red);
+    m_gameOverTitle.setStyle(sf::Text::Bold);
+
+    m_gameOverSubtext.setFont(m_font);
+    m_gameOverSubtext.setString("Press Enter to return to menu");
+    m_gameOverSubtext.setCharacterSize(22);
+    m_gameOverSubtext.setFillColor(sf::Color(200, 200, 200));
+
     // ── Menu hearts (static, 5 top-left) ─────────────────────────
     constexpr float HEART_SCALE = 20.0f / 500.0f;
     constexpr float HEART_STEP  = 30.0f;
@@ -183,6 +214,8 @@ void Game::processInput() {
                 }
             } else if (m_state == State::Paused) {
                 handlePauseInput(event);
+            } else if (m_state == State::GameOver || m_state == State::Victory) {
+                handleGameOverInput(event);
             }
         }
     }
@@ -268,7 +301,8 @@ void Game::handleMenuInput(const core::Event& event) {
     } else if (event.key == core::KeyCode::Enter) {
         switch (m_menuSelection) {
         case 0: // Start
-            loadLevel(1);
+            m_currentPhase = 0;
+            loadLevel(m_currentPhase);
             setState(State::Playing);
             break;
         case 1: // Restart
@@ -317,6 +351,13 @@ void Game::handlePauseInput(const core::Event& event) {
     }
 }
 
+void Game::handleGameOverInput(const core::Event& event) {
+    if (event.key == core::KeyCode::Enter) {
+        restartGame();
+        setState(State::Menu);
+    }
+}
+
 void Game::updateMenuTextColors() {
     for (int i = 0; i < static_cast<int>(m_menuItems.size()); ++i) {
         m_menuItems[i].setFillColor(
@@ -327,6 +368,22 @@ void Game::updateMenuTextColors() {
 // ────────────────────────────────────────────────────────────────────
 void Game::update(float dt) {
     if (m_state != State::Playing) return;
+
+    if (!m_player) return;
+
+    // ── Check game over (lives depleted) ─────────────────────────
+    if (m_player->lives.isGameOver() && m_player->health.isDead()) {
+        const auto& phase = m_phaseConfig.getPhase(m_currentPhase);
+        if (phase.hasBoss) {
+            m_gameOverTitle.setString("JUBILADO");
+        } else {
+            m_gameOverTitle.setString("REPROVADO");
+        }
+        m_gameOverOverlay.setFillColor(sf::Color(80, 10, 10, 235));
+        m_gameOverTitle.setFillColor(sf::Color::Red);
+        setState(State::GameOver);
+        return;
+    }
 
     auto& assets = infrastructure::AssetManager::instance();
 
@@ -378,7 +435,7 @@ void Game::update(float dt) {
                 }
             }
         } else {  // Exam (professor projectile) vs player
-            if (m_player && !m_player->health.isDead()) {
+            if (!m_player->health.isDead()) {
                 auto pPos = m_player->getPosition();
                 sf::FloatRect pBounds(pPos.x, pPos.y, 60.0f, 140.0f);
                 if (bounds.intersects(pBounds)) {
@@ -396,7 +453,7 @@ void Game::update(float dt) {
         m_projectiles.end());
 
     // ── Player ───────────────────────────────────────────────────
-    if (m_player && !m_player->health.isDead()) {
+    if (!m_player->health.isDead()) {
         m_player->updateAnimation(dt);
         m_player->applyGravity(dt);
 
@@ -436,6 +493,27 @@ void Game::update(float dt) {
     if (m_professor && barIdx < m_enemyHealthBars.size()) {
         auto pos = m_professor->getPosition();
         m_enemyHealthBars[barIdx].setPosition({pos.x - 50.0f, pos.y - 30.0f});
+    }
+
+    // ── Check phase completion (all enemies dead) ────────────────
+    bool allDead = true;
+    for (auto& c : m_capivaras) {
+        if (!c.isDead()) { allDead = false; break; }
+    }
+    if (m_professor && !m_professor->health.isDead()) {
+        allDead = false;
+    }
+
+    if (allDead) {
+        if (m_currentPhase + 1 >= m_phaseConfig.size()) {
+            // All phases complete → Victory
+            m_gameOverTitle.setString("PARABENS!");
+            m_gameOverTitle.setFillColor(sf::Color(255, 215, 0));  // gold
+            m_gameOverOverlay.setFillColor(sf::Color(10, 40, 10, 235));
+            setState(State::Victory);
+        } else {
+            advancePhase();
+        }
     }
 }
 
@@ -492,6 +570,23 @@ void Game::render() {
         if (m_state == State::Paused) {
             renderPauseMenu();
         }
+    } else if (m_state == State::GameOver) {
+        // Draw game layer frozen underneath
+        if (m_currentLevel) {
+            m_currentLevel->draw(m_renderer);
+        }
+        for (auto& c : m_capivaras) {
+            if (!c.isDead()) m_renderer.draw(c);
+        }
+        if (m_professor && !m_professor->health.isDead()) m_renderer.draw(*m_professor);
+        if (m_player && !m_player->health.isDead()) m_renderer.draw(*m_player);
+
+        renderGameOver();
+    } else if (m_state == State::Victory) {
+        if (m_currentLevel) {
+            m_currentLevel->draw(m_renderer);
+        }
+        renderVictory();
     }
 
     m_renderer.display();
@@ -632,6 +727,78 @@ void Game::renderPauseMenu() {
 }
 
 // ────────────────────────────────────────────────────────────────────
+// Game Over / Victory rendering
+// ────────────────────────────────────────────────────────────────────
+
+void Game::renderGameOver() {
+    const auto wSz = m_renderer.getSize();
+    const float cx = static_cast<float>(wSz.x) / 2.0f;
+    const float cy = static_cast<float>(wSz.y) / 2.0f;
+
+    auto& sfml = dynamic_cast<infrastructure::SfmlRenderer&>(m_renderer);
+
+    // Red-tinted fullscreen dim
+    sf::RectangleShape dim;
+    dim.setSize({static_cast<float>(wSz.x), static_cast<float>(wSz.y)});
+    dim.setFillColor(sf::Color(120, 0, 0, 150));
+    sfml.drawSfml(dim);
+
+    // Panel
+    m_gameOverOverlay.setOrigin(m_gameOverOverlay.getSize().x / 2.0f,
+                                m_gameOverOverlay.getSize().y / 2.0f);
+    m_gameOverOverlay.setPosition(cx, cy);
+    sfml.drawSfml(m_gameOverOverlay);
+
+    // Title (REPROVADO / JUBILADO)
+    auto tb = m_gameOverTitle.getLocalBounds();
+    m_gameOverTitle.setOrigin(tb.left + tb.width / 2.0f,
+                              tb.top + tb.height / 2.0f);
+    m_gameOverTitle.setPosition(cx, cy - 40.0f);
+    m_renderer.draw(m_gameOverTitle);
+
+    // Subtext
+    auto sb = m_gameOverSubtext.getLocalBounds();
+    m_gameOverSubtext.setOrigin(sb.left + sb.width / 2.0f,
+                                sb.top + sb.height / 2.0f);
+    m_gameOverSubtext.setPosition(cx, cy + 70.0f);
+    m_renderer.draw(m_gameOverSubtext);
+}
+
+void Game::renderVictory() {
+    const auto wSz = m_renderer.getSize();
+    const float cx = static_cast<float>(wSz.x) / 2.0f;
+    const float cy = static_cast<float>(wSz.y) / 2.0f;
+
+    auto& sfml = dynamic_cast<infrastructure::SfmlRenderer&>(m_renderer);
+
+    // Green-tinted fullscreen dim
+    sf::RectangleShape dim;
+    dim.setSize({static_cast<float>(wSz.x), static_cast<float>(wSz.y)});
+    dim.setFillColor(sf::Color(0, 80, 0, 140));
+    sfml.drawSfml(dim);
+
+    // Panel
+    m_gameOverOverlay.setOrigin(m_gameOverOverlay.getSize().x / 2.0f,
+                                m_gameOverOverlay.getSize().y / 2.0f);
+    m_gameOverOverlay.setPosition(cx, cy);
+    sfml.drawSfml(m_gameOverOverlay);
+
+    // Title
+    auto tb = m_gameOverTitle.getLocalBounds();
+    m_gameOverTitle.setOrigin(tb.left + tb.width / 2.0f,
+                              tb.top + tb.height / 2.0f);
+    m_gameOverTitle.setPosition(cx, cy - 40.0f);
+    m_renderer.draw(m_gameOverTitle);
+
+    // Subtext
+    auto sb = m_gameOverSubtext.getLocalBounds();
+    m_gameOverSubtext.setOrigin(sb.left + sb.width / 2.0f,
+                                sb.top + sb.height / 2.0f);
+    m_gameOverSubtext.setPosition(cx, cy + 70.0f);
+    m_renderer.draw(m_gameOverSubtext);
+}
+
+// ────────────────────────────────────────────────────────────────────
 void Game::setState(State newState) {
     m_state = newState;
 }
@@ -645,9 +812,10 @@ void Game::restartGame() {
     m_livesDisplay.reset();
     m_ammoDisplay.reset();
     m_playerHealthBar.reset();
+    m_projectiles.clear();
 
-    m_currentPhase = 1;
-    loadLevel(1);
+    m_currentPhase = 0;
+    loadLevel(m_currentPhase);
 }
 
 void Game::restartPhase() {
@@ -659,13 +827,29 @@ void Game::restartPhase() {
     m_livesDisplay.reset();
     m_ammoDisplay.reset();
     m_playerHealthBar.reset();
+    m_projectiles.clear();
 
     loadLevel(m_currentPhase);
 }
 
-void Game::loadLevel(int phaseNumber) {
-    m_currentPhase = phaseNumber;
-    m_currentLevel = std::make_unique<Level>(phaseNumber);
+void Game::advancePhase() {
+    m_currentPhase++;
+    m_capivaras.clear();
+    m_enemyHealthBars.clear();
+    m_professor.reset();
+    m_currentLevel.reset();
+    m_playerHealthBar.reset();
+    m_projectiles.clear();
+
+    loadLevel(m_currentPhase);
+}
+
+void Game::loadLevel(int phaseIndex) {
+    m_currentPhase = phaseIndex;
+    const auto& phase = m_phaseConfig.getPhase(phaseIndex);
+
+    // Create Level with the configured background path
+    m_currentLevel = std::make_unique<Level>(phase.background);
 
     auto& assets = infrastructure::AssetManager::instance();
 
@@ -679,8 +863,17 @@ void Game::loadLevel(int phaseNumber) {
                        "assets/projectiles/livro.png");
 
     // ── Player ───────────────────────────────────────────────────
+    // Preserve lives/ammo if player already exists (phase transition)
+    int savedLives = 5;
+    int savedAmmo  = 10;
+    if (m_player) {
+        savedLives = m_player->lives.currentLives;
+        savedAmmo  = m_player->ammo.currentAmmo;
+    }
     m_player = std::make_unique<Player>(
         assets.getTexture("player"), m_frameConfig);
+    m_player->lives.currentLives = savedLives;
+    m_player->ammo.currentAmmo  = savedAmmo;
 
     m_livesDisplay = std::make_unique<infrastructure::LivesDisplay>(
         m_player->lives, assets.getTexture("heart"));
@@ -694,38 +887,22 @@ void Game::loadLevel(int phaseNumber) {
     auto pPos = m_player->getPosition();
     m_playerHealthBar->setPosition({pPos.x - 50.0f, pPos.y - 30.0f});
 
-    // ── Enemies ──────────────────────────────────────────────────
+    // ── Enemies (from config) ────────────────────────────────────
     m_capivaras.clear();
     m_enemyHealthBars.clear();
     m_professor.reset();
 
-    if (phaseNumber == 1) {
-        for (int i = 0; i < 2; ++i) {
-            float startX = 1500.0f + i * 200.0f;
-            auto& c = m_capivaras.emplace_back(
-                assets.getTexture("capivara"), m_frameConfig, startX);
-            auto& bar = m_enemyHealthBars.emplace_back(c.health);
-            auto cPos = c.getPosition();
-            bar.setPosition({cPos.x - 50.0f, cPos.y - 30.0f});
-        }
-    } else if (phaseNumber == 2) {
-        for (int i = 0; i < 3; ++i) {
-            float startX = 1500.0f + i * 200.0f;
-            auto& c = m_capivaras.emplace_back(
-                assets.getTexture("capivara"), m_frameConfig, startX);
-            auto& bar = m_enemyHealthBars.emplace_back(c.health);
-            auto cPos = c.getPosition();
-            bar.setPosition({cPos.x - 50.0f, cPos.y - 30.0f});
-        }
-    } else if (phaseNumber == 3) {
-        for (int i = 0; i < 2; ++i) {
-            float startX = 1500.0f + i * 200.0f;
-            auto& c = m_capivaras.emplace_back(
-                assets.getTexture("capivara"), m_frameConfig, startX);
-            auto& bar = m_enemyHealthBars.emplace_back(c.health);
-            auto cPos = c.getPosition();
-            bar.setPosition({cPos.x - 50.0f, cPos.y - 30.0f});
-        }
+    int enemyCount = phase.enemyCount;
+    for (int i = 0; i < enemyCount; ++i) {
+        float startX = 1500.0f + i * 200.0f;
+        auto& c = m_capivaras.emplace_back(
+            assets.getTexture("capivara"), m_frameConfig, startX);
+        auto& bar = m_enemyHealthBars.emplace_back(c.health);
+        auto cPos = c.getPosition();
+        bar.setPosition({cPos.x - 50.0f, cPos.y - 30.0f});
+    }
+
+    if (phase.hasBoss) {
         m_professor = std::make_unique<Professor>(
             assets.getTexture("professor"), m_frameConfig);
         m_professor->setPosition({700.0f, core::GROUND_Y});

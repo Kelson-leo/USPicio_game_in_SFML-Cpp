@@ -8,28 +8,24 @@
 
 namespace gameplay {
 
-/// Represents a single game level (phase). Owns the background
-/// and ground-tile sprites, loaded via AssetManager.
+/// Represents a single game level (phase). Owns the background sprite,
+/// loaded via AssetManager from the given path.
 class Level {
 public:
-    /// @param phaseNumber  1, 2, or 3.
-    explicit Level(int phaseNumber);
+    /// @param bgPath  Path to the background texture (e.g. assets/backgrounds/fase1_patio.png).
+    explicit Level(const std::string& bgPath);
 
-    /// Draw the background and the ground tile.
+    /// Draw the background.
     void draw(core::IRenderer& renderer);
 
     /// Y-coordinate of the ground surface.
     float getGroundY() const;
 
 private:
-    int m_phaseNumber;
+    std::string m_bgPath;
+    std::string m_bgId;  ///< AssetManager key derived from the path
 
     infrastructure::SfmlSprite m_background;
-    infrastructure::SfmlSprite m_groundTile;
-
-    /// Asset IDs for the current phase.
-    std::string m_bgId;
-    std::string m_tileId;
 };
 
 } // namespace gameplay

@@ -1,0 +1,33 @@
+{
+  "fases": [
+    {
+      "id": 1,
+      "background": "assets/backgrounds/fase1_patio.png",
+      "inimigos_comuns": 2,
+      "tipo_inimigo": "capivara",
+      "chefao": false
+    },
+    {
+      "id": 2,
+      "background": "assets/backgrounds/fase2_interusp.png",
+      "inimigos_comuns": 3,
+      "tipo_inimigo": "capivara",
+      "chefao": false
+    },
+    {
+      "id": 3,
+      "background": "assets/backgrounds/fase3_biblioteca.png",
+      "inimigos_comuns": 4,
+      "tipo_inimigo": "capivara",
+      "chefao": false
+    },
+    {
+      "id": 4,
+      "background": "assets/backgrounds/fase4_reitoria.png",
+      "inimigos_comuns": 2,
+      "tipo_inimigo": "capivara",
+      "chefao": true,
+      "chefao_tipo": "professor"
+    }
+  ]
+}

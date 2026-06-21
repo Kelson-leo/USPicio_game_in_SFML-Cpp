@@ -3,51 +3,26 @@
 
 namespace gameplay {
 
-Level::Level(int phaseNumber)
-    : m_phaseNumber(phaseNumber) {
+Level::Level(const std::string& bgPath)
+    : m_bgPath(bgPath) {
 
-    // ── Select asset IDs per phase ───────────────────────────────
-    switch (phaseNumber) {
-    case 1:
-        m_bgId   = "background_fase1";
-        m_tileId = "tile_grama";
-        break;
-    case 2:
-        m_bgId   = "background_fase2";
-        m_tileId = "tile_madeira";
-        break;
-    case 3:
-        m_bgId   = "background_fase3";
-        m_tileId = "tile_grama";   // Reitoria uses grass too
-        break;
-    default:
-        m_bgId   = "background_fase1";
-        m_tileId = "tile_grama";
-        break;
-    }
+    // Derive a simple AssetManager key from the path (strip dirs + ext).
+    // e.g. "assets/backgrounds/fase1_patio.png" → "bg_fase1_patio"
+    auto start = bgPath.rfind('/');
+    if (start == std::string::npos) start = 0; else ++start;
+    auto end   = bgPath.rfind('.');
+    m_bgId = "bg_" + bgPath.substr(start, end - start);
 
     auto& assets = infrastructure::AssetManager::instance();
-
-    // Load (or fallback) each texture by its canonical path from CLAUDE.md.
-    assets.loadTexture("background_fase1",
-                       "assets/backgrounds/fase1_patio.png");
-    assets.loadTexture("background_fase2",
-                       "assets/backgrounds/fase2_biblioteca.png");
-    assets.loadTexture("background_fase3",
-                       "assets/backgrounds/fase3_reitoria.png");
-    assets.loadTexture("tile_grama",
-                       "assets/tiles/tile_grama.png");
-    assets.loadTexture("tile_madeira",
-                       "assets/tiles/tile_madeira.png");
+    assets.loadTexture(m_bgId, bgPath);
 
     m_background.setTexture(assets.getTexture(m_bgId), true);
-    m_groundTile.setTexture(assets.getTexture(m_tileId), true);
 }
 
 void Level::draw(core::IRenderer& renderer) {
     const auto winSize = renderer.getSize();
 
-    // ── Background: stretch to fill the window ───────────────────
+    // Background: stretch to fill the window
     const auto* bgTex = m_background.getSfmlSprite().getTexture();
     if (bgTex && bgTex->getSize().x > 0 && bgTex->getSize().y > 0) {
         m_background.setScale(
@@ -56,11 +31,6 @@ void Level::draw(core::IRenderer& renderer) {
     }
     m_background.setPosition(0.0f, 0.0f);
     renderer.draw(m_background);
-
-    // ── Ground tile: temporarily disabled (background has its own floor) ─
-    // m_groundTile.setScale(...)
-    // m_groundTile.setPosition(0.0f, core::GROUND_Y);
-    // renderer.draw(m_groundTile);
 }
 
 float Level::getGroundY() const {

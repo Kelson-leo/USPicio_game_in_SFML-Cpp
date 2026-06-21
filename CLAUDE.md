@@ -59,17 +59,30 @@
 - 5 corações globais. Persistem entre Fase 1, 2 e 3.
 - Cada dano sofrido remove 1 coração.
 
-### Fases
+### Fases (Sprint 8 — Configurável via JSON)
 
-| Fase | Nome | Dificuldade | Inimigos | Tile |
+Configuração carregada de `assets/config/fases.json` via `PhaseConfig`. A estrutura é expansível: basta adicionar entradas ao JSON.
+
+| Fase | Nome | Dificuldade | Inimigos Comuns | Chefão |
 |---|---|---|---|---|
-| 1 | Pátio | Fácil | 3 Capivaras | Grama |
-| 2 | Biblioteca | Médio | 4 Capivaras | Madeira |
-| 3 | Reitoria | Difícil | 2 Capivaras + Chefão (Professor) | Grama |
+| 1 | Pátio | Fácil | 2 Capivaras | — |
+| 2 | InterUSP | Fácil-Médio | 3 Capivaras | — |
+| 3 | Biblioteca | Médio | 4 Capivaras | — |
+| 4 | Reitoria | Difícil | 2 Capivaras | Professor |
 
-### Game Over
-- **Fase 1 ou 2** com 0 vidas → Tela vermelha + som dramático + texto **"REPROVADO"** → Menu Principal.
-- **Fase 3** com 0 vidas → Tela vermelha + som dramático + texto **"JUBILADO"** → Menu Principal.
+### Progressão (Sprint 8)
+
+- Ao derrotar todos os inimigos da fase atual, o jogo avança automaticamente para a próxima.
+- Após a última fase → tela de **"PARABENS!"** (vitória).
+- Vidas e munição persistem entre fases (transição preserva estado do Player).
+- **Restart:** reinicia da Fase 1 com estado limpo (5 vidas, 10 munição).
+- **Restart Phase:** reinicia a fase atual preservando vidas e munição.
+
+### Game Over (Sprint 8)
+
+- Fases sem chefão (1, 2, 3) com 0 vidas → Tela vermelha + texto **"REPROVADO"** → Enter para Menu Principal.
+- Fase com chefão (4 — Reitoria/Professor) com 0 vidas → Tela vermelha + texto **"JUBILADO"** → Enter para Menu Principal.
+- A lógica usa `phase.hasBoss`: se `true` → "JUBILADO", senão → "REPROVADO".
 
 ### Física
 - **Chão:** Y = 880 (tela 1080p). Altura do tile de chão: 200px.
@@ -132,8 +145,9 @@ assets/
 │   └── PressStart2P.ttf        (Google Fonts, baixada via script)
 ├── backgrounds/
 │   ├── fase1_patio.png
-│   ├── fase2_biblioteca.png
-│   └── fase3_reitoria.png
+│   ├── fase2_interusp.png
+│   ├── fase3_biblioteca.png
+│   └── fase4_reitoria.png
 ├── tiles/
 │   ├── tile_grama.png
 │   └── tile_madeira.png
@@ -234,12 +248,27 @@ Navegação: Up/Down para selecionar, Enter para confirmar.
 - Limpeza: `erase + remove_if` remove projéteis inativos a cada frame
 
 **Disparo pelo Player** (`Player::throwProjectile`):
-- Verifica `ammo.canUse()`, consome 1 munição, cria Pen na direção do player
+- Verifica `ammo.canUse()` e `m_shootCooldown <= 0`
+- Cooldown: 0.3s entre disparos (`SHOOT_COOLDOWN`), evita gasto instantâneo
+- Consome 1 munição, cria Pen na direção do player
 - Offset: Right=(40,20), Left=(-10,20)
 
 **Disparo pelo Professor** (`Professor::shootProjectile`):
 - Dispara se vivo, cooldown ≤ 0, e distância ao player < 600px
 - Reseta cooldown para 2.0s após cada disparo
+
+### HUD / UI Display (Sprint 7)
+
+**LivesDisplay** (corações, topo-esquerda):
+- Desenha 5 slots (`maxLives`). Vivos: sólidos. Perdidos: opacidade 50 + X vermelho `(220,20,20)`.
+- Contorno escuro ao redor de cada ícone (4 offsets de 1px).
+- Fundo semi-transparente `(255,255,255,35)` atrás da fileira.
+
+**AmmoDisplay** (canetas, abaixo dos corações em Y=40):
+- Desenha 10 slots (`maxAmmo`). Disponíveis: sólidas. Usadas: opacidade 50 + X vermelho.
+- Mesmo estilo visual: contorno escuro + fundo leve.
+- Textura dedicada: `assets/projectiles/caneta_disp.png` (≈63×62 nativa, scale 0.30).
+- Cooldown de disparo do Player (0.3s) evita gastar toda munição em 1 frame.
 
 ### Build
 ```bash
@@ -255,13 +284,45 @@ Singleton (`infrastructure::AssetManager::instance()`) que centraliza o carregam
 - `loadTexture(id, path)` → carrega do disco ou cria placeholder magenta 32x32 (fallback) e loga aviso
 - `getTexture(id)` → retorna `const sf::Texture&`; IDs nunca carregados recebem fallback global
 - `SfmlTextureLoader` implementa `core::ITextureLoader` internamente
-- IDs oficiais: `background_fase1`, `background_fase2`, `background_fase3`, `tile_grama`, `tile_madeira`, `player`, `capivara`, `professor`, `caneta`, `livro`, `heart`
+- IDs oficiais: `heart`, `player`, `capivara`, `professor`, `caneta`, `caneta_disp`, `exam`, `livro`, e dinâmicos `bg_fase1_patio`, `bg_fase2_interusp`, `bg_fase3_biblioteca`, `bg_fase4_reitoria` (gerados por `Level` a partir do path)
 
-### Level System (Sprint 2)
+### Level System (Sprint 2 → 8)
 
-`gameplay::Level(int phaseNumber)` carrega background e tile pelo AssetManager.
-- `draw(IRenderer&)` → estica background para preencher a janela, desenha tile do chão em Y=GROUND_Y com altura GROUND_HEIGHT
+`gameplay::Level(const std::string& bgPath)` carrega background diretamente do path configurado.
+- `draw(IRenderer&)` → estica background para preencher a janela
 - `getGroundY()` → retorna `core::GROUND_Y`
+- O ID do AssetManager é derivado automaticamente do path (ex: `assets/backgrounds/fase1_patio.png` → `bg_fase1_patio`)
+
+### PhaseConfig (Sprint 8)
+
+`gameplay::PhaseConfig` carrega `assets/config/fases.json` e fornece acesso tipado à configuração de fases:
+- `loadFromFile(path)` → carrega JSON com nlohmann/json
+- `size()` → número de fases
+- `getPhase(index)` → `const PhaseData&` com `{id, background, enemyCount, enemyType, hasBoss, bossType}`
+- `getBackground(index)`, `getEnemyCount(index)`, `hasBoss(index)`, `getBossType(index)` → convenience methods
+- Índices fora de range retornam sentinel vazio (id=0, strings vazias, counts=0)
+
+**Estrutura do JSON** (`assets/config/fases.json`):
+```json
+{
+  "fases": [
+    { "id": 1, "background": "...", "inimigos_comuns": 2, "tipo_inimigo": "capivara", "chefao": false },
+    { "id": 4, "background": "...", "inimigos_comuns": 2, "tipo_inimigo": "capivara", "chefao": true, "chefao_tipo": "professor" }
+  ]
+}
+```
+
+**PhaseData** (value object, header-only em `PhaseConfig.h`):
+```cpp
+struct PhaseData {
+    int id = 0;
+    std::string background;
+    int enemyCount = 0;
+    std::string enemyType;
+    bool hasBoss = false;
+    std::string bossType;
+};
+```
 
 ### SfmlSprite / SfmlText (Sprint 2)
 
@@ -411,3 +472,4 @@ Entidades em `src/gameplay/` implementam `core::Drawable` para renderização:
 | 5 | 2026-06-20 | Menu system (Start/Restart/Info with Up/Down/Enter navigation), Info screen (developer, copyright, controls overlay), Player scale 1.5x, keyboard controls documented, Restart fully resets game state |
 | 6 | 2026-06-20 | Capivara enemy: real sprite frames (8 directional), animation system, AI movement toward player, edge clamping, contact damage, hurt/dead states, Fase 1=2, Fase 2=3, Fase 3=2+Professor |
 | 7 | 2026-06-20 | Projectile system: Pen (player, 500px/s, 20dmg) and Exam (professor, 250px/s, 12dmg), collision with enemies/player, professor AI shoots at range 600px with 2s cooldown, unique_ptr lifecycle with erase_if cleanup |
+| 8 | 2026-06-20 | Phase system restructure: JSON-configurable phases (fases.json), PhaseConfig class, dynamic background loading, 4-phase progression (Patio→InterUSP→Biblioteca→Reitoria), auto-advance on enemy clear, victory screen ("PARABENS!"), game over with contextual messages (REPROVADO/JUBILADO based on hasBoss), lives/ammo persist across phases, 91/91 tests |

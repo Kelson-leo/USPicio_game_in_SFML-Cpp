@@ -9,6 +9,7 @@
 #include "infrastructure/HealthBar.h"
 #include "infrastructure/LivesDisplay.h"
 #include "infrastructure/AmmoDisplay.h"
+#include "gameplay/PhaseConfig.h"
 #include "gameplay/Player.h"
 #include "gameplay/Capivara.h"
 #include "gameplay/Professor.h"
@@ -39,21 +40,25 @@ private:
     void render();
 
     // ── State ─────────────────────────────────────────────────────
-    enum class State { Menu, Playing, Paused };
+    enum class State { Menu, Playing, Paused, GameOver, Victory };
     enum class MenuPage { Main, Info };
     void setState(State newState);
 
-    void loadLevel(int phaseNumber);
+    void loadLevel(int phaseIndex);
     void restartGame();
     void restartPhase();
+    void advancePhase();
 
     // ── Menu helpers ──────────────────────────────────────────────
     void handleMenuInput(const core::Event& event);
     void handleInfoInput(const core::Event& event);
     void handlePauseInput(const core::Event& event);
+    void handleGameOverInput(const core::Event& event);
     void renderMenu();
     void renderInfo();
     void renderPauseMenu();
+    void renderGameOver();
+    void renderVictory();
     void updateMenuTextColors();
 
     // ── Dependencies ──────────────────────────────────────────────
@@ -71,10 +76,11 @@ private:
     // ── Config ────────────────────────────────────────────────────
     core::DamageConfig           m_damageCfg;
     infrastructure::FrameConfig  m_frameConfig;
+    PhaseConfig                  m_phaseConfig;
 
     // ── Level ─────────────────────────────────────────────────────
     std::unique_ptr<Level> m_currentLevel;
-    int m_currentPhase = 1;
+    int m_currentPhase = 0;  // 0-based index into PhaseConfig
 
     // ── Menu UI ───────────────────────────────────────────────────
     sf::Font    m_font;
@@ -96,6 +102,11 @@ private:
     // ── Pause menu UI ─────────────────────────────────────────────
     sf::RectangleShape m_pauseOverlay;
     std::vector<infrastructure::SfmlText> m_pauseItems; // "Resume", "Restart", "Quit to Menu"
+
+    // ── Game Over / Victory UI ────────────────────────────────────
+    sf::RectangleShape m_gameOverOverlay;
+    infrastructure::SfmlText m_gameOverTitle;
+    infrastructure::SfmlText m_gameOverSubtext;
 
     // ── Entities (created per level) ──────────────────────────────
     std::unique_ptr<Player>    m_player;
