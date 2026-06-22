@@ -267,7 +267,7 @@ target_compile_definitions(UspicioGame PRIVATE
 if(EMSCRIPTEN)
     set_target_properties(UspicioGame PROPERTIES
         SUFFIX ".html"
-        LINK_FLAGS "--shell-file ${VRSFML_ROOT}/emscripten/shell.html --pre-js ${VRSFML_ROOT}/emscripten/pre.js --preload-file ${CMAKE_SOURCE_DIR}/assets@/assets -s USE_SDL=0 -s MIN_WEBGL_VERSION=2 -s MAX_WEBGL_VERSION=2 -s GL_EXPLICIT_UNIFORM_LOCATION=1 -s ALLOW_MEMORY_GROWTH=1 -pthread -s USE_PTHREADS=1 -s PTHREAD_POOL_SIZE_STRICT=0 -s EXIT_RUNTIME=1 -s FORCE_FILESYSTEM=1 -s FETCH=1 -s STACK_SIZE=4mb -s TOTAL_MEMORY=128mb -s ASYNCIFY=1 -sASYNCIFY_IGNORE_INDIRECT=1 -s ASSERTIONS=1 -s EXPORTED_RUNTIME_METHODS=HEAPU32,HEAP8,getValue,setValue,requestFullscreen -Wno-pthreads-mem-growth"
+        LINK_FLAGS "--shell-file ${CMAKE_SOURCE_DIR}/web/shell.html --pre-js ${VRSFML_ROOT}/emscripten/pre.js --preload-file${CMAKE_SOURCE_DIR}/assets@/assets -s USE_SDL=0 -s MIN_WEBGL_VERSION=2 -s MAX_WEBGL_VERSION=2 -s GL_EXPLICIT_UNIFORM_LOCATION=1 -s ALLOW_MEMORY_GROWTH=1 -pthread -s USE_PTHREADS=1 -s PTHREAD_POOL_SIZE_STRICT=0 -s EXIT_RUNTIME=1 -s FORCE_FILESYSTEM=1 -s FETCH=1 -s STACK_SIZE=4mb -s TOTAL_MEMORY=128mb -s ASYNCIFY=1 -sASYNCIFY_IGNORE_INDIRECT=1 -s ASSERTIONS=1 -s EXPORTED_RUNTIME_METHODS=HEAPU32,HEAP8,getValue,setValue,requestFullscreen -Wno-pthreads-mem-growth"
     )
 endif()
 

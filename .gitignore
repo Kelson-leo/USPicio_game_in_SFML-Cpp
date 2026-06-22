@@ -31,4 +31,5 @@ CMakeFiles/
 *.data
 *.wasm
 *.html
+!web/shell.html
 *.js

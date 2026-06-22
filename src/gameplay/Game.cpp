@@ -1305,12 +1305,12 @@ void Game::update(float dt) {
 
 
 
-        if (m_player->health.isDead() && !m_player->lives.isGameOver()) {
+    }
 
-            m_player->revive();
-
-        }
-
+    // Revive check outside the alive-block: boss projectiles can kill
+    // the player BEFORE the alive-block is entered.
+    if (m_player->health.isDead() && !m_player->lives.isGameOver()) {
+        m_player->revive();
     }
 
 
@@ -2243,7 +2243,10 @@ void Game::loadLevel(int phaseIndex) {
 
     float groundY = phase.groundY;
 
-
+    std::cout << "[loadLevel] phaseIndex=" << phaseIndex
+              << " phase.id=" << phase.id
+              << " groundY=" << groundY
+              << " hasBoss=" << phase.hasBoss << std::endl;
 
     // Create Level with the configured background path and ground level
 
