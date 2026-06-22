@@ -37,10 +37,12 @@ void AmmoDisplay::draw(core::IRenderer& renderer) const {
         bool used = (i >= m_ammo.currentAmmo);
 
         // Outline: dark copies in 4 directions
+        const sf::Rect2f penRect = m_canetaTexture.getRect();
         auto drawOutline = [&](float ox, float oy) {
             sf::Sprite s{
                 .position = {px + ox, py + oy},
                 .scale = {m_scale, m_scale},
+                .textureRect = penRect,
                 .color = sf::Color{20, 20, 20, 200}
             };
             sfml.drawSfml(s, &m_canetaTexture);
@@ -55,6 +57,7 @@ void AmmoDisplay::draw(core::IRenderer& renderer) const {
         sf::Sprite pen{
             .position = {px, py},
             .scale = {m_scale, m_scale},
+            .textureRect = penRect,
             .color = penColor
         };
         sfml.drawSfml(pen, &m_canetaTexture);

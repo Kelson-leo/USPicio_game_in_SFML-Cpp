@@ -37,10 +37,12 @@ void LivesDisplay::draw(core::IRenderer& renderer) const {
         bool lost = (i >= m_lives.currentLives);
 
         // Outline: draw dark copies offset in 4 directions
+        const sf::Rect2f heartRect = m_heartTexture.getRect();
         auto drawOutline = [&](float ox, float oy) {
             sf::Sprite s{
                 .position = {px + ox, py + oy},
                 .scale = {m_scale, m_scale},
+                .textureRect = heartRect,
                 .color = sf::Color{20, 20, 20, 200}
             };
             sfml.drawSfml(s, &m_heartTexture);
@@ -55,6 +57,7 @@ void LivesDisplay::draw(core::IRenderer& renderer) const {
         sf::Sprite heart{
             .position = {px, py},
             .scale = {m_scale, m_scale},
+            .textureRect = heartRect,
             .color = heartColor
         };
         sfml.drawSfml(heart, &m_heartTexture);

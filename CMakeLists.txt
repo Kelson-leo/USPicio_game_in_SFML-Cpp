@@ -53,30 +53,29 @@ set(TEST_SOURCES
 set(VRSFML_ROOT ${CMAKE_CURRENT_SOURCE_DIR}/vrsfml)
 set(VRSFML_INCLUDE ${VRSFML_ROOT}/include)
 
+# ── Shared dependencies (both WASM and desktop) ───────────────────────
+include(FetchContent)
+
+FetchContent_Declare(
+    json
+    GIT_REPOSITORY https://github.com/nlohmann/json.git
+    GIT_TAG        v3.11.3
+)
+FetchContent_MakeAvailable(json)
+
+FetchContent_Declare(
+    googletest
+    GIT_REPOSITORY https://github.com/google/googletest.git
+    GIT_TAG        v1.14.0
+)
+FetchContent_MakeAvailable(googletest)
+
 if(EMSCRIPTEN)
     # ── WASM build ─────────────────────────────────────────────────────
     message(STATUS "Configuring for WASM (Emscripten)")
 
     set(VRSFML_WASM_INSTALL ${VRSFML_ROOT}/install)
     set(VRSFML_WASM_LIB ${VRSFML_WASM_INSTALL}/lib)
-
-    # nlohmann/json (cached from desktop build)
-    add_library(nlohmann_json INTERFACE)
-    target_include_directories(nlohmann_json INTERFACE
-        ${CMAKE_CURRENT_SOURCE_DIR}/build/_deps/json-src/include
-    )
-
-    # Google Test (cached from desktop build)
-    add_library(gtest STATIC
-        ${CMAKE_CURRENT_SOURCE_DIR}/build/_deps/googletest-src/googletest/src/gtest-all.cc
-        ${CMAKE_CURRENT_SOURCE_DIR}/build/_deps/googletest-src/googletest/src/gtest_main.cc
-    )
-    target_include_directories(gtest PUBLIC
-        ${CMAKE_CURRENT_SOURCE_DIR}/build/_deps/googletest-src/googletest/include
-        ${CMAKE_CURRENT_SOURCE_DIR}/build/_deps/googletest-src/googletest
-    )
-    # WASM: gtest already includes main, so gtest_main is an alias
-    add_library(gtest_main ALIAS gtest)
 
     # ── VRSFML imported targets (WASM) ──────────────────────────────
     add_library(SFML_System STATIC IMPORTED)
@@ -141,23 +140,6 @@ else()
     message(STATUS "Configuring for Desktop (native)")
 
     set(VRSFML_DESKTOP_LIB ${VRSFML_ROOT}/build-desktop/lib)
-
-    # nlohmann/json (FetchContent)
-    include(FetchContent)
-    FetchContent_Declare(
-        json
-        GIT_REPOSITORY https://github.com/nlohmann/json.git
-        GIT_TAG        v3.11.3
-    )
-    FetchContent_MakeAvailable(json)
-
-    # Google Test (FetchContent)
-    FetchContent_Declare(
-        googletest
-        GIT_REPOSITORY https://github.com/google/googletest.git
-        GIT_TAG        v1.14.0
-    )
-    FetchContent_MakeAvailable(googletest)
 
     # ── VRSFML imported targets (Desktop) ───────────────────────────
     # libbacktrace (needed by sfml-system)
@@ -259,6 +241,13 @@ target_compile_definitions(UspicioLib PUBLIC
     SFML_ENABLE_STACK_TRACES
 )
 
+# WASM: VRSFML WASM libs are Release-built (no SFML_DEBUG/assertFailure symbol).
+# NDEBUG prevents SFML_DEBUG from being defined, avoiding link errors in Debug mode.
+# Desktop: VRSFML is built locally with matching flags, unaffected.
+if(EMSCRIPTEN)
+    target_compile_definitions(UspicioLib PUBLIC NDEBUG)
+endif()
+
 target_link_libraries(UspicioLib PUBLIC
     SFML_Graphics
     SFML_Window
@@ -278,7 +267,7 @@ target_compile_definitions(UspicioGame PRIVATE
 if(EMSCRIPTEN)
     set_target_properties(UspicioGame PROPERTIES
         SUFFIX ".html"
-        LINK_FLAGS "--shell-file ${VRSFML_ROOT}/emscripten/shell.html --pre-js ${VRSFML_ROOT}/emscripten/pre.js -s USE_SDL=0 -s FULL_ES3=1 -s ALLOW_MEMORY_GROWTH=1"
+        LINK_FLAGS "--shell-file ${VRSFML_ROOT}/emscripten/shell.html --pre-js ${VRSFML_ROOT}/emscripten/pre.js --preload-file ${CMAKE_SOURCE_DIR}/assets@/assets -s USE_SDL=0 -s FULL_ES3=1 -s MIN_WEBGL_VERSION=2 -s MAX_WEBGL_VERSION=2 -s GL_EXPLICIT_UNIFORM_LOCATION=1 -s ALLOW_MEMORY_GROWTH=1 -pthread -s USE_PTHREADS=1 -s PTHREAD_POOL_SIZE_STRICT=0 -s EXIT_RUNTIME=1 -s FORCE_FILESYSTEM=1 -s FETCH=1 -s STACK_SIZE=4mb -s TOTAL_MEMORY=128mb -s EXPORTED_RUNTIME_METHODS=HEAPU32,HEAP8,getValue,setValue,requestFullscreen -Wno-pthreads-mem-growth"
     )
 endif()
 
@@ -287,6 +276,9 @@ add_custom_command(TARGET UspicioGame POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_directory
     ${CMAKE_SOURCE_DIR}/assets
     $<TARGET_FILE_DIR:UspicioGame>/assets
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+    ${VRSFML_ROOT}/emscripten/coi-serviceworker.js
+    $<TARGET_FILE_DIR:UspicioGame>/coi-serviceworker.js
 )
 
 # ── Unit Tests ──────────────────────────────────────────────────────────
