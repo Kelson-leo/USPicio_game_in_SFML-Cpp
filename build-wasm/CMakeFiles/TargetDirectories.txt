@@ -1,6 +1,0 @@
-/home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/build-wasm/CMakeFiles/gtest.dir
-/home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/build-wasm/CMakeFiles/UspicioLib.dir
-/home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/build-wasm/CMakeFiles/UspicioGame.dir
-/home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/build-wasm/CMakeFiles/unit_tests.dir
-/home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/build-wasm/CMakeFiles/edit_cache.dir
-/home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/build-wasm/CMakeFiles/rebuild_cache.dir

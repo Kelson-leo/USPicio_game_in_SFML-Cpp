@@ -11,7 +11,7 @@ bool SfmlRenderer::open(const core::Vector2u& size,
     });
     if (!win.hasValue()) return false;
     m_window = std::make_unique<sf::RenderWindow>(std::move(win.value()));
-    m_window->setVerticalSyncEnabled(false);
+    m_window->setVerticalSyncEnabled(true);
     m_isOpen = true;
     return true;
 }

@@ -1,22 +1,19 @@
 #include <SFML/System/Path.hpp>
-
 #include <SFML/System/RectUtils.hpp>
-
 #include <SFML/System/Rect2.hpp>
 
 #include "Game.h"
-
 #include "Level.h"
-
 #include "infrastructure/AssetManager.h"
-
 #include "infrastructure/SfmlRenderer.h"
-
 #include "core/PhysicsConstants.h"
 
 #include <cmath>
-
 #include <iostream>
+
+#ifdef __EMSCRIPTEN__
+#include <emscripten.h>
+#endif
 
 
 
@@ -31,10 +28,9 @@ Game::~Game() = default;
 // ────────────────────────────────────────────────────────────────────
 
 Game::Game(core::IRenderer& renderer, core::IInputHandler& input)
-
     : m_renderer(renderer)
-
     , m_input(input) {
+    std::cout << "[Game] constructor start" << std::endl;
 
     // ── Font ─────────────────────────────────────────────────────
 
@@ -149,13 +145,9 @@ Game::Game(core::IRenderer& renderer, core::IInputHandler& input)
 
 
     // ── Audio ────────────────────────────────────────────────────
-
     m_audio = std::make_unique<infrastructure::AudioManager>(
-
         m_audioCfg.selectedTrack);
-
     m_audio->applyConfig(m_audioCfg);
-
     m_audio->play();
 
 
@@ -427,7 +419,7 @@ Game::Game(core::IRenderer& renderer, core::IInputHandler& input)
 
 
     updateMenuTextColors();
-
+    std::cout << "[Game] constructor done" << std::endl;
 }
 
 
@@ -435,40 +427,49 @@ Game::Game(core::IRenderer& renderer, core::IInputHandler& input)
 // ────────────────────────────────────────────────────────────────────
 
 void Game::run() {
-
+    std::cout << "[Game] run() start" << std::endl;
+#ifdef __EMSCRIPTEN__
+    std::cout << "[Game] using emscripten_set_main_loop (no ASYNCIFY in loop)" << std::endl;
+    emscripten_set_main_loop_arg(
+        [](void* arg) { static_cast<Game*>(arg)->frameStep(); },
+        this, 0, 1);
+#else
     sf::Clock clock;
-
     float accumulator = 0.0f;
-
-
-
     while (m_running && m_renderer.isOpen()) {
-
         const float frameTime = clock.restart().asSeconds();
-
         accumulator += (frameTime > MAX_FRAME) ? MAX_FRAME : frameTime;
-
-
-
         processInput();
-
-
-
         while (accumulator >= FIXED_DT) {
-
             update(FIXED_DT);
-
             accumulator -= FIXED_DT;
-
         }
-
-
-
         render();
+    }
+#endif
+}
 
+#ifdef __EMSCRIPTEN__
+void Game::frameStep() {
+    if (!m_running || !m_renderer.isOpen()) {
+        std::cout << "[Game] exiting main loop" << std::endl;
+        emscripten_cancel_main_loop();
+        return;
     }
 
+    const float frameTime = m_frameClock.restart().asSeconds();
+    m_accumulator += (frameTime > MAX_FRAME) ? MAX_FRAME : frameTime;
+
+    processInput();
+
+    while (m_accumulator >= FIXED_DT) {
+        update(FIXED_DT);
+        m_accumulator -= FIXED_DT;
+    }
+
+    render();
 }
+#endif
 
 
 
@@ -923,18 +924,14 @@ void Game::handleOptionsInput(const core::Event& event) {
         if (m_optionsSelection == 0) {
 
             m_audioCfg.musicVolume = std::max(0.0f, m_audioCfg.musicVolume - 5.0f);
-
-            m_audio->setMusicVolume(m_audioCfg.musicVolume);
-
+            if (m_audio) m_audio->setMusicVolume(m_audioCfg.musicVolume);
         } else if (m_optionsSelection == 1) {
-
             m_audioCfg.effectVolume = std::max(0.0f, m_audioCfg.effectVolume - 5.0f);
-
         } else if (m_optionsSelection == 2) {
-
-            m_audio->previousTrack();
-
-            m_audioCfg.selectedTrack = m_audio->getCurrentTrackIndex();
+            if (m_audio) {
+                m_audio->previousTrack();
+                m_audioCfg.selectedTrack = m_audio->getCurrentTrackIndex();
+            }
 
         }
 
@@ -943,18 +940,14 @@ void Game::handleOptionsInput(const core::Event& event) {
         if (m_optionsSelection == 0) {
 
             m_audioCfg.musicVolume = std::min(100.0f, m_audioCfg.musicVolume + 5.0f);
-
-            m_audio->setMusicVolume(m_audioCfg.musicVolume);
-
+            if (m_audio) m_audio->setMusicVolume(m_audioCfg.musicVolume);
         } else if (m_optionsSelection == 1) {
-
             m_audioCfg.effectVolume = std::min(100.0f, m_audioCfg.effectVolume + 5.0f);
-
         } else if (m_optionsSelection == 2) {
-
-            m_audio->nextTrack();
-
-            m_audioCfg.selectedTrack = m_audio->getCurrentTrackIndex();
+            if (m_audio) {
+                m_audio->nextTrack();
+                m_audioCfg.selectedTrack = m_audio->getCurrentTrackIndex();
+            }
 
         }
 
@@ -1903,8 +1896,8 @@ void Game::renderOptions() {
 
 
     m_optionsTrackSelector.setString(
-
-        "<  " + m_audio->getCurrentTrackLabel() + "  >");
+        m_audio ? "<  " + m_audio->getCurrentTrackLabel() + "  >"
+                : "Audio N/D");
 
     m_optionsTrackSelector.setFillColor(
 

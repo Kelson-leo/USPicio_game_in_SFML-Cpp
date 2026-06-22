@@ -41,6 +41,9 @@ public:
     ~Game();
 
     void run();
+#ifdef __EMSCRIPTEN__
+    void frameStep();
+#endif
 
 private:
     static constexpr float FIXED_DT  = 1.0f / 60.0f;
@@ -79,6 +82,10 @@ private:
     core::IInputHandler&  m_input;
 
     State    m_state    = State::Menu;
+#ifdef __EMSCRIPTEN__
+    sf::Clock m_frameClock;
+    float     m_accumulator = 0.0f;
+#endif
     MenuPage m_menuPage = MenuPage::Main;
     bool     m_running  = true;
 

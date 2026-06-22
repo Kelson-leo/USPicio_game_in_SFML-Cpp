@@ -1,2 +1,0 @@
-/home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/emar qc libgtest.a "CMakeFiles/gtest.dir/build/_deps/googletest-src/googletest/src/gtest-all.cc.o" "CMakeFiles/gtest.dir/build/_deps/googletest-src/googletest/src/gtest_main.cc.o"
-/home/userdebian/Documentos/Programming/Cpp_Language/Games/Uspicio_game/emsdk/upstream/emscripten/emranlib libgtest.a

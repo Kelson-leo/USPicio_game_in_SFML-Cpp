@@ -573,6 +573,9 @@ Entidades em `src/gameplay/` implementam `core::Drawable` para renderização:
 |---|---|---|---|
 | TD-01 | ~~`Game::render()` faz `dynamic_cast<SfmlRenderer&>`~~ | — | **Resolvido Sprint 2:** `SfmlSprite`/`SfmlText` implementam `core::Drawable`; cast fica em infrastructure/ |
 | TD-02 | `SfmlInput` armazena `sf::RenderWindow&` (não usa porta `IRenderer`) | Acoplamento direto ao SFML no adapter de input | Sprint 3 |
+| TD-03 | Audio WASM pode crashar (miniaudio `emscripten_sleep(1)` + AudioWorklet callback) | Sem musica no browser se crashar | Migrar para JSPI ou resolver conflito ASYNCIFY+Worklet |
+| TD-04 | Testes unitarios nao rodam em modo WASM (precisam de VRSFML runtime completo) | So testavel em desktop ou com browser | Smoke tests Playwright como alternativa |
+| TD-05 | VRSFML precisa de patch `EMSCRIPTEN_NO_YIELD` para build WASM funcional | Rebuild manual do VRSFML necessario apos `git pull` | Automatizar via CMake `add_compile_definitions` |
 
 ---
 
@@ -594,6 +597,8 @@ Entidades em `src/gameplay/` implementam `core::Drawable` para renderização:
 | 10 | 2026-06-21 | Expand to 7 phases + 4 bosses: Boss base class with Professor/Rato/Mandrake/Peru subclasses, factory in loadLevel(), placeholder spritesheets, 95/95 tests |
 | 11 | 2026-06-21 | Chest power-up in Phase 5 (Sanfran): restores 80% lost lives/ammo (ceil), single-use, frame switching, 107/107 tests |
 | 12 | 2026-06-21 | **Migração SFML 2.6 → VRSFML 3.x** para suporte a WebAssembly. ~25 arquivos migrados: headers monolíticos → individuais, `sf::Vector2f`→`sf::Vec2f`, `sf::FloatRect`→`sf::Rect2f`, Sprite sem textura (draw-time), VertexArray→`std::vector<sf::Vertex>`, Event variant-based, RenderWindow factory, AudioManager com PlaybackDevice+MusicReader, Font/Texture factory (Optional<T>), C++23 requerido. Core (src/core/) zero alterações. Build WASM: `cp CMakeLists-vrsfml.txt CMakeLists.txt && emcmake cmake && emmake make`. Desktop SFML 2.6 build preservado com `CMakeLists-desktop.bak`. |
+| 13 | 2026-06-21 | **Desktop + WASM runtime fixes**: CMakeLists unificado (EMSCRIPTEN auto-detect), compilação VRSFML nativa desktop (SDL3/X11 em `vrsfml/build-desktop/`), `WindowContext`+`GraphicsContext` obrigatórios em `main()`, HUD textureRect (VRSFML sprite default vazio), shader WebGL (`GL_EXPLICIT_UNIFORM_LOCATION`), preload assets WASM (`--preload-file`), coi-serviceworker.js, `.gitignore` para `build-*/`. 112 testes. |
+| 14 | 2026-06-22 | **WASM runtime crash fix**: Patch VRSFML `Window.cpp` com `EMSCRIPTEN_NO_YIELD` para eliminar `sfml_yield_to_raf()`/`emscripten_sleep()` do game loop. Game loop usa `emscripten_set_main_loop_arg` (RAF nativo) — zero ASYNCIFY durante gameplay. Audio reabilitado (ASYNCFY so na init). Vsync habilitado (`setVerticalSyncEnabled(true)`). Smoke tests criados (`tests/smoke/playwright_test.js`). Console tracing adicionado em `main.cpp` e `Game.cpp` para diagnostico. |
 
 ---
 
@@ -601,30 +606,66 @@ Entidades em `src/gameplay/` implementam `core::Drawable` para renderização:
 
 ### Pré-requisitos
 - Emscripten SDK em `emsdk/` (ativar com `source emsdk/emsdk_env.sh`)
-- VRSFML compilado em `vrsfml/install/`
+- VRSFML WASM compilado em `vrsfml/install/` (recompilar se alterar headers: ver seção 10.1)
 
-### Compilar o jogo para WebAssembly
+### Compilar TUDO do zero (VRSFML + Game)
+
 ```bash
-# 1. Trocar para o CMakeLists de WASM
-cp CMakeLists-vrsfml.txt CMakeLists.txt
-
-# 2. Build
 source emsdk/emsdk_env.sh
-mkdir -p build-wasm && cd build-wasm
+
+# 1. Build VRSFML com patch EMSCRIPTEN_NO_YIELD (obrigatorio!)
+rm -rf vrsfml/build-wasm vrsfml/install && mkdir -p vrsfml/build-wasm
+emcmake cmake -S vrsfml -B vrsfml/build-wasm -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_CXX_FLAGS="-DEMSCRIPTEN_NO_YIELD" \
+    -DCMAKE_C_FLAGS="-DEMSCRIPTEN_NO_YIELD" \
+    -DSFML_BUILD_EXAMPLES=OFF -DSFML_BUILD_DOC=OFF -DSFML_BUILD_TEST_SUITE=OFF
+emmake make -C vrsfml/build-wasm -j1
+cmake --install vrsfml/build-wasm --prefix vrsfml/install
+cp vrsfml/build-wasm/lib/libSDL3.a vrsfml/install/lib/
+
+# 2. Build game
+rm -rf build-wasm && mkdir build-wasm && cd build-wasm
 emcmake cmake .. -DCMAKE_BUILD_TYPE=Release
-emmake make -j$(nproc)
-
-# 3. Output: UspicioGame.html, UspicioGame.js, UspicioGame.wasm
+emmake make -j1
 ```
 
-### Rodar testes (WASM)
+### Servir e testar
 ```bash
-node unit_tests.js  # testes não-GUI passam; GUI tests precisam de browser
+cd build-wasm
+python3 -m http.server 8001
+# Abrir http://localhost:8001/UspicioGame.html
 ```
 
-### Restaurar build desktop
+### Rodar testes unitarios (WASM)
 ```bash
-cp CMakeLists-desktop.bak CMakeLists.txt  # SFML 2.6 original
+cd build-wasm
+node unit_tests.js  # pode falhar em modo WASM — testes precisam de VRSFML runtime
+```
+
+### Smoke test com Playwright
+```bash
+cd build-wasm && python3 -m http.server 8001 &
+cd ../tests/smoke
+npx playwright install chromium  # uma vez
+node playwright_test.js
+```
+
+### 10.2 Recompilar VRSFML desktop (se _deps/ foi limpo)
+```bash
+rm -rf vrsfml/build-desktop
+mkdir -p vrsfml/build-desktop
+cmake -S vrsfml -B vrsfml/build-desktop -DCMAKE_BUILD_TYPE=Release \
+    -DSFML_BUILD_EXAMPLES=OFF -DSFML_BUILD_DOC=OFF -DSFML_BUILD_TEST_SUITE=OFF \
+    -DSDL_X11_XSCRNSAVER=OFF -DSDL_X11_XTEST=OFF -DSDL_X11_XDBE=OFF \
+    -DSDL_X11_XSHAPE=OFF -DSDL_X11_XSYNC=OFF -DSDL_X11_XINPUT=OFF
+cmake --build vrsfml/build-desktop --parallel $(nproc)
+```
+
+### 10.3 Build desktop (Linux nativo)
+```bash
+cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+cmake --build build --parallel $(nproc)
+./build/UspicioGame
 ```
 
 ## 11. API VRSFML (SFML 3.x) — Guia Rápido
@@ -649,3 +690,59 @@ cp CMakeLists-desktop.bak CMakeLists.txt  # SFML 2.6 original
 | `font.loadFromFile()` | `sf::Font::openFromFile()` retorna `Optional<Font>` |
 | `sf::RectangleShape(sf::Vector2f)` | `sf::RectangleShape({{.size={w,h}}})` |
 | C++17 | **C++23 requerido** |
+
+### VRSFML Gotchas (descobertos no Sprint 13)
+
+| Problema | Sintoma | Solução |
+|---|---|---|
+| `sf::Sprite.textureRect` padrão vazio | Sprite não desenha nada | Sempre setar `.textureRect = texture.getRect()` |
+| Sem `sf::GraphicsContext` | Tela preta (áudio funciona) | `sf::GraphicsContext::create().value()` em `main()` |
+| Sem `sf::WindowContext` | Crash: "WindowContext not installed" | `sf::WindowContext::create().value()` em `main()` |
+| Ordem destruição: AssetManager após GL context | Crash no `exit()` | `AssetManager::instance().clear()` antes do fim de `main()` |
+| Designated initializers fora de ordem | Warning `-Wreorder` | Campos na ordem de declaração da struct (`RectangleShape`: `.position`, `.fillColor`, `.size`) |
+| Membro usado antes de inicializado | Warning `-Wuninitialized` | Verificar ordem de declaração vs ordem no init list |
+| WASM Debug: `assertFailure` undefined | Erro de link | `target_compile_definitions(... NDEBUG)` no CMakeLists |
+| WASM: shader `layout(location) uniform` | Erro compilação shader WebGL | `-sGL_EXPLICIT_UNIFORM_LOCATION=1` |
+| WASM: `Module.HEAPU32 undefined` | Crash JS no startup | `-sEXPORTED_RUNTIME_METHODS=HEAPU32,...` + `-pthread` |
+| WASM: assets não carregam | "failed to open file" | `--preload-file assets@/assets` nos link flags |
+| WASM: `-pthread` requer SharedArrayBuffer | Página não carrega | `coi-serviceworker.js` (já copiado no post-build) |
+
+### WASM Async Loop Gotcha (Sprint 14)
+
+VRSFML's `Window::display()` chama `sfml_yield_to_raf()` (via `EM_ASYNC_JS`) ou `emscripten_sleep(0u)` a cada frame. Ambos requerem `-sASYNCIFY=1`. A combinacao ASYNCIFY + SDL events + pthreads causa `unreachable executed`.
+
+**Solucao:** Patch VRSFML com `EMSCRIPTEN_NO_YIELD` + usar `emscripten_set_main_loop` no game loop:
+- `Window.cpp`: `#if defined(SFML_SYSTEM_EMSCRIPTEN) && !defined(EMSCRIPTEN_NO_YIELD)` — pula o yield
+- `Game::run()`: `emscripten_set_main_loop_arg()` no lugar do `while` loop no Emscripten
+- `CMakeLists.txt`: `-DCMAKE_CXX_FLAGS="-DEMSCRIPTEN_NO_YIELD"` ao buildar VRSFML
+- Audio inicializa com ASYNCIFY (miniaudio `emscripten_sleep(1)`), game loop NÃO usa ASYNCIFY
+- `SfmlRenderer::open()`: `setVerticalSyncEnabled(true)` (requerido para consistencia)
+
+**Build:**
+```bash
+# 1. Build VRSFML com patch
+rm -rf vrsfml/build-wasm vrsfml/install && mkdir -p vrsfml/build-wasm
+emcmake cmake -S vrsfml -B vrsfml/build-wasm -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_CXX_FLAGS="-DEMSCRIPTEN_NO_YIELD" \
+    -DCMAKE_C_FLAGS="-DEMSCRIPTEN_NO_YIELD" \
+    -DSFML_BUILD_EXAMPLES=OFF -DSFML_BUILD_DOC=OFF -DSFML_BUILD_TEST_SUITE=OFF
+emmake make -C vrsfml/build-wasm -j1
+cmake --install vrsfml/build-wasm --prefix vrsfml/install
+cp vrsfml/build-wasm/lib/libSDL3.a vrsfml/install/lib/
+
+# 2. Build game
+rm -rf build-wasm && mkdir build-wasm && cd build-wasm
+emcmake cmake .. -DCMAKE_BUILD_TYPE=Release
+emmake make -j1
+```
+
+**Smoke Tests (Playwright):**
+```bash
+cd build-wasm && python3 -m http.server 8001 &
+node ../tests/smoke/playwright_test.js
+```
+
+**Debitos tecnicos abertos:**
+- Audio WASM pode crashar (miniaudio web audio worklet + ASYNCIFY). Se crashar, desabilitar com `#ifndef __EMSCRIPTEN__` em Game.cpp.
+- Migrar para JSPI (`-sJSPI=1`) quando navegador do usuario tiver suporte a `WebAssembly.Suspending`.
+- Testes unitarios nao rodam em WASM (precisam de VRSFML runtime).

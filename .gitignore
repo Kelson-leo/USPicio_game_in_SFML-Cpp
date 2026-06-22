@@ -1,12 +1,34 @@
+# Builds e dependências
 build/
+build-web/
+build-wasm/
+vrsfml/
+sfml-3.0/
+emsdk/
+cmake-build-*/
+
+# IDE
 .vscode/
 .idea/
-cmake-build-*/
+*.user
+*.swp
+*~
+.DS_Store
+
+# Artefatos de compilação
 *.o
 *.a
 *.so
 *.dll
 *.exe
-.DS_Store
-build-wasm/
-build-web/
+*.d
+.deps/
+.dirstamp
+CMakeCache.txt
+CMakeFiles/
+
+# WASM output (build-wasm/ já cobre, mas segurança extra)
+*.data
+*.wasm
+*.html
+*.js
