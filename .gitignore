@@ -16,6 +16,9 @@ cmake-build-*/
 *~
 .DS_Store
 
+# Project documentation (local only)
+CLAUDE.md
+
 # Artefatos de compilação
 *.o
 *.a
