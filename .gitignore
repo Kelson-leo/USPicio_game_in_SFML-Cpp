@@ -2,6 +2,7 @@
 build/
 build-web/
 build-wasm/
+build-vrsfml/
 vrsfml/
 sfml-3.0/
 emsdk/
@@ -33,3 +34,5 @@ CMakeFiles/
 *.html
 !web/shell.html
 *.js
+!tests/smoke/*.js
+!web/*.js
