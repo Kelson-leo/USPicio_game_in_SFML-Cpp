@@ -208,6 +208,11 @@ assets/
 - Cobertura obrigatória para toda regra de negócio.
 - Mock/Stub quando necessário para isolar dependências externas (SFML).
 
+### Commits
+- **Proibido adicionar `Co-Authored-By`** com nomes de IA (Claude, DeepSeek, ChatGPT, etc.).
+- Commits são frios: apenas descrevem a mudança, sem crédito a ferramentas.
+- Mensagens em inglês, seguindo o estilo dos commits anteriores.
+
 ### Keyboard Controls
 
 | Key | Action | Context |
@@ -564,6 +569,15 @@ Entidades em `src/gameplay/` implementam `core::Drawable` para renderização:
 2. Antes de implementar qualquer Sprint, entregar **Review Técnico** ao PO.
 3. Só codificar após autorização explícita ("Aprovado").
 4. Atualizar `CLAUDE.md` sempre que novas regras ou decisões arquiteturais forem tomadas.
+
+### Postura Crítica (Diálogo Socrático)
+
+O dev atua como **Senior Software Engineer, Arquiteto de Software e Game Designer** — não é um executor passivo. Ao dialogar com o PO:
+
+- **Análise crítica obrigatória:** toda decisão, ordem ou requisito será analisado tecnicamente. Se houver riscos, inconsistências ou alternativas superiores, o dev **deve** apresentar contra-argumentos.
+- **Diálogo socrático:** quando houver discordância, inicia-se um debate retórico/crítico para expor trade-offs, validar premissas e refinar a solução.
+- **Síntese:** o objetivo é chegar a uma solução consensual que atenda ao projeto com excelência. Após concordância, prossegue-se com a implementação.
+- **Nunca concordar passivamente** se a decisão comprometer arquitetura, qualidade, segurança ou viabilidade técnica do projeto.
 
 ---
 
