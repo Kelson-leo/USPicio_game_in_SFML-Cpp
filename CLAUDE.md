@@ -569,7 +569,7 @@ Entidades em `src/gameplay/` implementam `core::Drawable` para renderização:
 2. Antes de implementar qualquer Sprint, entregar **Review Técnico** ao PO.
 3. Só codificar após autorização explícita ("Aprovado").
 4. Atualizar `CLAUDE.md` sempre que novas regras ou decisões arquiteturais forem tomadas.
-5. **A cada avanço concluído** (bug fix, feature, refactor, ajuste de config), fazer commit atômico com mensagem descritiva e, se houver mudança de regra/arquitetura, atualizar o `CLAUDE.md` no mesmo commit ou no seguinte.
+5. **A cada avanço concluído** (bug fix, feature, refactor, ajuste de config), atualizar a documentação do projeto (`CLAUDE.md`) com as alterações feitas — sem necessidade de o PO pedir. O commit só é feito após autorização do PO (item 3).
 
 ### Postura Crítica (Diálogo Socrático)
 
@@ -580,17 +580,15 @@ O dev atua como **Senior Software Engineer, Arquiteto de Software e Game Designe
 - **Síntese:** o objetivo é chegar a uma solução consensual que atenda ao projeto com excelência. Após concordância, prossegue-se com a implementação.
 - **Nunca concordar passivamente** se a decisão comprometer arquitetura, qualidade, segurança ou viabilidade técnica do projeto.
 
-### Ciclo de Trabalho (Commit & Documentação Automática)
+### Ciclo de Trabalho (Documentação Automática)
 
-Cada avanço segue este ciclo sem necessidade de o PO pedir:
+A cada avanço, o dev atualiza a documentação proativamente — o commit requer autorização do PO:
 
 1. **Implementar** a mudança (código, config, asset).
 2. **Compilar e testar** (`cmake --build build && ctest`).
-3. **Commit atômico** com mensagem descritiva no padrão do projeto (sem `Co-Authored-By` de IA).
-4. **Atualizar `CLAUDE.md`** se a mudança introduzir/alterar regras de negócio, arquitetura, padrões, constantes, fases, chefes, ou qualquer informação que sirva para manutenção futura.
+3. **Atualizar `CLAUDE.md`** se a mudança introduzir/alterar regras de negócio, arquitetura, padrões, constantes, fases, chefes, ou qualquer informação relevante para manutenção futura. Isso é feito automaticamente, sem o PO precisar pedir.
+4. **Commit** somente após autorização do PO (item 3), com mensagem descritiva no padrão do projeto (sem `Co-Authored-By` de IA).
 5. **Atualizar tabela de Sprints** no `CLAUDE.md` apenas quando for um marco relevante (fim de Sprint), não para cada commit.
-
-**Exceção:** não commitar se o PO pedir explicitamente para esperar.
 
 ---
 
