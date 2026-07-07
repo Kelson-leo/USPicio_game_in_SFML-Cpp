@@ -442,6 +442,34 @@
         };
       };
     </script>
+
+    <!-- Prevent canvas resize on fullscreen exit.
+         The browser fires 'fullscreenchange' before the CSS reflow
+         completes, so the .canvas-frame layout may resize the <canvas>
+         *after* our handler runs.  A double requestAnimationFrame
+         waits for the layout to settle, then restores the internal
+         resolution to the design size.                                    -->
+    <script>
+      (function() {
+        var DESIGN_W = 1920, DESIGN_H = 1080;
+        document.addEventListener('fullscreenchange', function() {
+          if (document.fullscreenElement) return;  // entering fullscreen
+          // Exiting fullscreen — wait for CSS reflow to finish
+          requestAnimationFrame(function() {
+            requestAnimationFrame(function() {
+              var c = document.getElementById('canvas');
+              if (c && (c.width !== DESIGN_W || c.height !== DESIGN_H)) {
+                c.width  = DESIGN_W;
+                c.height = DESIGN_H;
+                console.log('[shell] fullscreen exit — canvas reset to '
+                  + DESIGN_W + '×' + DESIGN_H);
+              }
+            });
+          });
+        });
+      })();
+    </script>
+
     {{{ SCRIPT }}}
   </body>
 </html>

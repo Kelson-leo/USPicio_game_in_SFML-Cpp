@@ -457,6 +457,16 @@ void Game::frameStep() {
         return;
     }
 
+    // ── Detect viewport resize (e.g. fullscreen exit) ────────────
+    {
+        const auto winSz = m_renderer.getSize();
+        const float winH = static_cast<float>(winSz.y);
+        if (winH > 0.0f && std::abs(winH - m_lastWebViewH) > 1.0f) {
+            readjustForViewport(winH);
+            m_lastWebViewH = winH;
+        }
+    }
+
     const float frameTime = m_frameClock.restart().asSeconds();
     m_accumulator += (frameTime > MAX_FRAME) ? MAX_FRAME : frameTime;
 
@@ -468,6 +478,24 @@ void Game::frameStep() {
     }
 
     render();
+}
+
+void Game::readjustForViewport(float viewH) {
+    if (viewH <= 0.0f) return;
+    constexpr float DESKTOP_VIEW_H = 1011.0f;
+    const float newGroundY = m_originalGroundY * (viewH / DESKTOP_VIEW_H);
+
+    std::cout << "[readjustForViewport] viewH=" << viewH
+              << " origGroundY=" << m_originalGroundY
+              << " → newGroundY=" << newGroundY << std::endl;
+
+    if (m_player) m_player->setGroundY(newGroundY);
+    for (auto& c : m_capivaras) c.setGroundY(newGroundY);
+    if (m_boss) {
+        m_boss->setGroundY(newGroundY);
+        m_boss->setPosition({m_boss->getPosition().x,
+                             newGroundY - m_boss->getHeight()});
+    }
 }
 #endif
 
@@ -2242,6 +2270,25 @@ void Game::loadLevel(int phaseIndex) {
     const auto& phase = m_phaseConfig.getPhase(phaseIndex);
 
     float groundY = phase.groundY;
+
+#ifdef __EMSCRIPTEN__
+    // Desktop window decorations (~69 px title bar) reduce the 1080p
+    // client area to ~1011 px.  The background image was designed so
+    // its visual ground sits at groundY/1011 fraction from the top.
+    //
+    // The web canvas is exactly 1080 px (no decorations) — and may
+    // change on fullscreen exit / CSS resize.  Scale groundY relative
+    // to the *actual* viewport height, and store the original so we
+    // can re-apply whenever the viewport changes.
+    m_originalGroundY = groundY;
+    {
+        const auto winSz = m_renderer.getSize();
+        const float winH = static_cast<float>(winSz.y);
+        m_lastWebViewH = winH;
+        constexpr float DESKTOP_VIEW_H = 1011.0f;
+        groundY = groundY * (winH / DESKTOP_VIEW_H);
+    }
+#endif
 
     std::cout << "[loadLevel] phaseIndex=" << phaseIndex
               << " phase.id=" << phase.id

@@ -22,15 +22,16 @@ Level::Level(const std::string& bgPath, float groundY)
 
 void Level::draw(core::IRenderer& renderer) {
     const auto winSize = renderer.getSize();
+    const float winW = static_cast<float>(winSize.x);
+    const float winH = static_cast<float>(winSize.y);
 
-    // Background: stretch to fill the window
     const auto* bgTex = m_background.getTexture();
     if (bgTex && bgTex->getSize().x > 0 && bgTex->getSize().y > 0) {
-        m_background.setScale(
-            static_cast<float>(winSize.x) / bgTex->getSize().x,
-            static_cast<float>(winSize.y) / bgTex->getSize().y);
+        const float texW = static_cast<float>(bgTex->getSize().x);
+        const float texH = static_cast<float>(bgTex->getSize().y);
+        m_background.setScale(winW / texW, winH / texH);
+        m_background.setPosition(0.0f, 0.0f);
     }
-    m_background.setPosition(0.0f, 0.0f);
     renderer.draw(m_background);
 }
 

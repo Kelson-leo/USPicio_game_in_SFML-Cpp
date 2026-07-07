@@ -1,5 +1,7 @@
 #include "SfmlRenderer.h"
 #include "SfmlConversions.h"
+#include <SFML/Graphics/View.hpp>
+#include <iostream>
 
 namespace infrastructure {
 
@@ -12,6 +14,14 @@ bool SfmlRenderer::open(const core::Vector2u& size,
     if (!win.hasValue()) return false;
     m_window = std::make_unique<sf::RenderWindow>(std::move(win.value()));
     m_window->setVerticalSyncEnabled(true);
+
+    // Log the default view for diagnostic comparison desktop vs web.
+    auto view = m_window->computeView();
+    std::cout << "[SfmlRenderer] Default view: center=("
+              << view.center.x << "," << view.center.y
+              << ") size=(" << view.size.x << "," << view.size.y
+              << ")" << std::endl;
+
     m_isOpen = true;
     return true;
 }

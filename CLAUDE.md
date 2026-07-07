@@ -601,6 +601,9 @@ A cada avanço, o dev atualiza a documentação proativamente — o commit reque
 | TD-03 | Audio WASM pode crashar (miniaudio `emscripten_sleep(1)` + AudioWorklet callback) | Sem musica no browser se crashar | Migrar para JSPI ou resolver conflito ASYNCIFY+Worklet |
 | TD-04 | Testes unitarios nao rodam em modo WASM (precisam de VRSFML runtime completo) | So testavel em desktop ou com browser | Smoke tests Playwright como alternativa |
 | TD-05 | VRSFML precisa de patch `EMSCRIPTEN_NO_YIELD` para build WASM funcional | Rebuild manual do VRSFML necessario apos `git pull` | Automatizar via CMake `add_compile_definitions` |
+| TD-06 | ~~Web: entidades flutuam acima do chão~~ | — | **Resolvido 2026-07-07:** groundY escalado dinamicamente (`1080/1011`) no `loadLevel()` + `readjustForViewport()` no `frameStep()` |
+| TD-07 | Web: tela "cortada/zoom" ao sair do fullscreen com ESC | Viewport mostra menos área de jogo após fullscreen exit; chefes e inimigos podem ficar fora do campo de visão | Investigar resize do canvas pelo CSS reflow no VRSFML/Emscripten; double-rAF em `shell.html` mitiga parcialmente |
+| TD-08 | `EM_ASM` causa crash (`No EM_ASM constant found`) se `.wasm` e `.js` ficam dessincronizados (ex: cache do navegador) | Jogo não carrega até hard refresh (Ctrl+Shift+R) | Evitar `EM_ASM` sempre que possível; usar `emscripten_run_script` ou `MAIN_THREAD_EM_ASM` |
 
 ---
 
@@ -625,6 +628,7 @@ A cada avanço, o dev atualiza a documentação proativamente — o commit reque
 | 13 | 2026-06-21 | **Desktop + WASM runtime fixes**: CMakeLists unificado (EMSCRIPTEN auto-detect), compilação VRSFML nativa desktop (SDL3/X11 em `vrsfml/build-desktop/`), `WindowContext`+`GraphicsContext` obrigatórios em `main()`, HUD textureRect (VRSFML sprite default vazio), shader WebGL (`GL_EXPLICIT_UNIFORM_LOCATION`), preload assets WASM (`--preload-file`), coi-serviceworker.js, `.gitignore` para `build-*/`. 112 testes. |
 | 14 | 2026-06-22 | **WASM runtime crash fix**: Patch VRSFML `Window.cpp` com `EMSCRIPTEN_NO_YIELD` para eliminar `sfml_yield_to_raf()`/`emscripten_sleep()` do game loop. Game loop usa `emscripten_set_main_loop_arg` (RAF nativo) — zero ASYNCIFY durante gameplay. Audio reabilitado (ASYNCFY so na init). Vsync habilitado (`setVerticalSyncEnabled(true)`). Smoke tests criados (`tests/smoke/playwright_test.js`). Console tracing adicionado em `main.cpp` e `Game.cpp` para diagnostico. |
 | 15 | 2026-06-22 | **Bugfixes + Web scaling**: `WALK_SPEED` restaurado 80→200 (Player.h). Revive contra chefes corrigido — movido pra fora do `if(!alive)` em Game.cpp. Canvas CSS responsivo 16:9 (`web/shell.html` versionado, `.gitignore` ajustado). `--preload-file` com espaço corrigido no CMakeLists. Logs diagnosticos em PhaseConfig e loadLevel. |
+| 16 | 2026-07-07 | **Web ground alignment fix**: groundY dinâmico no `loadLevel()` com fator `1080/1011` (~1.068) para compensar divergência de viewport desktop (1011px, com decorações de janela) vs web (1080px, canvas sem decorações). `readjustForViewport()` no `frameStep()` recalcula groundY se o viewport muda (ex: fullscreen exit). `shell.html` com double-rAF para restaurar canvas 1920×1080 após fullscreen. Linha de debug visual (`RectangleShape`) para diagnóstico de alinhamento. Removido hack antigo `BG_Y_OFFSET` (52px) do `Level.cpp`. |
 
 ---
 
@@ -771,4 +775,83 @@ node ../tests/smoke/playwright_test.js
 **Debitos tecnicos abertos:**
 - Audio WASM pode crashar (miniaudio web audio worklet + ASYNCIFY). Se crashar, desabilitar com `#ifndef __EMSCRIPTEN__` em Game.cpp.
 - Migrar para JSPI (`-sJSPI=1`) quando navegador do usuario tiver suporte a `WebAssembly.Suspending`.
+
+---
+
+## 12. Troubleshooting Web (WASM)
+
+### 12.1 Bug: Entidades flutuando acima do chão (RESOLVIDO — Sprint 16)
+
+**Sintoma:** Na versão web, jogador, capivaras, chefes e baú apareciam ~61px acima do chão visual do background. No desktop Linux o alinhamento era perfeito.
+
+**Causa raiz:** Divergência de viewport entre desktop e web:
+- **Desktop:** `RenderWindow::create({1920,1080})` produz área de cliente de ~1920×1011 (barra de título rouba ~69px). View SFML = `center=(960,505.5), size=(1920,1011)`. Entidades em `y=900` → `900/1011 = 89.0%` do topo.
+- **Web:** Mesmo `create({1920,1080})` produz canvas de exatamente 1920×1080 (sem decorações). View = `center=(960,540), size=(1920,1080)`. Entidades em `y=900` → `900/1080 = 83.3%` do topo.
+- O background é esticado para preencher a janela; seu chão visual está em ~89% da altura em ambas as plataformas. Na web, as entidades ficam ~61px acima do chão visual.
+
+**Soluções tentadas que NÃO funcionaram:**
+1. **Shift do background (`BG_Y_OFFSET = 52px`)** — movia o background 52px para cima. Reduzia o gap para ~9px mas não resolvia. Causava buraco visual na parte inferior. Número mágico frágil.
+2. **`m_window->setView()` / `m_window->applyView()`** — `setView()` não existe no VRSFML; `applyView()` é privado no `sf::RenderTarget`. A view no VRSFML/SFML 3.x é passada por `RenderStates` em cada draw call, não globalmente.
+3. **`groundY * 1.068` fixo** — funcionou matematicamente mas foi sabotado por cache do navegador nos primeiros testes (Firefox servindo `.wasm` antigo).
+
+**Solução final (funcionando):**
+- `Game::loadLevel()`: escala `groundY` dinamicamente com `winH / 1011.0f` (razão viewport web/desktop).
+- `Game::frameStep()`: detecta mudanças no viewport (`m_renderer.getSize()`) e chama `readjustForViewport()` para recalcular e reaplicar groundY a Player, Capivaras e Boss.
+- `Game.h`: membros `m_originalGroundY` (groundY original do `fases.json`) e `m_lastWebViewH` (altura do viewport no último ajuste), apenas no `#ifdef __EMSCRIPTEN__`.
+- `Level.cpp`: removido hack `BG_Y_OFFSET`; background em `(0,0)` preenchendo a janela uniformemente.
+
+### 12.2 Bug: Tela cortada/zoom ao sair do fullscreen com ESC (TD-07)
+
+**Sintoma:** Após entrar em fullscreen e pressionar ESC (que o navegador intercepta para sair do fullscreen), o viewport do jogo mostra menos área — efeito de "zoom/corte". Inimigos e chefes podem ficar fora do campo de visão.
+
+**Causa:** O CSS reflow ao sair do fullscreen redimensiona o `<canvas>`. O `.canvas-frame` com `aspect-ratio: 16/9` + `width: min(...)` força o canvas a um tamanho menor que 1920×1080. O VRSFML/SDL atualiza o viewport para esse novo tamanho.
+
+**Mitigação atual (parcial):**
+- `shell.html`: listener `fullscreenchange` com double `requestAnimationFrame` (espera o CSS reflow terminar) restaura `canvas.width/height = 1920/1080`.
+- `Game::readjustForViewport()`: recalcula groundY quando detecta resize.
+- **Funciona bem no fullscreen. Na visão normal após fullscreen exit, ainda pode mostrar área reduzida (MVP aceitável).**
+
+### 12.3 Cache do navegador (Firefox)
+
+**Sintoma:** Crash `Aborted(Assertion failed: No EM_ASM constant found at address XXXX)` ou comportamento inconsistente entre reloads.
+
+**Causa:** O Firefox (e às vezes Chrome) cacheia agressivamente arquivos `.wasm` e `.js`. Se o servidor não envia headers `Cache-Control: no-cache`, um reload normal (F5 / Ctrl+R) pode servir arquivos antigos que estão dessincronizados.
+
+**Solução:** Sempre usar **Ctrl+Shift+R** (hard refresh) após rebuild do WASM. Em desenvolvimento, considerar adicionar `-s NO_EXIT_RUNTIME=0` ou headers HTTP de no-cache no servidor Python:
+```bash
+# Servidor com no-cache (alternativa ao python3 -m http.server)
+python3 -c "
+from http.server import HTTPServer, SimpleHTTPRequestHandler
+class NCH(SimpleHTTPRequestHandler):
+    def end_headers(self):
+        self.send_header('Cache-Control','no-store,no-cache,must-revalidate')
+        super().end_headers()
+HTTPServer(('',8001),NCH).serve_forever()
+"
+```
+
+### 12.4 `EM_ASM` vs `emscripten_run_script`
+
+**Problema:** `EM_ASM()` embute código JS como constante no `.wasm`. Se `.wasm` e `.js` dessincronizam (cache, build parcial), crash com "No EM_ASM constant found".
+
+**Regra:** Evitar `EM_ASM` para diagnósticos e código não-crítico. Preferir:
+- `emscripten_run_script("js code here")` — executa JS como string, sem constantes no .wasm
+- `std::cout` — output já é capturado pelo `Module.print` do Emscripten e aparece no textarea da página
+- `emscripten_log()` — log com nível EM_LOG_CONSOLE
+
+### 12.5 Ferramentas de diagnóstico visual
+
+Para diagnosticar problemas de alinhamento na web, foi usada uma barra horizontal vermelha (`sf::RectangleShape`) desenhada no `groundY` lógico dentro de `Level::draw()`. Isso permitiu confirmar visualmente que:
+- A linha vermelha (= groundY lógico) alinhava com os pés das entidades
+- Ambos (linha + entidades) estavam acima do chão visual do background
+- O problema era o viewport, não o anchor dos sprites
+
+Técnica removida após diagnóstico, mas o padrão pode ser reutilizado:
+```cpp
+sf::RectangleShape bar(sf::RectangleShapeData{
+    .position = {0.0f, m_groundY - 1.0f},
+    .fillColor = sf::Color::Red,
+    .size = {1920.0f, 3.0f}
+});
+```
 - Testes unitarios nao rodam em WASM (precisam de VRSFML runtime).

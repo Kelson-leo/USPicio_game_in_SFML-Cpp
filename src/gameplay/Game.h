@@ -151,6 +151,15 @@ private:
     std::unique_ptr<Boss>      m_boss;
     std::unique_ptr<Chest>     m_chest;
 
+#ifdef __EMSCRIPTEN__
+    // Web viewport may change (fullscreen exit, CSS resize).
+    // Track the original unadjusted groundY and current viewport
+    // height so we can re-apply the desktop→web scaling dynamically.
+    float m_originalGroundY  = core::GROUND_Y;
+    float m_lastWebViewH     = 0.0f;
+    void readjustForViewport(float viewH);
+#endif
+
     // ── Projectiles ───────────────────────────────────────────────
     std::vector<std::unique_ptr<Projectile>> m_projectiles;
 
