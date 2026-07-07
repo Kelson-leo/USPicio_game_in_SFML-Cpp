@@ -27,7 +27,7 @@ public:
     bool isAttacking() const;  // true while punch/throw animation is playing
 
     static constexpr float FRAME_DURATION = 0.15f;
-    static constexpr float WALK_SPEED     = 80.0f;
+    static constexpr float WALK_SPEED     = 200.0f;
     static constexpr float PLAYER_SCALE   = 1.5f;
     static constexpr float PLAYER_HEIGHT  = 95.0f * PLAYER_SCALE;  // feet offset
     static constexpr float CROUCH_HEIGHT  = 79.0f * PLAYER_SCALE;  // crouch hitbox

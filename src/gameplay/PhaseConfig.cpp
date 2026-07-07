@@ -31,6 +31,13 @@ bool PhaseConfig::loadFromFile(const std::string& path) {
             m_phases.push_back(std::move(pd));
         }
 
+        std::cout << "[PhaseConfig] Loaded " << m_phases.size()
+                  << " phases from " << path << std::endl;
+        for (const auto& p : m_phases) {
+            std::cout << "[PhaseConfig]   Phase " << p.id
+                      << " ground_y=" << p.groundY << std::endl;
+        }
+
         return true;
     } catch (const nlohmann::json::exception& e) {
         std::cerr << "[PhaseConfig] JSON parse error: " << e.what() << "\n";
