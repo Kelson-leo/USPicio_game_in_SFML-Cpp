@@ -604,6 +604,7 @@ A cada avanço, o dev atualiza a documentação proativamente — o commit reque
 | TD-06 | ~~Web: entidades flutuam acima do chão~~ | — | **Resolvido 2026-07-07:** groundY escalado dinamicamente (`1080/1011`) no `loadLevel()` + `readjustForViewport()` no `frameStep()` |
 | TD-07 | Web: tela "cortada/zoom" ao sair do fullscreen com ESC | Viewport mostra menos área de jogo após fullscreen exit; chefes e inimigos podem ficar fora do campo de visão | Investigar resize do canvas pelo CSS reflow no VRSFML/Emscripten; double-rAF em `shell.html` mitiga parcialmente |
 | TD-08 | `EM_ASM` causa crash (`No EM_ASM constant found`) se `.wasm` e `.js` ficam dessincronizados (ex: cache do navegador) | Jogo não carrega até hard refresh (Ctrl+Shift+R) | Evitar `EM_ASM` sempre que possível; usar `emscripten_run_script` ou `MAIN_THREAD_EM_ASM` |
+| TD-09 | Web: click/pop na transição de fase (miniaudio + ASYNCIFY) | Pequeno artefato sonoro ao trocar de fase | Mascarar com SFX de transição quando assets de som estiverem disponíveis; ou migrar para JSPI |
 
 ---
 
