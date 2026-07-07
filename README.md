@@ -70,6 +70,17 @@
 - **Game Over:** "JUBILADO" (fases com chefão) ou "REPROVADO" (fases sem chefão)
 - **Vitória:** "Formado!" ao derrotar todos os chefes
 
+### 🎵 Música
+
+O jogo conta com **4 faixas de funk sem copyright** — uma homenagem ao *animus* cultural dos estudantes que embalam suas noites de estudo (e procrastinação) com batidas características.
+
+No **Menu de Opções** (acessível pelo menu principal ou pelo menu de pausa durante o jogo):
+- Use `←` `→` para ajustar o **volume da música** (±5%)
+- Navegue entre as faixas com o seletor **`< Track N/4 >`**
+- A música troca instantaneamente ao alternar de faixa
+
+As faixas estão em `assets/sounds/music/` e tocam em loop durante todo o jogo.
+
 ---
 
 ## 🗺️ Fases
