@@ -97,8 +97,7 @@ As faixas estão em `assets/sounds/music/` e tocam em loop durante todo o jogo.
 
 <p align="center">
   <em>Screenshots das fases — adicione em <code>screenshots/</code></em><br>
-  <sub>fase1_patio.png · fase2_bandeijao.png · fase3_interusp.png · fase4_busao.png</sub><br>
-  <sub>fase5_sanfran.png · fase6_biblioteca.png · fase7_reitoria.png</sub>
+  <sub>fase2_bandeijao.png · fase4_busao.png · fase5_sanfran.png · fase7_reitoria.png</sub>
 </p>
 
 ---
@@ -231,6 +230,8 @@ git push origin gh-pages
 
 Este projeto é uma obra de **sátira e humor estudantil**, criado com **animus jocandi** — intenção exclusivamente cômica e recreativa. As referências a pessoas, instituições e locais são elementos de paródia no contexto de um jogo eletrônico independente e **open source**, sem qualquer finalidade comercial, difamatória ou de desprestígio.
 
+Nenhuma capivara real foi ferida durante o desenvolvimento. O jogo **não incentiva, endossa ou glorifica** qualquer forma de violência contra animais — as capivaras digitais são tão fictícias quanto os chefes que atiram provas e panelas. Elas apenas tiveram o azar de nascer no sprite errado.
+
 Não há vínculo ou endosso oficial da Universidade de São Paulo ou de qualquer outra entidade mencionada.
 
 ---
@@ -243,14 +244,14 @@ Não há vínculo ou endosso oficial da Universidade de São Paulo ou de qualque
 ### Menu Principal
 ![Menu](screenshots/menu.png)
 
-### Fase 1 — Pátio
-![Fase 1](screenshots/fase1_patio.png)
-
 ### Fase 2 — Bandeijão (Chefão: Rato)
 ![Fase 2](screenshots/fase2_bandeijao.png)
 
 ### Fase 4 — Busão (Chefão: Mandrake)
 ![Fase 4](screenshots/fase4_busao.png)
+
+### Fase 5 — SanFran (Chefão: Peru)
+![Fase 5](screenshots/fase5_sanfran.png)
 
 ### Fase 7 — Reitoria (Chefão: Professor)
 ![Fase 7](screenshots/fase7_reitoria.png)
