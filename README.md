@@ -230,7 +230,7 @@ git push origin gh-pages
 
 Este projeto é uma obra de **sátira e humor estudantil**, criado com **animus jocandi** — intenção exclusivamente cômica e recreativa. As referências a pessoas, instituições e locais são elementos de paródia no contexto de um jogo eletrônico independente e **open source**, sem qualquer finalidade comercial, difamatória ou de desprestígio.
 
-Nenhuma capivara real foi ferida durante o desenvolvimento. O jogo **não incentiva, endossa ou glorifica** qualquer forma de violência contra animais — as capivaras digitais são tão fictícias quanto os chefes que atiram provas e panelas. Elas apenas tiveram o azar de nascer no sprite errado.
+Nenhuma capivara real foi ferida durante o desenvolvimento. O jogo **não incentiva, endossa ou glorifica** qualquer forma de violência contra animais — as capivaras digitais são tão fictícias quanto os chefes que atiram provas e panelas. IBAMA já foi notificado. O laudo confirmou: são pixels.
 
 Não há vínculo ou endosso oficial da Universidade de São Paulo ou de qualquer outra entidade mencionada.
 
