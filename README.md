@@ -95,10 +95,6 @@ As faixas estão em `assets/sounds/music/` e tocam em loop durante todo o jogo.
 | 6 | Biblioteca | 5 Capivaras | — | Silêncio... ou nem tanto. |
 | 7 | Reitoria | 2 Capivaras | **Professor** 👨‍🏫 | A batalha final. Provas voando! |
 
-<p align="center">
-  <em>Screenshots das fases — adicione em <code>screenshots/</code></em><br>
-  <sub>fase2_bandeijao.png · fase4_busao.png · fase5_sanfran.png · fase7_reitoria.png</sub>
-</p>
 
 ---
 
@@ -238,9 +234,6 @@ Não há vínculo ou endosso oficial da Universidade de São Paulo ou de qualque
 
 ## 📸 Screenshots
 
-> Para adicionar screenshots, crie a pasta `screenshots/` no repositório e coloque as imagens com os nomes abaixo. Depois descomente as tags `<img>` correspondentes.
-
-<!--
 ### Menu Principal
 ![Menu](screenshots/menu.png)
 
@@ -255,7 +248,6 @@ Não há vínculo ou endosso oficial da Universidade de São Paulo ou de qualque
 
 ### Fase 7 — Reitoria (Chefão: Professor)
 ![Fase 7](screenshots/fase7_reitoria.png)
--->
 
 ---
 
